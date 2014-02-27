@@ -42,8 +42,6 @@
 
 <p>This is an auction method where there is one object to be sold and multiple buyers. Each buyer bids a value. The highest bidder is awarded the object and he pays the price equal to the second highest bid value. For instance, if a pen is being auctioned and P1, P2, P3 bid ₹ 70, 50, 40 respectively then P1 wins the auction and pays ₹ 50.</p>
 
-<p>This mechanism is used in auctioning display inventory by various ad exchanges like <a href="https://support.google.com/adxbuyer/answer/152039?hl=en">doubleclick</a>.</p>
-
 <h4 id="truth_telling_is_dominant_strategy_in_second_price_auction">Truth telling is dominant strategy in second price auction</h4>
 
 <p>What it means is that each participant has an incentive to bid the true value that he attaches to the object.</p>
@@ -78,11 +76,79 @@
 
 <p>In case participants are not incentivized to bid their true values, their bids would be dependent on their guess about other participants’ bids. This would lead to differing bid values by participants even when inventory quality remains the same. Thus, revenues of seller would be variable, and that is not desirable by the sellers.</p>
 
-<h2 id="generalized_second_price_gsp_auction">Generalized second price (GSP) auction</h2>
+<h2 id="generalized_second_price_gsp_auction_and_vickrey_clarke_groves_vcg_auction">Generalized second price (GSP) auction and Vickrey Clarke Groves (VCG) auction</h2>
 
-<p>Both GSP and VCG are auction stratgies where multiple items are for sale. There are various ways to understand what GSP and VCG are. In this article, let’s consider the setting that</p>
+<p>They are auction strategies where</p>
 
-<h2 id="vickry_clarke_groves_vcg_auction">Vickry Clarke Groves (VCG) auction</h2>
+<ul>
+<li>multiple items are for sale</li>
+
+<li>some items are more desirable than others, and order of desirability is same for all participants.</li>
+
+<li>a participant needs to bid only one bid value</li>
+
+<li>a participant can win at the most one item</li>
+</ul>
+
+<p>There are various ways to understand GSP and VCG. In this article, let’s consider the setting that is suitable for understanding auction in ad space.</p>
+
+<p>Let’s say there are two ad slots with CTRs of 0.9 and 0.4 respectively (irrespective of the ad that is shown here). Let’s say there are three bidders A, B and C who value the clicks at 7, 6 and 1 units respectively. They need to pay the seller only if an ad gets clicked.</p>
+
+<p>Let us say the participants bid values 7, 6 and 1 respectively.</p>
+
+<p><strong>GSP</strong></p>
+
+<p>Here is how GSP conducts the auction. Highest bidder, A, wins first slot and pays the second highest bid (6). Second highest bidder, B, wins the second slot and pays the next highest bid (1).</p>
+
+<p>Net value realized by A is (7 - 6) * 0.9 = 0.9</p>
+
+<p>Net value realized by B is (6 - 1) * 0.4 = 2</p>
+
+<p>Net revenue of seller is 6 * 0.9 + 1 * 0.4 = 5.8</p>
+
+<p>GSP has a shortcoming that revealing their true valuations in bids is not always optimal for the participants. For instance, in above example A can bid 2, which leads B to win first slot at 2 units and A to win second slot at 1 unit.</p>
+
+<p>In this case, Net value realized by B is (6 - 2) * 0.9 = 3.6</p>
+
+<p>Net value realized by A is (7 - 1) * 0.4 = 2.4</p>
+
+<p>Thus, we see that A can realize more value by bidding lower than his true value.</p>
+
+<p><strong>VCG</strong></p>
+
+<p>Here is how VCG conducts the auction. As in GSP, highest bidder, A wins the first slot and second highest bidder B wins the second slot.</p>
+
+<p>To calculate the bid value of A, we find how much penalty does A cause to other participants by being present in the system, and winning the first slot. If A were not present in the system, B and C would win first and second slots and derive a total value of 6 * 0.9 + 1 * 0.4 = 5.8. Once A gets first slot, B derives a value 6 * 0.4 = 2.4 and C derives a value 0. So, A should pay 5.8 - 2.4 = 3.4.</p>
+
+<p>Similarly, B should pay 1 * 0.4 = 0.4, since this is the value by which C is harmed by his presence (A is not harmed by B’s presence).</p>
+
+<p>In this case, total revenue realized by seller = 3.4 + 0.4 = 3.8</p>
+
+<h2 id="a_few_notes">A few notes</h2>
+
+<ul>
+<li>
+<p>Second price auction is a specific case of generalized second price auction where there is only one item for sale.</p>
+</li>
+
+<li>
+<p>While truth telling is dominant strategy in second price auction, it is not so in generalized second price auction.</p>
+</li>
+
+<li>
+<p>Truth telling is dominant strategy in VCG auction. I have not read the proof for that.</p>
+</li>
+
+<li>
+<p>Revenue for seller is usually higher in GSP, compared to VCG. This is is the case for example in above example. I do not know what are the precise conditions in which this holds true.</p>
+</li>
+</ul>
+
+<h2 id="where_are_various_auction_mechanisms_used">Where are various auction mechanisms used</h2>
+
+<ul>
+<li>Second price auction is used by exchanges like doubleclick in auction of display inventory. Eg, see <a href="http://www.google.com">Here</a></li>
+</ul>
     </div>
   </body>
 </html>

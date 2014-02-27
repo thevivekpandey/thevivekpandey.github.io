@@ -14,9 +14,6 @@ price equal to the second highest bid value. For instance, if a pen is being auc
 and P1, P2, P3 bid &#8377; 70, 50, 40 respectively then P1 wins the auction and
 pays &#8377; 50.
 
-This mechanism is used in auctioning display inventory by various ad exchanges
-like [doubleclick] (https://support.google.com/adxbuyer/answer/152039?hl=en).
-
 ####Truth telling is dominant strategy in second price auction####
 
 What it means is that each participant has an incentive to bid the true value that
@@ -54,9 +51,79 @@ be dependent on their guess about other participants' bids. This would lead to
 differing bid values by participants even when inventory quality remains the same.
 Thus, revenues of seller would be variable, and that is not desirable by the sellers.
 
-##Generalized second price (GSP) auction
-Both GSP and VCG are auction stratgies where multiple items are for sale. There are
-various ways to understand what GSP and VCG are. In this article, let's consider
-the setting that 
+##Generalized second price (GSP) auction and Vickrey Clarke Groves (VCG) auction
 
-##Vickry Clarke Groves (VCG) auction
+They are auction strategies where
+* multiple items are for sale
+* some items are more desirable than others, and order of desirability is same
+for all participants. 
+* a participant needs to bid only one bid value
+* a participant can win at the most one item
+
+There are various ways to understand GSP and VCG. In this article, let's consider the 
+setting that is suitable for understanding auction in ad space.
+
+Let's say there are two ad slots with CTRs of 0.9 and 0.4 respectively (irrespective
+of the ad that is shown here). Let's say there are three bidders A, B and C who value
+the clicks at 7, 6 and 1 units respectively. They need to pay the seller only if an
+ad gets clicked.
+
+Let us say the participants bid values 7, 6 and 1 respectively.
+
+__GSP__
+
+Here is how GSP conducts the auction. Highest bidder, A, wins first slot and pays
+the second highest bid (6). Second highest bidder, B, wins the second slot and
+pays the next highest bid (1). 
+
+Net value realized by A is (7 - 6) * 0.9 = 0.9
+
+Net value realized by B is (6 - 1) * 0.4 = 2
+
+Net revenue of seller is 6 * 0.9 + 1 * 0.4 = 5.8
+
+GSP has a shortcoming that revealing their true valuations in bids is not always
+optimal for the participants. For instance, in above example A can bid 2, 
+which leads B to win first slot at 2 units and A to win second slot at 1 unit.
+
+In this case,
+Net value realized by B is (6 - 2) * 0.9 = 3.6
+
+Net value realized by A is (7 - 1) * 0.4 = 2.4
+
+Thus, we see that A can realize more value by bidding lower than his true
+value.
+
+__VCG__
+
+Here is how VCG conducts the auction. As in GSP, highest bidder, A wins the 
+first slot and second highest bidder B wins the second slot.
+
+To calculate the bid value of A, we find how much penalty does A cause to
+other participants by being present in the system, and winning the first
+slot. If A were not present in the system, B and C would win first and
+second slots and derive a total value of 6 * 0.9 + 1 * 0.4 = 5.8. Once
+A gets first slot, B derives a value 6 * 0.4 = 2.4 and C derives a value 0.
+So, A should pay 5.8 - 2.4 = 3.4.
+
+Similarly, B should pay 1 * 0.4 = 0.4, since this is the value by which C
+is harmed by his presence (A is not harmed by B's presence).
+
+In this case, total revenue realized by seller = 3.4 + 0.4 = 3.8
+
+##A few notes##
+* Second price auction is a specific case of generalized second price auction where
+  there is only one item for sale.
+
+* While truth telling is dominant strategy in second price auction, it is not so
+  in generalized second price auction.
+
+* Truth telling is dominant strategy in VCG auction. I have not read the proof for that.
+
+* Revenue for seller is usually higher in GSP, compared to VCG. This is is the case
+  for example in above example. I do not know what are the precise conditions in which
+  this holds true.
+
+##Where are various auction mechanisms used##
+* Second price auction is used by exchanges like doubleclick in auction of display
+  inventory. Eg, see [Here](http://www.google.com)
