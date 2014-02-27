@@ -35,9 +35,9 @@ I value that pen at 50. Then, it is best for me to bid 50. Why?
 * Similarly, suppose I bid conservative and bid 40 instead of 50. Then
   + If highest bid other than mine is more than 50. I would lose the bid irrespctive
     of bidding 50 or 40. So, truth telling is no worse than bidding lower.
-  + If highest bid other than mine is between 40 and 50, say 44then bidding 40 makes 
+  + If highest bid other than mine is between 40 and 50, say 44 then bidding 40 makes 
     me lose the bid, where has bidding 50 would have led me to win the bid, pay 44
-    and make a profit of 4.
+    and make a profit of 6.
   + If higest bid other than mine is less than 40, then I would win the bid regardless
     of bidding 40 or 50.
 
@@ -63,6 +63,7 @@ for all participants.
 There are various ways to understand GSP and VCG. In this article, let's consider the 
 setting that is suitable for understanding auction in ad space.
 
+Example below is inspired from [this](http://en.wikipedia.org/wiki/Generalized_second-price_auction) wikipedia article.
 Let's say there are two ad slots with CTRs of 0.9 and 0.4 respectively (irrespective
 of the ad that is shown here). Let's say there are three bidders A, B and C who value
 the clicks at 7, 6 and 1 units respectively. They need to pay the seller only if an
