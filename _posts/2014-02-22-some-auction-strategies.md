@@ -11,8 +11,8 @@ about values bid by each other)
 This is an auction method where there is one object to be sold and multiple buyers.
 Each buyer bids a value. The highest bidder is awarded the object and he pays the
 price equal to the second highest bid value. For instance, if a pen is being auctioned
-and P1, P2, P3 bid &#8377; 70, 50, 40 respectively then P1 wins the auction and
-pays &#8377; 50.
+and P1, P2, P3 bid 70, 50, 40 respectively then P1 wins the auction and
+pays 50.
 
 ####Truth telling is dominant strategy in second price auction####
 
@@ -20,7 +20,7 @@ What it means is that each participant has an incentive to bid the true value th
 he attaches to the object.
 
 Let\'s see this using an example. Let\'s say an auction for a pen is taking place.
-I value that pen at &#8377; 50. Then, it is best for me to bid &#8377; 50. Why?
+I value that pen at 50. Then, it is best for me to bid 50. Why?
 * Suppose, I become aggressive and bid 60 instead of 50. Then
   + If highest bid other than mine was more than 60, then I would lose the bid.
     But I would have lost the bid even if I bid 50. So, truth telling is no worse
@@ -57,7 +57,7 @@ They are auction strategies where
 * multiple items are for sale
 * some items are more desirable than others, and order of desirability is same
 for all participants. 
-* a participant needs to bid only one bid value
+* a participant can bid only one bid value
 * a participant can win at the most one item
 
 There are various ways to understand GSP and VCG. In this article, let's consider the 
@@ -126,4 +126,10 @@ In this case, total revenue realized by seller = 3.4 + 0.4 = 3.8
 
 ##Where are various auction mechanisms used##
 * Second price auction is used by exchanges like doubleclick in auction of display
-  inventory. Eg, see [Here](http://www.google.com)
+  inventory. Eg, see [Here](http://static.googleusercontent.com/media/www.google.com/en//doubleclick/pdfs/Google-White-Paper-The-Arrival-of-Real-Time-Bidding-July-2011.pdf)
+
+* Generalized second price auction is used by google to sell search ads. Explained 
+  [here](http://www.quora.com/Why-does-Google-use-the-Generalized-Second-Price-auction-to-sell-search-ads-instead-of-Vickrey-Clark-Groves)
+
+* VCG auction is used by facebook to auction to sell their RHS inventory. Explained
+  [here](http://www.quora.com/Does-Facebooks-Ad-platform-use-a-Generalized-Second-Price-auction)
