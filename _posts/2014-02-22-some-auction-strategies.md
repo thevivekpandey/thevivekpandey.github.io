@@ -21,7 +21,9 @@ he attaches to the object.
 
 Let\'s see this using an example. Let\'s say an auction for a pen is taking place.
 I value that pen at 50. Then, it is best for me to bid 50. Why?
+
 + Suppose, I become aggressive and bid 60 instead of 50. Then
+
   + If highest bid other than mine was more than 60, then I would lose the bid.
     But I would have lost the bid even if I bid 50. So, truth telling is no worse
     than bidding 60.
