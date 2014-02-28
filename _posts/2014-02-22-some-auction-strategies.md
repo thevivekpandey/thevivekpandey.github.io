@@ -57,11 +57,11 @@ Thus, revenues of seller would be variable, and that is not desirable by the sel
 ##Generalized second price (GSP) auction and Vickrey Clarke Groves (VCG) auction
 
 They are auction strategies where
-* multiple items are for sale
-* some items are more desirable than others, and order of desirability is same
-for all participants. 
-* a participant can bid only one bid value
-* a participant can win at the most one item
+
++ multiple items are for sale
++ some items are more desirable than others, and order of desirability is same for all participants. 
++ a participant can bid only one bid value
++ a participant can win at the most one item
 
 There are various ways to understand GSP and VCG. In this article, let's consider the 
 setting that is suitable for understanding auction in ad space.
