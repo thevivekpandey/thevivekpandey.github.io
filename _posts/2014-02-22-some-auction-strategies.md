@@ -21,7 +21,7 @@ he attaches to the object.
 
 Let\'s see this using an example. Let\'s say an auction for a pen is taking place.
 I value that pen at 50. Then, it is best for me to bid 50. Why?
-* Suppose, I become aggressive and bid 60 instead of 50. Then
++ Suppose, I become aggressive and bid 60 instead of 50. Then
   + If highest bid other than mine was more than 60, then I would lose the bid.
     But I would have lost the bid even if I bid 50. So, truth telling is no worse
     than bidding 60.
@@ -32,7 +32,8 @@ I value that pen at 50. Then, it is best for me to bid 50. Why?
   + If highest bid other than mine was less than 50, I would win the bid whether
     I bid 50 or 60, and pay same price irrespective of my bid. Hence, truth telling
     is no worse than bidding 60.
-* Similarly, suppose I bid conservative and bid 40 instead of 50. Then
++ Similarly, suppose I bid conservative and bid 40 instead of 50. Then
+
   + If highest bid other than mine is more than 50. I would lose the bid irrespctive
     of bidding 50 or 40. So, truth telling is no worse than bidding lower.
   + If highest bid other than mine is between 40 and 50, say 44 then bidding 40 makes 
