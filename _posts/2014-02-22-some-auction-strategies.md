@@ -19,7 +19,7 @@ pays 50.
 What it means is that each participant has an incentive to bid the true value that
 he attaches to the object.
 
-Let\'s see this using an example. Let\'s say an auction for a pen is taking place.
+Let's see this using an example. Let's say an auction for a pen is taking place.
 I value that pen at 50. Then, it is best for me to bid 50. Why?
 
 + Suppose, I become aggressive and bid 60 instead of 50. Then
