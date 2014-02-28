@@ -69,7 +69,7 @@ of the ad that is shown here). Let's say there are three bidders A, B and C who 
 the clicks at 7, 6 and 1 units respectively. They need to pay the seller only if an
 ad gets clicked.
 
-Let us say the participants bid values 7, 6 and 1 respectively.
+Let's say the participants bid values 7, 6 and 1 respectively.
 
 __GSP__
 
