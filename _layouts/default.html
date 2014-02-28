@@ -1,40 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>{{ site.name }}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{{ site.description }}">
-    <script type="text/javascript"
-	 src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-    </script>
-    <script type="text/x-mathjax-config">
-	MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
-    </script>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
 
-    <style>
-	code {
-	     font-family:"Andale Mono", "Courier New", Courier, mono;
-	     font-size:10pt;
-	     color:black;
-	     font-weight:bold;
-	}
-	p { font-family:Georgia, "Times New Roman", Times, serif; }
-	ul { font-family:Georgia, "Times New Roman", Times, serif; }
-	ol { font-family:Georgia, "Times New Roman", Times, serif; }
-	h1 { margin-bottom: -5px; }
-	h2 { margin-bottom: -5px; }
-	h3 { margin-bottom: -15px; }
-	h4 { margin-bottom: -15px; }
-	h5 { margin-bottom: -15px; }
-	h6 { margin-bottom: -15px; }
-      </style>
-
-  </head>
+  {% include head.html %}
 
   <body>
-    <div style="width:800px; text-align:justify">
+
+    <header class="masthead">
+      <div class="masthead-inner">
+        <h1>Vivek Pandey's pages</h1>
+      </div>
+    </header>
+
+    <div class="content container">
       {{ content }}
     </div>
+
   </body>
 </html>
