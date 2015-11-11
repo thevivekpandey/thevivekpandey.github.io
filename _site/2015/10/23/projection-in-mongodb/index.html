@@ -1,1 +1,169 @@
-<p>Hello</p>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+
+  <title>
+    Projection In Mongodb &middot; 
+    Hyde, a Jekyll theme
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/hyde.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Abril+Fatface">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.png">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <header class="masthead">
+      <div class="masthead-inner">
+        <h1>Vivek Pandey's pages</h1>
+      </div>
+    </header>
+
+    <div class="content container">
+      <h1>Projections in mongodb</h1>
+
+<p>In MongoDB, one should use <a href="https://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/">projections</a> wherever possible. I wanted to quantify two things</p>
+
+<ul>
+<li>What is the effect of using projections on query times?</li>
+<li>Why do query times improve because of projections?</li>
+</ul>
+
+
+<p>We have a table called events, whose stats looks like this:</p>
+
+<pre><code>
+> db.events.stats()
+{
+    "ns" : "6ed11a9246404d1b95fe.events",
+    "count" : 16912712,
+    "size" : 8617342080,
+    "avgObjSize" : 509,
+    "numExtents" : 25,
+    "storageSize" : 9305935856,
+    "lastExtentSize" : 2146426864,
+    "paddingFactor" : 1,
+    "paddingFactorNote" : "paddingFactor is unused and unmaintained in 3.0. It remains hard coded to 1.0 for compatibility only.",
+    "userFlags" : 1,
+    "capped" : false,
+    "nindexes" : 4,
+    "totalIndexSize" : 1167933424,
+    "indexSizes" : {
+        "_id_" : 548732240,
+        "notificationId_1" : 14545104,
+        "parameters.notificationId_1" : 54296816,
+        "eventName_1" : 550359264
+    },
+    "ok" : 1
+}
+</code></pre>
+
+
+<p>So, there are around 17M entries, having a total size of 8.6GB, thus having an average object
+size of 8.6GB/17M = 509 bytes.</p>
+
+<p>I fetched first three million entries in this collection, using a python program like this:</p>
+
+<pre>
+<code>
+class QGMongo(object):
+   __conn = None
+   @classmethod
+   def get_connection(cls):
+      if cls.__conn is None:
+         cls.__conn = MongoClient('127.0.0.1', 27000)
+      return cls.__conn
+
+if __name__ == '__main__':
+   conn = QGMongo.get_connection()
+   database = conn['6ed11a9246404d1b95fe']
+   events = database.events.find()
+   count = 0
+   for event in events:
+      count += 1
+      if count == 3000000:
+         break
+</code>
+</pre>
+
+
+<p>This prgram took around 120s to run.
+I set db.setProfilingLevel(2) and then figured out from system.profiles collection that</p>
+
+<p>As per db.system.profile collection,</p>
+
+<ul>
+<li>There were 273 getmore commands.</li>
+<li>They returned a total of 3M documents of length around 1.1GB in a total of 15s</li>
+</ul>
+
+
+<p>I then did same experiment using projection:</p>
+
+<pre>
+<code>
+class QGMongo(object):
+   __conn = None
+   @classmethod
+   def get_connection(cls):
+      if cls.__conn is None:
+         cls.__conn = MongoClient('127.0.0.1', 27000)
+      return cls.__conn
+
+if __name__ == '__main__':
+   conn = QGMongo.get_connection()
+   database = conn['6ed11a9246404d1b95fe']
+   events = database.events.find({}, {'eventName': 1})
+   count = 0
+   for event in events:
+      count += 1
+      if count == 3000000:
+         break
+</code>
+</pre>
+
+
+<p>This time, the program took around 30s.</p>
+
+<p>As per db.system.profile collection,</p>
+
+<ul>
+<li>There were 40 getmore commands</li>
+<li>They returned a total of 3M documents of length around 159MB in 1.7s.</li>
+</ul>
+
+
+<p>As a result of this, I have the answer to my first question: the query times improve significantly
+using projections. When I used projection such that the data size required by my program dropped to
+around 15% (1.1GB to 160MB), program running time dropped to 25% (120s to 30s).</p>
+
+<p>However, my second question is not well answered. There are two outstanding questions:</p>
+
+<ul>
+<li><p>While complete running times for my programs in the two cases are 120s and 30s repectively,
+times reported by mongodb are 15s and 1.7s respectively. So, where does the remaining time
+get spent? Is it in the pymongo driver?</p></li>
+<li><p>Why does projection help at all? The data required to be read from the disk is the
+same. I have read somewhere that decoding bson is what takes time. I need to quantify
+this time before I can come to a conclusion.</p></li>
+</ul>
+
+
+    </div>
+
+  </body>
+</html>
