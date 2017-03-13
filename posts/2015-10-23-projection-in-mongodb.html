@@ -2,6 +2,7 @@
 <head>
   <title> Projections in MongoDB </title>
   <link rel="stylesheet" type="text/css" href="style.css"/>
+  <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
 </head>
 <body>
 <h2>Projections in MongoDB</h2>
@@ -53,7 +54,7 @@ size of 8.6GB/17M = 509 bytes.
 <p>
 I fetched first three million entries in this collection, using a python program like this:
 </p>
-<pre>
+<pre class="prettyprint">
 class QGMongo(object):
    __conn = None
    @classmethod
@@ -94,7 +95,7 @@ They returned a total of 3M documents of length around 1.1GB in a total of 15s
 </ul>
 
 I then did same experiment using projection:
-<pre>
+<pre class="prettyprint">
 class QGMongo(object):
    __conn = None
    @classmethod
