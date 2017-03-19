@@ -1,0 +1,78 @@
+<html>
+<head>
+  <title> A probability question</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+</head>
+<body>
+<h2>A Probability Question</h2>
+<p>
+I recently came across the following question: if you randomly partition a line segment in three
+segments, what is the probability that the three segments will be the sides of a triangle?
+</p>
+
+<figure>
+<img src="./line.png" />
+<figcaption>What is the probability that AP<sub>1</sub>, P<sub>1</sub>P<sub>2</sub>, P<sub>2</sub>B are the sides
+of a triangle?
+</figcaption>
+</figure>
+
+<h3>One solution (using calculus)</h3>
+<p>
+After some false starts and incorrect calculations, I was able to solve it. 
+</p>
+
+<p>
+Assume the length of 
+triangle to be unit.  Clearly, the segments will be parts of a triangle if each of them is less
+than 0.5.
+</p>
+
+<p>Let P<sub>1</sub> be the point on the left. Probability that is it is smaller than 0.5 is 0.5.</p>
+
+<p> Now assume that |AP<sub>1</sub>| = s. Now the next point P<sub>2</sub> should be of length
+at least 0.5 - s (else |P<sub>2</sub>B| will be more than 0.5) and at most 0.5. Further, it 
+should like to the right of P<sub>1</sub>. Probability of that happening is s.
+</p>
+
+<p>
+So probability of choosing P<sub>1</sub> and P<sub>2</sub> such that P<sub>1</sub> is to the
+left and triangle inequality happens is:
+
+$$\int_0^{1/2} {(1/2)}s ds = 1/8$$ 
+</p>
+
+<p>
+But then, we could also have P<sub>2</sub> on left and P<sub>1</sub> on right, bringing
+the probability to 1/4.
+</p>
+
+<h3>Another solution (using geometry)</h3>
+<p>
+But then I saw another, geometric solution in a youtube video.
+</p>
+
+<img src="./partition-line-geometry.png" />
+
+<p>
+For each pair of points P<sub>1</sub> and P<sub>2</sub> on AB, there is a point Q inside the big
+triangle such that P<sub>1</sub>P<sub>2</sub>Q is an equilateral triangle. Similarly for each point
+inside the big triangle, there is a pair of points on the line AB.
+</p>
+
+<p>
+P<sub>1</sub> and P<sub>2</sub> divide the line AB in such a way that the segments can form 
+equilateral triangle if and only if Q lies inside the smaller triangle XYZ. Since area of triangle
+XYZ is one fourth of the area of triangle ABC, the answer of the original question is 1/4.
+</p>
+
+
+<u>A side note</u>
+<br>
+Note that ABC need not be an equilateral triangle for the proof to work.
+<h3>Is their a connection between two solutions?</h3>
+Is there some deeper connection between the two solutions? Is there another way to solve
+this problem? If you have any thoughts, let me know at vivek@qgraph.io.
+</body?
+
