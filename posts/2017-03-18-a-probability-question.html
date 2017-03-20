@@ -18,7 +18,7 @@ of a triangle?
 </figcaption>
 </figure>
 
-<h3>One solution (using calculus)</h3>
+<h3>Method 1 (using calculus)</h3>
 <p>
 After some false starts and incorrect calculations, I was able to solve it. 
 </p>
@@ -48,7 +48,7 @@ But then, we could also have P<sub>2</sub> on left and P<sub>1</sub> on right, b
 the probability to 1/4.
 </p>
 
-<h3>Another solution (using geometry)</h3>
+<h3>Method 2 (using geometry)</h3>
 <p>
 But then I saw another, geometric solution in a <a href="https://youtu.be/udxwP26gTwA?t=57" target="_blank">youtube video</a>
 </p>
@@ -71,8 +71,31 @@ XYZ is one fourth of the area of triangle ABC, the answer of the original questi
 <u>A side note</u>
 <br>
 Note that ABC need not be an equilateral triangle for the proof to work.
-<h3>Is their a connection between two solutions?</h3>
-Is there some deeper connection between the two solutions? Is there another way to solve
+
+<h3>Method 3 (using geometry)</h3>
+<p>This method is simply "de-calculusazing" method 1.</p>
+<img src="./probability-method-3.png" />
+
+<p>
+Since lengths of first two segments determine the length of the third segment, we consider
+the possible values of the lengths of first two segments. Plot all points (x, y) on the
+2D coordinate system where x and y are the lengths of the two segments. The constraint
+that these points need to satify is x + y &lt= 1 Clearly, those
+points consititute the triangle AOB.
+</p>
+
+<p>
+Now consider those points (x, y) such that x, y, 1 - x - y are the sides of a triangle.
+For this to happen, x, y need to be less than 0.5 and x + y needs to be more than 0.5.
+Triangle PQR represents the set of such points.
+</p>
+
+<p>Since area of triangle PQR is 1/4 of the area of triangle AOB, we have our answer
+as 1/4
+</p>
+
+<p>
+Is there some deeper connection between the first/third and second solutions? Is there yet another way to solve
 this problem? If you have any thoughts, let me know at vivek@qgraph.io.
 </body?
 
