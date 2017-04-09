@@ -1,0 +1,163 @@
+<html>
+<head>
+<link rel="stylesheet" href="http://thevivekpandey.github.io/posts/style.css">
+<style>
+body {
+   margin: 10;
+   max-width: 4096px;
+}
+</style>
+</head>
+<body>
+
+<p>
+We will work with two images. First image is called image1.jpg, second is called image2.jpg.
+</p>
+<div>
+    <div>
+    <figure>
+         <img src="./image1.jpg" width=200 />
+         <figcaption>image1.jpg</figcaption>
+    </figure>
+    </div>
+    <div>
+    <figure>
+         <img src="./image2.jpg" width=200 />
+         <figcaption>image2.jpg</figcaption>
+    </figure>
+    </div>
+</div>
+<hr>
+<div>
+  <h3>Type 1</h3>
+  <ul>
+  <li>A background color</li>
+  <li>Border around each image</li>
+  </ul>
+  <pre>
+  convert \
+    \( -define jpeg:size=512x576 image1.jpg -bordercolor green -border 10x10 -thumbnail 462x518 -background skyblue -gravity center -extent 512x576 \) \
+    \( -define jpeg:size=512x576 image2.jpg -bordercolor green -border 10x10 -thumbnail 462x518 -background skyblue -gravity center -extent 512x576 \) \
+    +append \
+    output-1.jpg
+  </pre>
+  <img src="./output-1.jpg" width=512/>
+</div>
+
+<hr>
+<div>
+  <h3>Type 2</h3>
+  <ul>
+  <li>A background image</li>
+  <li>Border around each image</li>
+  </ul>
+  <pre>
+  convert \
+    \( background.jpg -resize 1024x1024 -crop 1024x768+0+0 \) \
+    \( image1.jpg -bordercolor green -border 10x10 -resize 462x518 \) -gravity west -geometry +60+0 -composite \
+    \( image2.jpg -bordercolor green -border 10x10 -resize 462x518 \) -gravity east -geometry +60+0 -composite \
+    output-2.jpg
+  </pre>
+  <img src="./output-2.jpg" width=512/>
+</div>
+
+<hr>
+<div>
+  <h3>Type 3</h3>
+  <ul>
+  <li>A background image</li>
+  <li>Border around each image</li>
+  <li>Text on each image</li>
+  </ul>
+  <pre>
+  convert \
+    \( background.jpg -resize 1024x1024 -crop 1024x768+0+0 \) \
+    \( image1.jpg -bordercolor green -border 10x10 \
+                  -resize 462x518 \
+                  -fill '#0008' -draw 'rectangle 25,25,170,60' \
+                  -fill white   -font AvantGarde-Book  -pointsize 15 -gravity NorthWest -annotate +28+37 'Bewakoof Dress #1' \) -gravity west -geometry +60+0 -composite \
+    \( image2.jpg -bordercolor green -border 10x10 \
+                  -resize 462x518 \
+                  -fill '#0008' -draw 'rectangle 25,25,170,60' \
+                  -fill white   -font AvantGarde-Book  -pointsize 15 -gravity NorthWest -annotate +28+37 'Bewakoof Dress #2' \) -gravity east -geometry +60+0 -composite \
+    output-3.jpg
+  </pre>
+  <img src="./output-3.jpg" width=512/>
+</div>
+
+<hr>
+<div>
+  <h3>Type 4</h3>
+  <ul>
+  <li>A background image</li>
+  <li>Border around each image</li>
+  <li>Text on each image, with rounded background</li>
+  </ul>
+  <pre>
+  convert \
+    \( background.jpg -resize 1024x1024 -crop 1024x768+0+0 \) \
+    \( image1.jpg -bordercolor green -border 10x10 \
+                  -resize 462x518 \
+                  -fill '#0008' -draw 'roundrectangle 12,23 180,60 10,10' \
+                  -fill white   -font AvantGarde-Book  -pointsize 15 -gravity NorthWest -annotate +28+37 'Bewakoof Dress #1' \) -gravity west -geometry +60+0 -composite \
+    \( image2.jpg -bordercolor green -border 10x10 \
+                  -resize 462x518 \
+                  -fill '#0008' -draw 'roundrectangle 12,23 180,60 10,10' \
+                  -fill white   -font AvantGarde-Book  -pointsize 15 -gravity NorthWest -annotate +28+37 'Bewakoof Dress #2' \) -gravity east -geometry +60+0 -composite \
+    output-4.jpg
+  </pre>
+  <img src="./output-4.jpg" width=512/>
+</div>
+
+<hr>
+<div>
+  <h3>Type 5</h3>
+  <ul>
+  <li>A background image</li>
+  <li>Border around each image</li>
+  <li>Text on each image</li>
+  <li>Images are tilted</li>
+  </ul>
+  <pre>
+  convert \
+    \( background.jpg -resize 1024x1024 -crop 1024x768+0+0 \) \
+    \( image1.jpg -background transparent -bordercolor green -border 10x10 \
+                  -resize 462x518 \
+                  -fill '#0008' -draw 'roundrectangle 12,23 180,60 10,10' \
+                  -fill white -font AvantGarde-Book  -pointsize 15 -gravity NorthWest -annotate +28+37 'Bewakoof Dress #1' -rotate  10 \) -gravity west -geometry +30+0 -composite \
+    \( image2.jpg -background transparent -bordercolor green -border 10x10 \
+                  -resize 462x518 \
+                  -fill '#0008' -draw 'roundrectangle 12,23 180,60 10,10' \
+                  -fill white   -font AvantGarde-Book  -pointsize 15 -gravity NorthWest -annotate +28+37 'Bewakoof Dress #2' -rotate -15 \) -gravity east -geometry +30-40 -composite \
+    output-5.jpg
+
+  </pre>
+  <img src="./output-5.jpg" width=512/>
+</div>
+
+<hr>
+<div>
+  <h3>Type 5</h3>
+  <ul>
+  <li>A background image</li>
+  <li>Border around each image</li>
+  <li>Text on each image</li>
+  <li>Text is tilted</li>
+  </ul>
+  <pre>
+    convert \
+      \( background.jpg -resize 1024x1024 -crop 1024x768+0+0 \) \
+      \( image1.jpg -bordercolor green -border 10x10 \
+                    -resize 462x518 \
+                    -fill '#0008' -draw 'rotate -15 roundrectangle -5,63 163,100 10,10' \
+                    -fill white   -font AvantGarde-Book  -pointsize 15 -gravity NorthWest -draw "rotate -15 text 5,80 'Bewakoof Dress #1'" \) -gravity west -geometry +60+0 -composite \
+      \( image2.jpg -bordercolor green -border 10x10 \
+                    -resize 462x518 \
+                    -fill '#0008' -draw 'rotate -15 roundrectangle -5,63 163,100 10,10' \
+                    -fill white   -font AvantGarde-Book  -pointsize 15 -gravity NorthWest -draw "rotate -15 text 5,80 'Bewakoof Dress #2'" \) -gravity east -geometry +60+0 -composite \
+      output-6.jpg
+  </pre>
+  <img src="./output-6.jpg" width=512/>
+</div>
+</body>
+</html>
