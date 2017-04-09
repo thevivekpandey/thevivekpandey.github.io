@@ -36,17 +36,13 @@ We will work with three images. First image is called image1.jpg, second is call
 <hr>
 <div>
   <h3>Type 1</h3>
-  <ul>
-  <li>A background color</li>
-  <li>Border around each image</li>
-  </ul>
+  A background color / Border around each image
   <pre>
   convert \
     \( -define jpeg:size=512x576 image1.jpg -bordercolor green -border 10x10 -thumbnail 462x518 -background skyblue -gravity center -extent 512x576 \) \
     \( -define jpeg:size=512x576 image2.jpg -bordercolor green -border 10x10 -thumbnail 462x518 -background skyblue -gravity center -extent 512x576 \) \
     +append \
-    output-1.jpg
-  </pre>
+    output-1.jpg</pre>
   <img src="./output-1.jpg" width=512/>
 </div>
 
@@ -54,27 +50,21 @@ We will work with three images. First image is called image1.jpg, second is call
 <div>
   <h3>Type 2</h3>
   <ul>
-  <li>A background image</li>
-  <li>Border around each image</li>
+  A background image / Border around each image
   </ul>
   <pre>
   convert \
     \( background.jpg -resize 1024x1024 -crop 1024x768+0+0 \) \
     \( image1.jpg -bordercolor green -border 10x10 -resize 462x518 \) -gravity west -geometry +60+0 -composite \
     \( image2.jpg -bordercolor green -border 10x10 -resize 462x518 \) -gravity east -geometry +60+0 -composite \
-    output-2.jpg
-  </pre>
+    output-2.jpg</pre>
   <img src="./output-2.jpg" width=512/>
 </div>
 
 <hr>
 <div>
   <h3>Type 3</h3>
-  <ul>
-  <li>A background image</li>
-  <li>Border around each image</li>
-  <li>Text on each image</li>
-  </ul>
+  A background image / Border around each image / Text on each image
   <pre>
   convert \
     \( background.jpg -resize 1024x1024 -crop 1024x768+0+0 \) \
@@ -86,8 +76,7 @@ We will work with three images. First image is called image1.jpg, second is call
                   -resize 462x518 \
                   -fill '#0008' -draw 'rectangle 25,25,170,60' \
                   -fill white   -font AvantGarde-Book  -pointsize 15 -gravity NorthWest -annotate +28+37 'Bewakoof Dress #2' \) -gravity east -geometry +60+0 -composite \
-    output-3.jpg
-  </pre>
+    output-3.jpg</pre>
   <img src="./output-3.jpg" width=512/>
 </div>
 
@@ -95,9 +84,7 @@ We will work with three images. First image is called image1.jpg, second is call
 <div>
   <h3>Type 4</h3>
   <ul>
-  <li>A background image</li>
-  <li>Border around each image</li>
-  <li>Text on each image, with rounded background</li>
+  A background image / Border around each image / Text on each image, with rounded background
   </ul>
   <pre>
   convert \
@@ -110,8 +97,7 @@ We will work with three images. First image is called image1.jpg, second is call
                   -resize 462x518 \
                   -fill '#0008' -draw 'roundrectangle 12,23 180,60 10,10' \
                   -fill white   -font AvantGarde-Book  -pointsize 15 -gravity NorthWest -annotate +28+37 'Bewakoof Dress #2' \) -gravity east -geometry +60+0 -composite \
-    output-4.jpg
-  </pre>
+    output-4.jpg</pre>
   <img src="./output-4.jpg" width=512/>
 </div>
 
@@ -119,10 +105,10 @@ We will work with three images. First image is called image1.jpg, second is call
 <div>
   <h3>Type 5</h3>
   <ul>
-  <li>A background image</li>
-  <li>Border around each image</li>
-  <li>Text on each image</li>
-  <li>Images are tilted</li>
+  A background image /
+  Border around each image /
+  Text on each image /
+  Images are tilted
   </ul>
   <pre>
   convert \
@@ -135,9 +121,7 @@ We will work with three images. First image is called image1.jpg, second is call
                   -resize 462x518 \
                   -fill '#0008' -draw 'roundrectangle 12,23 180,60 10,10' \
                   -fill white   -font AvantGarde-Book  -pointsize 15 -gravity NorthWest -annotate +28+37 'Bewakoof Dress #2' -rotate -15 \) -gravity east -geometry +30-40 -composite \
-    output-5.jpg
-
-  </pre>
+    output-5.jpg</pre>
   <img src="./output-5.jpg" width=512/>
 </div>
 
@@ -145,10 +129,7 @@ We will work with three images. First image is called image1.jpg, second is call
 <div>
   <h3>Type 5</h3>
   <ul>
-  <li>A background image</li>
-  <li>Border around each image</li>
-  <li>Text on each image</li>
-  <li>Text is tilted</li>
+  A background image/ Border around each image/ Text on each image/ Text is tilted
   </ul>
   <pre>
     convert \
@@ -161,8 +142,7 @@ We will work with three images. First image is called image1.jpg, second is call
                     -resize 462x518 \
                     -fill '#0008' -draw 'rotate -15 roundrectangle -5,63 163,100 10,10' \
                     -fill white   -font AvantGarde-Book  -pointsize 15 -gravity NorthWest -draw "rotate -15 text 5,80 'Bewakoof Dress #2'" \) -gravity east -geometry +60+0 -composite \
-      output-6.jpg
-  </pre>
+      output-6.jpg</pre>
   <img src="./output-6.jpg" width=512/>
 </div>
 </body>
