@@ -16,6 +16,60 @@ chances of introducing a bug in it become larger.
 <p>Software engineers and managers are well aware of this, and thus, in any reasonable
 sized company, there is an emphasis on testing. Large companies have large
 Quality Assurance departments. In behemoths like Microsoft, strength of testing team
-rivals the strengths of development teams: meaning 
+rivals the strengths of development teams: there is often 1 tester per developer. The code
+is frozen several months before the release, and only bug fixes are allowed after
+the freeze. This is so that the QA department can test the code thoroughly. This speaks
+volumes about how we much confidence we have in the software that we right.
+</p> 
+
+<p>
+The field of software engineering is not alone in being complex: any worthwhile human
+enterprise is complex: it takes months or years to devise experiments for Large Hydron
+Collider, and peer review for path breaking papers in Mathematics takes several months
+too. However, there is something unique about software engineering: at each stage we
+spend large amount of effort in debugging the software, and yet the quality of the
+software that comes out is often less than desirable:
+</p>
+
+<img src = "BSOD_Windows_8.png" />
+
+<p>
+Why is writing software so complex? Can't we be a little more careful and write correct code? The complexity
+of software arises from two fundamental reasons.
+</p>
+
+<p>
+First, humans have a capability to hold a limited amount
+of state in their brains. In his paper "The Magical Number Seven, Plus or Minus Two: Some Limits 
+on Our Capacity for Processing Information",
+George A. Miller, a cognitive psychologist at Princeton University, posits that human beings
+are able to hold between five and nine pieces of information at a time. Give them more than that
+and things start falling apart.
+</p>
+
+<p>
+In the game of chess, this is known as blunder. Novice players often see that their particular piece,
+say Queen, is under attack, and they are fully aware that they need to do something about it. However,
+when they start exploring various possible lines, they sometime tend to forget that their Queen is
+under attack, and make a silly move at the end. This is because we have a limited capacity to hold
+state in our head.
+</p>
+
+<p>
+Computers are giant state machines. The content on the hard disk, the memory, various caches and the 
+processor registers constitutes the state, and various instructions are rules to change the state
+from one to another.
+</p>
+
+<p>
+To manipulate such a giant state machine is very hard, and thus, higher level programming languages
+provide us with a simple, abstracted out state machine. Variables and objects are the states and
+statements operate on those states.
+</p>
+
+<p>
+It remains a state machine nonetheless and human capacity to hold a non trivial state information
+is just not there.
+</p>
 </body>
 </html>
