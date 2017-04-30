@@ -1,0 +1,141 @@
+<html>
+<head>
+  <title> Empty Set is a Set </title>
+  <link rel="stylesheet" type="text/css" href="../style.css"/>
+</head>
+<body>
+<h2>Empty Set is a set</h2>
+<h3>Silence is Nirvana</h3>
+<p>
+We are conditioned to view action as good and inaction as bad. We want "men of action". We are conditioned
+to view material as good and void as bad. We want "men of substance". Noise is for the living and silence
+is the symbol of dead. We carry these traits to creating software.
+</p>
+
+<p>
+<h4>Perfect is the enemy of good</h4>
+At IIT Kanpur, I had a friend, and mid semester examinations were near. We were both studying, and
+my friend got stuck in solving a complicated problem. He asked me, and I was unable to solve the problem.
+I said that the problem was quite difficult and the concept it involved was peripheral to the topics
+we had been taught, and thus it was unlikely to appear in the question paper. Thus, we should just
+ignore the problem and solve other problems.
+</p>
+
+<p>
+My friend protested: "What if it appears tomorrow in the question paper?". 
+</p>
+
+<p>
+What a dumb concern! If it appears tomorrow in the question paper, we will not solve it and we will lose marks. Simple.
+It is not the first time we will lose marks. But, given the limited time that we have, it makes sense to thoroughly
+study those questions which are much more likely to appear, rather than fretting over the corner case.
+</p>
+
+<p>
+Perfect is the enemy of good. If you aim for perefect score, you might end up not even getting a good score.
+</p>
+<p>
+
+<h4>Empty set is a set</h4>
+Empty set is a set. We all know that. Infact, it is such a special set, it has a symbol for itself: phi.
+</p>
+
+<p>
+Zero is a number. We all know that. In case it sounds obvious to you, be humbled by the fact that Romans
+did not have a symbol for that.
+</p>
+
+<p>
+As software engineer, our goal is to deliver systems which work, not to entangle ourselves in needless complexities.
+</p>
+
+<h4>Less is more</h4>
+<p>
+Let's say you are a startup starting with a couple of engineers. Idea behind your startup is to build the website 
+for a SaaS product. Specifically, it is a marketing automation software.
+Marketing person from your client company makes an account on your website, and then he can run online ads
+on Facebook, Google, and several other providers. Your pitch is that users need not manage
+those ad platforms independently. Your platform allows an integrated view of campaigns
+on all those platforms and you can manage ad spend on all those platforms from a single place.
+</p>
+
+<p>
+Your are quite excited about the business potential of your idea and start designing how the platform would work.
+In particular, you figure out user management system. What all features do you need? Let's start making a list:
+
+<ol>
+<li>A user should be able to sign up. When he signsup, he gets an activation link on the email that he provided. 
+When he clicks on the activation  </li>
+<li>A user should be able to sign in using his password.</li>
+<li>If a user forgets his password, he should be able to click on a "Reset password" link. If he clicks on that link,
+he should get a mail with the reset link. Clicking the reset link should take him to a page where he can enter
+his new password twice. If he types same password twice his password should get changed and he should taken to
+the login page.</li>
+<li>We may sometime need to disable the login for a certain user, because perhaps his account is suspended because
+of non payment. If a disabled user tries to login, he should not be allowed to login, but a message should prompting
+him to contact the relevant person should be displayed</li>
+<li>We would wish that a user should be able to invite other users. He needs to enter the email of the invitee. The
+system will send a mail to the invitee, tell him the user that is inviting him. When the invitee clicks on a link,
+he will prompted to enter his password twice. If the passwords match, he is assigned the same account as the person
+who invited him.</li>
+<li>We will also need the concept of roles: an "admin" is the person who has all the privileges, a "user" is a person
+who can only create and run campaigns. The admin can make another user admin. An admin can also remove another user
+from the account.</li>
+</ol>
+</p>
+
+<p>
+The list could go on and on, depending on how creative and experienced the list creator is. 
+You may even think of something like Amazon IAM (Identity and Access Management)
+</p>
+
+<p>
+But, are all the above feature required in your platform? Remember, your idea is just an idea. Your time is better
+spent in writing code for core application rather than worrying about user management. Just the first 3 points
+from above list are good enough to be implemented initially. You do not need many users to share the same account:
+people can just share the account details for your site. When your site does indeed become popular, you can always
+add on more features related to user management.
+</p>
+
+<p>
+Remember, every line of code you write makes the software more bug prone, and needs investment in maintenance. Thus,
+features which we implement require business or technical justification which outweights the maintenance cost.
+</p>
+
+<h4>Yes, the API is ready</h4>
+<p>Often, not doing soemthing is the best way to do it. We once had a client who used to request for some APIs. 
+Can I have an API to download this data? Can I have an API to download that data? We noticed that the client 
+asked for the APIs but never used them once we built them. What is more, till the time the API was built, they
+would follow up with us regularly. If we said it would take 2 weeks to build it, they would try to negotiate
+for a week. But once we delivered the API, they never talked about it. They never used it. We figured that
+now their tech team needs to build the systems to use the API. And their tech team never finished.</p>
+
+<p>So, we adopted a trick. When they asked for an API, we simply took some time (it takes time to build
+something, right?), did nothing, and said that it was done. Our idea was that when they actually tried to
+access the API, they would complain that it is not working, and then we would actually build it. That
+never happened, they never complained.</p>
+
+<h4>Lazy stuff is all over the place</h4>
+<p>
+This "Lazy doing" is all over the place. Ever heard of lazy loading classes? Or lazy evluation? Just in time
+compiliation in JVMs is the process of compiling byte code to machine code just when it is required. So, if
+you are being lazy, you have good company.
+</p>
+
+<h4>Good problem to have</h4>
+<p>
+Once I worked at a startup, where the CTO used to distinguish between a "good problem to have" and a
+"bad problem to have". If customers are using your product very rigorously and are demanding features
+at the rate at which you cannot build them, it is a good problem to have. If your servers are being
+overworked with requests, it is too a good problem to have (which needs to be solved quickly, else the
+customers will go away). However, if you built needless things, which you maintain but nobody uses
+them, it is a bad problem to have.
+</p>
+<h4>Empty set is not the only set</h4>
+<p>
+Lastly note that empty set is not the only set. Not building things is not the final goal. We decide not
+to build some things so that we can build other, important things. Putting things off beyond a certain
+point can be harmful too. That is the topic of one of the next chapters.
+</p>
+</body>
+</html>

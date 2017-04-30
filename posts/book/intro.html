@@ -106,5 +106,42 @@ There is a three pronged strategy that software developers need to follow to del
 <li>Monitor the software for probelms after you deploy it</li>
 </ol>
 </p>
+
+<p>
+First, since software development is bug prone because it is complex, we strive to reduce the complexity
+of the software. Furhter since software is complex because of large state involved, we strive to reduce
+the number of states that we have to deal with.
+</p>
+
+<p>
+The general principle of reducing the number of states that we deal with can be applied at various levels,
+from coding style to architecting the systems. 
+</p> 
+<p>
+While coding, you should strive to have fewer variables
+in the function (each variable is a state), name each variable suitable (to enable better association
+in our brains). Use fewer conditions, because code inside the conditionals has more state information
+to be tracked compared to the code outside the conditionals. Nested ifs are even worse. We will consider
+several techniques to reduce complexity in one of the upcoming chapters.
+</p>
+
+<p>
+At architectural level too, we try to reduce complexity by deduplicating information between components,
+and reusing code across components.
+</p>
+
+<p>
+Secondly, however hard we may try, software that we write will always contain problems, ranging from silly
+mistakes to lack of understanding about the system should work. As we write our code, we also write test
+cases to protect against erroneous future modifications. Whenever we find a bug in the production, we add
+a test case so as to avoid the appearance of the same bug in future.
+</p>
+
+<p>
+Lastly, even after thorough testing may not reveal problems related to the lack of foresight of developers
+about how the code will be actually used. The input provided to the program may be in a different
+format than assumed by the developers, network requests may time out or provide unreasonable responses
+and so on. Thus, it is important that we monitor the behavior of the code in production. 
+</p>
 </body>
 </html>
