@@ -1,0 +1,10 @@
+if data_exists():
+    use_data()
+else:
+    prepare_data()
+    use_data()
+
+should be replaced by
+if not data_exists():
+    prepare_data()
+use_data()

@@ -73,3 +73,9 @@
 - Problem solving
   o Amadahl's law
   o Assumption vs derivations
+
+- Any if needs a justification:
+   if changed:
+      write to disk
+   why not
+   write to disk (unconditionally)
