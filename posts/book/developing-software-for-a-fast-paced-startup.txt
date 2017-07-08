@@ -22,7 +22,7 @@
 
 - Be ready to rewrite
 
-- Deduplication at all levels
+- Deduplication at all levels [DONE]
    o Concept of unity is in all sciences
        - Biologists have found evolution
        - Physicists unify all the forces
@@ -36,7 +36,7 @@
    o Convention: camelCase etc
          dropdown or drop_down
 
-- You do not need Hadoop
+- You do not need Hadoop [DONE]
    Don't blindly copy big companies
       o Google needs map reduce does not mean you do
           Raj said: I am learning hadoop because we will have large amount of data
@@ -79,3 +79,8 @@
       write to disk
    why not
    write to disk (unconditionally)
+
+- Learn your tools
+   - vim editor
+   - linux command line
+   - Do things in new way, in a style
