@@ -24,5 +24,87 @@ You may have a great mind, but to survive, you need to see and hear and feel wha
 you. An average mind with great curiosity is better a great mind with a mild curiosity about what 
 is happening around you.
 </p>
+
+<p>
+I have found that too often, engineers are either too confident that their systems will obviously
+work correctly for all times to come, or have an ostrich attitude: they just don't dare to 
+find if their systems are working correctly, lest they accidentally open a can of worms.
+</p>
+
+<p>
+There was once telephony company. They built software which would route calls made to a customer 
+support number to one of several agents. The agent would have the calling customer's details available 
+on their laptop as they talked to the customer. Once, because of some problem, for a particular
+client, the software stopped working. No customers were getting routed to any agents.
+</p>
+
+<p>
+The client company decided not to report this to the telephony company. They were testing how
+soon will the problem be detected. Well, the problem was never detected, and the client company
+terminated the contract after one month.
+</p>
+
+<p>
+This is the normal state of affairs if one does not actively monitor one's systems.
+</p>
+
+<p>
+There is no silver bullet for monitoring. The guiding principle is: any piece of software should
+produce some easily comprehensible summary output to prove that it is working correctly. This summary
+output would mostly be some numbers, which are easy to chart or detect anomalies in, but it could
+also be in some other format: tables or pictures or flamegraphs, whatever is easier to comprehend.
+</p>
+
+
+<h3>Heartbeat pings</h3>
+<p>
+Probably the simplest thing to track is if your machine is alive and reachable. There are plenty
+of conditions under which your machine may become unreachable. The disk of your system may have
+got full, or your program may have allocated too much memory resulting in thrashing, or your
+cloud service provider may be experiencing network problems. Whatever the reason, end result
+is going to be that your business will get impacted.
+</p>
+
+<p>
+There are plenty of ways to track if the machine is reachable. The most popular way is that the
+machine periodically sends a "heartbeat ping" to a central server. If the central several does
+not receive a heartbeat ping for a threshold amount of time, it raises an alaram (by sending
+a mail or sms or phone call to relevant people).
+</p>
+
+<p>
+I have used Sensu, along with its accompanying UI Uchiwa for this purpose, and it has served
+us satisfactorily. There have been countless occassions when machines have gone down and we
+have detected that very soon and taken action. There are other products in this area. Of them,
+nagios is perhaps the oldest and most versatile, but also harder to set up. The important thing
+is to pick one solution and start using it.
+</p>
+
+<h3>Machine Metrics</h3>
+<p>
+A very generic set of metrics to track are machine metrics. This include metrics like CPU, memory
+and disk utilization.
+</p>
+
+<p>
+If you use a cloud based service provider like Amazon AWS or Google Compute Engine, your service provider
+would provide you a bunch of these metrics, like CPU utilization or network bandwidth utilization. It is 
+a good idea to put an alarm on some of these metrics, which can help you understand when your systems
+are reaching their limits.
+</p>
+
+<p>
+There are some other machine metrics which are impossible or hard to be tracked by your cloud provider.
+Memory utilization is one such metric. If you are like me, you run several disparate programs on one 
+machine, each with its own memory needs, which typically rise as your business grows. Thus, it is
+important to track the cumulative and individual memory utilization of those programs. Linux (and I
+presume, other operating systems) provides utilities using which you can find resident set sizes
+(the size of the memory used for a particular program). You should track resident set sizes of
+your programs over time, and get concerned when it rises.
+</p>
+
+<p>
+Similarly, 
+</p>
 </body>
 </html>
