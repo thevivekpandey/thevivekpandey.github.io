@@ -6,6 +6,8 @@
    o Chanakya style
    o Some imperfection is okay. Long term quality is more important than resolving each short term quality issue.
    o Start with what you have, do what you know
+   o Recognize your constraints. Know what you do not know (utf-8). Do well what you know.
+   o Automation on demand: If something manual is beign done repeatedly, automate it. Eg. file deletion.
 
 - Spend time in learning fundamentals not tools
    o Many people think that some other tool/framwork will solve their problem.
@@ -51,6 +53,7 @@
       o Correctness
       o Performance
       o Logging, quite verbose, even if it imposes good overhead
+      o Need for internal dashboard. What is happenng currently.
 
 - Don't optimise prematurely
 
@@ -84,3 +87,16 @@
    - vim editor
    - linux command line
    - Do things in new way, in a style
+
+- How does Cofounder/CTO work?
+   - My context may different from yours (I am tech heavy, and relatively senior)
+   - Go as deep as your capabilities and time allow
+   - At least skim through the code
+   - Set culture of performance
+   - Know what is happening where
+   - Team building, hiring challenges, practical affair.
+   - Tech work is never done: keep improving the performance, stability, monitoring, deployment, processes.
+
+- Interpersonal skills
+   - No news is bad news. If employee is complaining about systems and code, he is engaged. If he is
+     silent, then he will leave soon.

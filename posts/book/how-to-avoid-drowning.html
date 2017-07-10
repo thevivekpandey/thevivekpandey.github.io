@@ -94,6 +94,22 @@ are reaching their limits.
 </p>
 
 <p>
+There is another use of tracking metrics: if you do an improvement in your software which is expected
+to improve some machine metric: you can easily measure the effectiveness of your improvement. For instance,
+to reduce infrastructure cost, we changed the backend from Python Django to Java Jetty. Since Python
+is faster than Java (in computational workloads), we noted an immediate drop in CPU utilization as depicted
+in following figure. (Note that we did not start with Java to begin with: starting off with Django
+allowed us to develop our backend quickly. Only when the business succeeded to some extent and
+infrastrcuture cost grew did we invest in writing backend in Java. There are other parts of the system
+which continue to be in Python Django.)
+
+<figure>
+<img src = "cpu-utilization.png" height="300"/>
+<figcaption>CPU utilization dropped when we switched from Python Django to Java Jetty</>
+</figure>
+</p>
+
+<p>
 There are some other machine metrics which are impossible or hard to be tracked by your cloud provider.
 Memory utilization is one such metric. If you are like me, you run several disparate programs on one 
 machine, each with its own memory needs, which typically rise as your business grows. Thus, it is
@@ -104,7 +120,86 @@ your programs over time, and get concerned when it rises.
 </p>
 
 <p>
-Similarly, 
+The approach which I have found helpful is to run a program periodically, compute the memory utilization
+(as a fraction of total machine memory) for some predefined programs, and log top 10 of them to
+a database. I use elasticsearch as the database to log such information, but equally effective would
+be to log this to cloudwatch. Then you can plot the utilization over time, and set alarams if the 
+cumulative memory utilization exceeds a threshold. If it does, it is perhaps time to move to a larger
+machine, or better, to optimize your programs so that they consume lesser memory.
 </p>
+
+<p>
+I have found using sensu plugins for tracking disk utilization periodically very helpful, but I imagine
+any other mature solution would also be fine.
+</p>
+
+<p>
+Similarly, disk utilization is another basic metric that you should track. For this too, I have found
+sensu to be very helpful.
+</p>
+
+<p>
+Infact, sensu is very configurable. You can track any metric periodically, and sensu will send you
+a message if that metric goes above or below a threshold.
+</p>
+
+<p>
+Another class of metric which you can track using your cloud provider relates to the number of requests
+your online servers are getting and how well they are responding to those servers. This can be done
+if you use your cloud provider's load balancers, for example AWS ELB (Elastic Load Balancer). I use this
+to track how many requests my servers are receiving per unit. As of time of writing, my graph for
+last 24 hours looks like this:
+
+<figure>
+<img src = "elb-request-rate-24-hours.png" height="300"/>
+<figcaption>Request rate on my servers for past 24 hours</>
+</figure>
+
+These requests are send from mobile apps to QGraph's servers. You expect more requests when users
+are active.  The times are in GMT. As you can see, the peak request rate is from 2 PM GMT to 4 PM GMT. These times
+correspond to 7:30 PM to 9:30 India time, and 9 PM to 12 midnight Singapore time, two of the prominent
+geogrpahies in which our software is used. It makes sense that during India/Singapore evening time,
+the number of requests is the largest. On the other side, request rate hits the bottom at around 11 PM
+GMT which is aroudn 4:30 in India and the country is in deep sleep.
+</p>
+
+<p>
+Following is the request rate on a daily basis: it has been quite consistent over past 2 week, but
+rose around 13 days ago. It was probably related to a new client using product, or else an abnormally
+high activity from one of our existing clients. Perhaps one of them blasted off too many notifications
+to their users.
+<figure>
+<img src = "elb-request-rate-1-day.png" height="300"/>
+<figcaption>Request rate on a daily basis</>
+</figure>
+</p>
+
+<p>
+Similarly you should track the average response times of your servers, like so:
+<figure>
+<img src = "elb-latency.png" height="300"/>
+<figcaption>Latency during last 24 hours</>
+</figure>
+The latency is lower when the request rate is lower. Important thing is that the latency varies from
+10ms to 35ms. So, we should put an alaram if latency grows higher than 50ms (Is the request rate too
+high for servers to handle?) or lower than 5ms (Is a bug in the code causing the response to be returned
+without processing fully?)
+</p>
+
+<p>
+Similarly you can track the number of 5xx responses your server is throwing, and keep an alarm on
+this metric exceeding a certain threshold.
+</p>
+
+<p>
+A related question is: how do you decide the threshold: keep it too aggressive and you will get so
+many mails that everyone will start ignoring the alarams. Keep it too lenient, and you may miss
+the bad event. My suggestion is that you should start somewhere in the middle towards the aggressive
+side and adjust the threshold so that the volume of incorrect mails is tolerable.
+</p>
+
+<h3>Tracking Application correctness</h3>
+Your application should also output summary data indicating its correctnes and performance. Some of this
+data is the in form of metric, which you can track by putting it in elasticsearch or cloudwatch. For instance,
 </body>
 </html>

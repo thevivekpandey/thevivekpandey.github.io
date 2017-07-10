@@ -2,9 +2,10 @@
 body {
   margin: 0 auto;
   max-width: 50em;
-  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-family: "Roboto",Corbel,Avenir,"Lucida Grande","Lucida Sans",sans-serif!important;
   line-height: 1.5;
-  color: #566b78;
+  color: #3e4349;
+  font-size: 14px;
 }
 
 h2 {
@@ -49,4 +50,14 @@ header {
   line-height: 1.2;
   padding: 10vw 2em;
   text-align: center;
+}
+p {
+-webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+}
+
+div.body p, div.body dd, div.body li {
+    line-height: 1.4em;
 }
