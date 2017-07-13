@@ -160,7 +160,8 @@ are active.  The times are in GMT. As you can see, the peak request rate is from
 correspond to 7:30 PM to 9:30 India time, and 9 PM to 12 midnight Singapore time, two of the prominent
 geogrpahies in which our software is used. It makes sense that during India/Singapore evening time,
 the number of requests is the largest. On the other side, request rate hits the bottom at around 11 PM
-GMT which is aroudn 4:30 in India and the country is in deep sleep.
+GMT which is aroudn 4:30 in India and the country is in deep sleep. Periodic spikes are spurts in
+user activity when one of our clients sends notifications to their users.
 </p>
 
 <p>
@@ -189,7 +190,7 @@ without processing fully?)
 <p>
 Similarly you can track the number of 5xx responses your server is throwing, and keep an alarm on
 this metric exceeding a certain threshold.
-</p>
+</p
 
 <p>
 A related question is: how do you decide the threshold: keep it too aggressive and you will get so
@@ -199,7 +200,61 @@ side and adjust the threshold so that the volume of incorrect mails is tolerable
 </p>
 
 <h3>Tracking Application correctness</h3>
+<p>
 Your application should also output summary data indicating its correctnes and performance. Some of this
-data is the in form of metric, which you can track by putting it in elasticsearch or cloudwatch. For instance,
-</body>
+data is the in form of metric, which you can track by putting it in elasticsearch or cloudwatch. For example,
+our device backend puts the data in a Kafka queue from where a fleet of consumers picks up and processes
+the data. It is important for us to be sure if all the data is actually being processed. To ensure this,
+every 5 minutes, each consumer outputs the number of records it processes, and outputs to a file. The file
+is tailed by td-agent, which puts the record in elastic search. On top of elastic search, we use kibana
+to find the aggreate number of requests we process per 5 minutes. Here is that record, broken by 
+the appids (app ids are identifiers for clients). Thus, this chart also tells us which clients are
+sending us most data.
+<figure>
+<img src = "kibana-event-counter.png" height="400"/>
+<figcaption>Number of requests consumed by consumers in last 24 hours, split by app ids</>
+</figure>
+</p>
+
+<p>
+We have at QGraph, a component which puts messages in SQS queue (SQS is a queuing serivce provided
+by Amazon) and and a component which consumers these messages from the queue. The producer writes
+to ElasticSearch the number of messages it is producing to the queue, while the consumer
+writes to ElasticSearch the number of message it is consuming. In a healthy system, the metrics
+better match, like this (ignore slight variations between production vs consumption figures):
+
+<figure>
+<img src = "crunner-vs-message-sender-1.png" height="400"/>
+<figcaption>Number of requests produced vs number of requests consumed</>
+</figure>
+</p>
+
+<p>
+But when one of the systems is not behaving correctly, there will be mismatch in the figures.
+Perhaps the consumer has gone down, and the production figure is smaller than consumption figure.
+Or perhaps the consumer is consuming the same message repeatedly, leading to consumption figure
+being larger than the production figure.
+</p>
+
+<p>
+It is not always possible to have a few metrics corresponding to your systems which you can plot.
+Sometimes, I make a table for a component. At QGraph, we run what we call "campaigns". A 
+campaign is the set of notifications sent to a set of users. A campaign could be customized 
+or uncustomized, it will be sent to a certain number of users, it takes some time to run, and
+consumers some memory.  In our systems, typically a few hundreds of campaigns run every day.  
+I like to track what are various metrics for each campaign that goes through our system, and thus
+I make a table as following:
+<figure>
+<img src = "crunner-dashboard.png" height="300"/>
+<figcaption>For monitoring some metrics, you need a table</>
+</figure>
+</p>
+
+<h4>A picture is worth a thousand words</h4>
+<p>
+
+</p>
+
+<h3>Monitoring performance</h3>
+<body>
 </html>

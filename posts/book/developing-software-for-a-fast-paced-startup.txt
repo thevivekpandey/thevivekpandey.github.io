@@ -54,6 +54,8 @@
       o Performance
       o Logging, quite verbose, even if it imposes good overhead
       o Need for internal dashboard. What is happenng currently.
+      o Monitoring as a first class citizen
+      o A program itself may send the mail
 
 - Don't optimise prematurely
 
@@ -100,3 +102,9 @@
 - Interpersonal skills
    - No news is bad news. If employee is complaining about systems and code, he is engaged. If he is
      silent, then he will leave soon.
+
+- Loosely coupled systems
+   - Systems should use a queue
+   - Use td-agent
+   - If one system goes down, others should not be impacted. Systems have their capacities. If weakest
+     link breaks, other systems should not break.
