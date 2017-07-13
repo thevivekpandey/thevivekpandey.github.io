@@ -251,8 +251,50 @@ I make a table as following:
 </p>
 
 <h4>A picture is worth a thousand words</h4>
-<p>
 
+<p>
+Often, a visual or pictoral representation is far more comprehensible than textual or numeric data.
+</p>
+
+<p>
+At QGraph, we send customised notifications to users of ecommerce apps. We customise the message, 
+the image, the deep link and the payload. The customisation happens in a myriad number of ways: 
+we may customise on the basis of the what products the user has viewed in the past, what products
+we recommend for him, and what products are trending in the market. If we fail to generate a customised
+message, we fall back to sending a default message to the user.
+</p>
+
+<p>
+It is important to check how customisation is happening. Sometimes, due to a bug, all notifications
+may be falling back to the default message. One may try to numerically represent what fraction of
+notifications are customised in what ways, but I found it useful to just generate a webpage that
+visually shows what notifications are going to various users. A quick glance through this page
+is good enough to check if everything is going fine.
+<figure>
+<img src = "notification-viewer.png" height="400"/>
+<figcaption>A pictoral representation of notifications, along with the actual jsons.</>
+</figure>
+</p>
+
+<h3>Other monitoring tools</h3>
+<p>
+There are some other tools which I have used, or else I think should be helpful:
+</p>
+<h4>Pingdom</h4>
+<p>
+Pingdom can ping various URLs that you provide to it, and mail you if some of the URLs are inaccessible.
+Apart from this, it can also track the load time of web pages, and provide how long it takes to download
+various JS files, CSS files, images etc. and theri sizes.It also provides suggestions about how you can decrease your
+page load time. Further, you can find page load times from various locations across the world.
+</p>
+
+<p>
+Using pingdom as a guide, we were able to cut the page load time by two third. A numerical page load time,
+updated automatically, is a wonderful tool to keep yourself motivated to make constant progress.
+</p>
+<h4>Cronitor</h4>
+<p>
+As the functionality and the usage of your product expands, you will invariably have many cron jobs.
 </p>
 
 <h3>Monitoring performance</h3>
