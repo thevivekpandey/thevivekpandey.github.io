@@ -295,8 +295,59 @@ updated automatically, is a wonderful tool to keep yourself motivated to make co
 <h4>Cronitor</h4>
 <p>
 As the functionality and the usage of your product expands, you will invariably have many cron jobs.
+It becomes hard to monitor whether or not those crons are running properly, and finishing in time.
+I have found the service called "Cronitor" useful in this regard. Once you integrate with cronitor
+(which is very easy), it will send you a mail if crons don't run on time or take more than usual time.
 </p>
 
 <h3>Monitoring performance</h3>
-<body>
+<p>
+Another important monitoring is performance monitoring, which is a topic in itself. We will consider
+this topic in a separate chapter.
+</p>
+
+<h3>Logging</h3>
+<p>
+However hard you may try, you can simply assume that most likely you will be deploying a buggy software.
+Particularly in a start up, where product or the feature itself is not fully validated, the focus is
+on the speedy delivery of a software with manageable errors rather than striving for a high quality
+software in the first version.
+</p>
+
+<p>
+Given this reality, while writing software, it is important to write information to logs
+so that when there is a report of software misbehavior one is able to speedily detect the 
+the bug fast.
+</p>
+
+<p>
+Most languages provide logging modules (like log4j in Java), which can be used to log information.
+These modules usually provide various logging levels, like critical, debug, production etc. I like
+to turn on the log level to high levels, unless there is a provable performance impact (See
+"premature optimisation is the root of all evil".
+</p>
+
+<p>
+In some case, I like to create log files with one directory per day (in the format YYYY-MM-DD),
+and several files inside these directories, with one file per unit of work. This way, it is
+easy to zoom in on a specific file when there is a report of malfunction.
+</p>
+
+<h3>Internal Dashboard</h3>
+<p>
+While logging gives you a history of what happened, you also need a dashboard to tell you
+what is happening <i>right now</i>. How many users are logged in currently? What the the
+database queries in progress right now? What is the table size of various database tables
+currently? What all campaigns are running currently, and for how long they have been running?
+</p>
+
+<p>
+Usually, this dashboard is wrapper across various small scripts running an various systems,
+or database functionalities. One could always log in to the relevant system, and run the query.
+However, the presence of a dashboard makes it a one click affair to get information and that
+leads to more frequent consumption and observation of metrics, leading to a better understanding
+of systems.
+</p>
+
+</body>
 </html>

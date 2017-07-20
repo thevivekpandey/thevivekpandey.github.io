@@ -50,9 +50,9 @@
       o Test on production
 
 - Monitoring
-      o Correctness
+      o Correctness [DONE]
       o Performance
-      o Logging, quite verbose, even if it imposes good overhead
+      o Logging, quite verbose, even if it imposes good overhead [DONE]
       o Need for internal dashboard. What is happenng currently.
       o Monitoring as a first class citizen
       o A program itself may send the mail
@@ -108,3 +108,10 @@
    - Use td-agent
    - If one system goes down, others should not be impacted. Systems have their capacities. If weakest
      link breaks, other systems should not break.
+
+- Attitude
+   - There is a tendency to say "there is no way my software can be wrong". The problem though, is 
+     always between the chair and the monitor.
+   - Do just enough in first iteration, need not be perfect, and keep the logging etc on to detect bugs
+   - Don't keep trying without any clue. Don't delay giving bad news. Keep everyone updated. Do a bad work
+     now that ponder aimlessly and then do a bad work in a long time.
