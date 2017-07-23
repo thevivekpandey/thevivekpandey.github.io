@@ -1,3 +1,7 @@
+- This book talks about nuts and bolts of tech.
+   o There is plenty of material related to how to ideate, and how to iterate.
+   o Born mostly out of personal experience
+
 - Be pragmatic
    o Sushank asked: what if this question comes in exam? [DONE]
    o You should own your house, your house should not own you
@@ -53,8 +57,8 @@
       o Correctness [DONE]
       o Performance
       o Logging, quite verbose, even if it imposes good overhead [DONE]
-      o Need for internal dashboard. What is happenng currently.
-      o Monitoring as a first class citizen
+      o Need for internal dashboard. What is happenng currently. [DONE]
+      o Monitoring as a first class citizen [DONE]
       o A program itself may send the mail
 
 - Don't optimise prematurely

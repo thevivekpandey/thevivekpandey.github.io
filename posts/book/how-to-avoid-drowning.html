@@ -55,6 +55,27 @@ output would mostly be some numbers, which are easy to chart or detect anomalies
 also be in some other format: tables or pictures or flamegraphs, whatever is easier to comprehend.
 </p>
 
+<h3>Monitoring as first class activity</h3>
+
+<p>
+A "First class activity" is an activity that you take conscious effort to do, not as a side
+effect of some other activity, but as an activity in itself.
+</p>
+
+<p>
+Writing code clearly is a first class activity. Testing too gets a lot of press, with acronyms
+like TDD (Test Driven Development), and several frameworks and tools to help out in testing.
+</p>
+
+<p>
+Correctness monitoring and performance monitoring are similarly the activities that you need
+to be concerned about. Sometimes engineers are reluctant to work on monitoring because it seems
+to them that once the code is written and tested well, it will obviously work. Little do they
+know that testing often misses cases that happen in real life. Unanticipated user inputs
+(you coded up only for ascii characters and user inputs a chinese character), network failures,
+disk getting full, swapping in systems some of the problems that may unexpectedly crop up
+in production systems.
+</p>
 
 <h3>Heartbeat pings</h3>
 <p>
@@ -349,5 +370,19 @@ leads to more frequent consumption and observation of metrics, leading to a bett
 of systems.
 </p>
 
+<p>
+You can also use this dashboard to take actions in your system: modifying or deleting a user,
+modifying or deleting an order, overriding some settings and so on. My dashboard consists 
+of lots of links which take me to other dashboards of kibana or various tools that we use,
+and various buttons that provide specific information. This is what it looks like:
+
+<figure>
+<img src = "internal-dashboard.png" height="500"/>
+<figcaption>Internal Dashboard</>
+</figure>
+
+Admittedly, the UI is not great, but in internal tools, it is functionality and usability
+that counts.
+</p>
 </body>
 </html>
