@@ -95,13 +95,19 @@
    - Do things in new way, in a style
 
 - How does Cofounder/CTO work?
-   - My context may different from yours (I am tech heavy, and relatively senior)
+   - My context may different from yours (I am tech heavy, and relatively senior) [DONE]
    - Go as deep as your capabilities and time allow
    - At least skim through the code
    - Set culture of performance
    - Know what is happening where
-   - Team building, hiring challenges, practical affair.
+   - Team building, hiring challenges, practical affair. Everyone says: we hire the best. 
+     But not everyone can hire the best. We need to get excellent product out of well meaning
+     but practically not that bright set of people. Which is fine, because no one is perfect.
+     If your company is solving mundane problems, it is totally fine. You would need top
+     notch brains if you are working on cutting edge research, which 95% of the companies are not.
    - Tech work is never done: keep improving the performance, stability, monitoring, deployment, processes.
+   - People have different skill sets: some do crappy work fast, some do good work slow. Some 
+     can explore technologies
 
 - Interpersonal skills
    - No news is bad news. If employee is complaining about systems and code, he is engaged. If he is
@@ -115,7 +121,31 @@
 
 - Attitude
    - There is a tendency to say "there is no way my software can be wrong". The problem though, is 
-     always between the chair and the monitor.
-   - Do just enough in first iteration, need not be perfect, and keep the logging etc on to detect bugs
+     always between the chair and the monitor. [DONE]
+   - Do just enough in first iteration, need not be perfect, and keep the logging etc on to detect bugs [DONE]
    - Don't keep trying without any clue. Don't delay giving bad news. Keep everyone updated. Do a bad work
-     now that ponder aimlessly and then do a bad work in a long time.
+     now that ponder aimlessly and then do a bad work in a long time. [DONE]
+   - Don't max out. Have continuous improvement. In one interview, some one said that there was nothing new to learn
+     in android development. [DONE]
+
+- Don't take shortcuts.
+    We stored dropdown fields like:
+    {'e1': [p1, p2, p3],
+     'e2': [p4, p5, p6]      
+    }
+   We needed to have types, so we should do like this:
+    {
+       e1: {
+          p1: t1, p2: t2, p3: t3
+       }
+       e2:
+    }
+
+    Sagar said that code modification wise it was simpler to have:
+    {
+      e1: [{p1: t1}, {p2: t2}, {p3: t3}]
+    }
+
+    But this is bad idea. This is how evolution works. But we can do better.
+
+- https://projectm-online.com/investing/why-maintenance-means-more-to-peoples-lives-than-innovation/

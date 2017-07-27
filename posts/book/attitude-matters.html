@@ -6,6 +6,148 @@
 <body>
 <h2>Attitude Matters</h2>
 <p>
+This chapter is a miscellaneous collection of attitude related problems and deficiencies that I
+have encountered in various engineers.
+</p>
+
+<h3>Can't be my problem</h3>
+<p>
+Sometimes, if you report a problem to an engineer, his first reaction is that it cannot 
+be a problem with his code, because he is sure that he had written correct code.
+</p>
+
+<p>
+Often times, when you get a problem description, one of many components could be responsible
+for the problem, and it is hard to immediately point out why. If the engineers responsible
+for one of those components is sure that his component is correct and does not have an
+open mind in discussions, it makes the environemnt a bit toxic.
+</p>
+
+<p>
+In such situations, I find it useful for the rest of the team to do investigation. If the
+root cause of the problem is in some other component, then the confidence of the engineer
+in question was justified. However, if on further investigation, the component in question
+is implicated, you should make it a point to tell the engineer that his confidence was
+misplaced. I have seen that after one such incident, the engineer exhibits more humility.
+</p>
+
+<p>
+In a good team, all the members understand there are going to be problems with the components
+they have written, and they are always alert to uncovering problems in them. Even if they hear
+of a problem in which their component is not implicated (yet), they are always scanning how
+their component could be somehow responsible for the problem.
+</p>
+
+<p>
+A more severe manifestation fo "Can't be my problem" is when a developer, during the process
+of development, starts blaming the universe (the computer) for his software not working. He
+would show you his (not particularly comprehensible) code, run it, display the wrong answer
+and raise up his hand, frustrated by the universe conspiring against him.
+</p>
+
+<p>
+In such cases you should tell him that the problem always lies between the keyboard and the chair.
+</p>
+
+<p>
+I once had a friend whose writing Java code, and the compiler was throwing a single compilation
+error that some class did not define a certain function which was being used. The class under
+question was the standard Java String class. My friend looked at the API refrence available online
+and found that he was correctly spelling the function name. He tried other functions of the class
+and they were working as expected. At this, he started he came up with a weird hypothesis:
+"The code for class String has been written by an intern at Sun Microsystems, and that intern
+has made a typo while writing the function. Thus, while the documentation is correct (we did not
+know then, in our sophomore years, that documentation can be generated automatically from the code
+and code annotations), the actual function name as a typo in it." Then, my friend started trying
+various misspellings of the function name, hoping that he would uncover the actual function name
+used by the hypothetical intern.
+</p>
+
+<p>
+Several hours later of chasing the intern, the problem was found to be between the keyboard and
+the chair: my friend was making a spelling mistake in his code.
+</p>
+
+<h3>It's everybody's problem</h3>
+<p>
+While some engineers throw up at the first hurdle, sure in their minds that "it is someone else's
+problem", there are others who keep on working, suffering silently without making progress.
+</p>
+
+<p>
+If something is not happening within reasonable time, you should report to your manager about it.
+This is different from blaming someone for the delay. You are simply informing that something
+is taking more time than expected. Perhaps your manager may know a trick to solve the problem
+quickly. Or the problem may be inherently difficult in a way that was overlooked by everyone else,
+and given the new information, it may not make sense to solve the problem at all.
+</p>
+
+<p>
+Don't delay giving bad news to your manager. If something cannot happen, tell that sooner so that
+an alternative is found sooner than later. Admitting defeat now is better than admitting defeat
+a few days later.
+</p>
+
+<p>
+I once had a friend at University of Illinois. We often used to have arguments on various
+topics about life, computer science, religion and so on. Slowly I started to feel that I am
+losing most of the times. I started to observer our arguments more closely. I found that my winning
+rate was pretty good. However, in the arguments in which I won, he gave up quickly (as soon
+as he realised he was losing), and thus those arguments lasted for a short time. However, I 
+always gave him a good fight, even when I was losing an argument. Hence, in the long run,
+most of the time I was engaged in a losing argument. Thus, it appeared that I mostly lost the
+arguments, when in reality the record was pretty even.
+</p>
+
+<p>
+Cutting your losses is a good strategy. Give up soon when it is clear that you cannot win.
+But then you should know how to distinguish between the cases when the situation is hopeless
+and the situation where you just need to fight a bit more. And that can come only with
+experience.
+</p>
+
+<h3>Don't max out</h3>
+<p>
+One difference between good and not good engineers that I have seen is that not good engineers
+"max out" too soon.
+</p>
+
+<p>
+I once interviewed an android developer for our company. When asked why he wanted to leave is
+current company, he replied that "there was nothing left to do" in the android app of the
+current company.
+</p>
+
+<p>
+That was clearly untrue: the app was mediocre at best: its look and feel could be improved,
+its usability could be improved and its performance could be improved. However, the candidate
+thought that there was nothing else to be done, since a raw product was out in the place.
+</p>
+
+<p>
+On the other hand, we had a super engineer at VMware who, every few days, would submit a new
+change to the Virtual Machine Monitor (the core virtualization code). Each checkin would
+improve the performance of our product in a minor way, and he would submit comparision like
+this:
+<table border="1">
+<tr><td></td><td>Earlier</td><td>Now</td></tr>
+<tr><td>Component A</td><td>12.2</td><td>9.6</td></tr>
+<tr><td>Component B</td><td>5.6</td><td>5.9</td></tr>
+<tr><td>Component C</td><td>2.1</td><td>2.1</td></tr>
+<tr><td>Component D</td><td>0.8</td><td>0.9</td></tr>
+<tr><td>Total</td><td>20.7</td><td>18.5</td></tr>
+</table>
+Gain: 2.2 cycles per invocation.
+
+<br>
+Someone remarked that the said engineer improves performance one cycle at a time. But over time,
+it adds up, and VMware was the leader in hypervisor performance.
+</p>
+
+<p>
+The lesson to be learnt it not be satisfied with status quo. A good engineer is always on lookout
+to improve the quality, performance, debuggability, maintanability, deployability, reliability of
+his systems. He never maxes out.
 </p>
 </body>
 </html>

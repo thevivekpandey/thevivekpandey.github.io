@@ -1,0 +1,90 @@
+<html>
+<head>
+  <title>How to be a good CTO?</title>
+  <link rel="stylesheet" type="text/css" href="../style.css"/>
+</head>
+<body>
+<h2>How to be a good CTO?</h2>
+<p>
+First things first: in a startup of the size that we concerned with in this book
+(perhaps 3-4 to 30-40 technology team size), CTO is either the technical co founder,
+or else a person hired by the early stage company to head the technology team. He
+may also be referred by VP Engineering, which emphasizes the managerial role,
+and is usually suitable when the team size is on the higher side of the above
+mentioned ranges.
+</p>
+<p>
+The title of the chapter is presumptive: it assumes that I am a good CTO. But how can I 
+say that? If there were a way to measure it quantitatively, like you get 70 out of 100
+in CTO-goodness, then I would have tried to prove myself. But in absence of such a scale,
+we will just assume the above statement because I am the writer of this book.
+</p>
+
+<p>
+Note that the opinions expressed here are predicated to my experience: I have served
+as a CTO or CTO-like role in a companies where technology team sizes has varied from 5
+to 20 people. The companies have employed engineers which I would rate as 90 percentilers:
+they are clearly above average, but by no means superstars. Further, the work my companies
+have done is fairly tech intensive: dealing with billions of requests per day, have processed
+terabytes of data in Hadoop and have written sub millisecond response time servers, but
+they are by no means on the cutting edge of computer science: we have not coded up
+self driving cars or brand new operating systems or compiler. Further, since I have worked
+in ad-tech and related fields for long time, speed of development and savings in 
+infrastructure costs have been important considerations. While the software needs to be
+accurate, accuracy concerns are not as pressing, as they would be, for example when
+you are coding up a medical equipment or self driving car. Read the rest of the chapter
+with above caveats in mind.
+</p>
+
+<h3>Go as deep as your capabilities allow</h3>
+<p>
+A common dilemma for the CTO is: should you be involved in the ground level coding, or
+should you rather zoom out and look at the big picture?
+</p>
+
+<p>
+My suggestion is for the CTO to necessarily look at the big picture (If you don't, who
+will?), and be involved in ground level coding to extent which your capabilities allow.
+</p>
+
+<p>
+In any startup that is off the ground, and has more than a couple of engineers,
+there will inevitably be a large number of components. At my company we have a bunch
+of SDKs: an android SDK, an iOS SDK and a web SDK, written respectively in Objective C,
+Java and javascript. Our data ingestion system is written in Java Jetty and core
+backend is written Java and Python. We use React + Redux for our web app and use
+Python Django web server as the backend for UI. 
+</p>
+
+<p>
+It is not possible to get a deep knowledge of each of the components. Indeed there
+are people who specialize in a single component: there are frontend developers who
+will argue about merits and demerits of using webpack, and there are Python
+gurus who will talk about Python's metaclasses and reflection capabilities.
+</p>
+
+<p>
+I think, to the extent your capabilities allow, you should try to learn everything.
+Being a full time engineer, it is good to learn various aspects of Computer Science:
+from backend to frontend to deployment to unit testing and continuous integration.
+It is hard task, but you have signed up for it. As they say, delegation is the art of
+second best.
+</p>
+
+<p>
+At some point, you will max out and no longer be up to date on all the aspects. At
+that point you should continue being involved in fewer components. Perhaps you
+can stop tracking less critical components, or the components which you do not know 
+well any way, or if there is a person who can handle it better than you.
+</p>
+
+<h3>Delegate</h3>
+<p>
+Previous section may make it seem that I am against delegation, but that is not so.
+There is a certain stage before which delegation is premature (when you are small,
+you better do everything yourself, and set the culture about the way things are done).
+But you as an individual have a limited capacity and you need to learn to delegate
+as you grow.
+</p>
+</body>
+</html>
