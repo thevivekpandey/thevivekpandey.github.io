@@ -127,6 +127,7 @@
      now that ponder aimlessly and then do a bad work in a long time. [DONE]
    - Don't max out. Have continuous improvement. In one interview, some one said that there was nothing new to learn
      in android development. [DONE]
+   - Don't bring ego in. It is for people who feel unsafe. Set the example by not bringing ego in.
 
 - Don't take shortcuts.
     We stored dropdown fields like:
