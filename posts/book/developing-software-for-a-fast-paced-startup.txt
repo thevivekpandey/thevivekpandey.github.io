@@ -104,7 +104,7 @@
      But not everyone can hire the best. We need to get excellent product out of well meaning
      but practically not that bright set of people. Which is fine, because no one is perfect.
      If your company is solving mundane problems, it is totally fine. You would need top
-     notch brains if you are working on cutting edge research, which 95% of the companies are not.
+     notch brains if you are working on cutting edge research, which 95% of the companies are not. [DONE]
    - Tech work is never done: keep improving the performance, stability, monitoring, deployment, processes.
    - People have different skill sets: some do crappy work fast, some do good work slow. Some 
      can explore technologies
@@ -112,8 +112,8 @@
    - Hiring
      o Hire only the best? [DONE]
      o How much does experience matter? [DONE]
-     o What interview questions to ask?
-     o Don't overhire even if you get money.
+     o What interview questions to ask? [DONE]
+     o Don't overhire even if you get money. [DONE]
 
 - Interpersonal skills
    - No news is bad news. If employee is complaining about systems and code, he is engaged. If he is
