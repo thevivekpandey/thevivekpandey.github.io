@@ -96,10 +96,10 @@
 
 - How does Cofounder/CTO work?
    - My context may different from yours (I am tech heavy, and relatively senior) [DONE]
-   - Go as deep as your capabilities and time allow
-   - At least skim through the code
+   - Go as deep as your capabilities and time allow [DONE]
+   - At least skim through the code [DONE]
    - Set culture of performance
-   - Know what is happening where
+   - Know what is happening where [DONE]
    - Team building, hiring challenges, practical affair. Everyone says: we hire the best. 
      But not everyone can hire the best. We need to get excellent product out of well meaning
      but practically not that bright set of people. Which is fine, because no one is perfect.
@@ -108,6 +108,12 @@
    - Tech work is never done: keep improving the performance, stability, monitoring, deployment, processes.
    - People have different skill sets: some do crappy work fast, some do good work slow. Some 
      can explore technologies
+   - Should you press the people to work hard? How much to press?
+   - Hiring
+     o Hire only the best? [DONE]
+     o How much does experience matter? [DONE]
+     o What interview questions to ask?
+     o Don't overhire even if you get money.
 
 - Interpersonal skills
    - No news is bad news. If employee is complaining about systems and code, he is engaged. If he is
@@ -128,6 +134,11 @@
    - Don't max out. Have continuous improvement. In one interview, some one said that there was nothing new to learn
      in android development. [DONE]
    - Don't bring ego in. It is for people who feel unsafe. Set the example by not bringing ego in.
+
+- Interacting with clients
+   - Reply quickly. Keep udpated.
+   - Customer is always right
+   - Reply on the same medium, so that there is a record
 
 - Don't take shortcuts.
     We stored dropdown fields like:
