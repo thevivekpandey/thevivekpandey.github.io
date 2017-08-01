@@ -108,7 +108,7 @@
    - Tech work is never done: keep improving the performance, stability, monitoring, deployment, processes.
    - People have different skill sets: some do crappy work fast, some do good work slow. Some 
      can explore technologies
-   - Should you press the people to work hard? How much to press?
+   - Should you press the people to work hard? How much to press? [DONE]
    - Hiring
      o Hire only the best? [DONE]
      o How much does experience matter? [DONE]
@@ -136,7 +136,7 @@
    - Don't bring ego in. It is for people who feel unsafe. Set the example by not bringing ego in.
 
 - Interacting with clients
-   - Reply quickly. Keep udpated.
+   - Reply quickly. Keep udpated. [DONE]
    - Customer is always right
    - Reply on the same medium, so that there is a record
 
