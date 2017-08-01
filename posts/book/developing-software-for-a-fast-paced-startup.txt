@@ -161,3 +161,9 @@
     But this is bad idea. This is how evolution works. But we can do better.
 
 - https://projectm-online.com/investing/why-maintenance-means-more-to-peoples-lives-than-innovation/
+- Monitoring:
+   Best is if developer finds problem
+   Else tech team
+   Else business team
+   Else the customer
+   Else no one
