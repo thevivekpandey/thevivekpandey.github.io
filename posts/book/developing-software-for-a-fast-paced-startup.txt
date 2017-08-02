@@ -135,10 +135,10 @@
      in android development. [DONE]
    - Don't bring ego in. It is for people who feel unsafe. Set the example by not bringing ego in.
 
-- Interacting with clients
+- Interacting with clients [DONE]
    - Reply quickly. Keep udpated. [DONE]
-   - Customer is always right
-   - Reply on the same medium, so that there is a record
+   - Customer is always right [DONE]
+   - Reply on the same medium, so that there is a record [DONE]
 
 - Don't take shortcuts.
     We stored dropdown fields like:
@@ -161,6 +161,7 @@
     But this is bad idea. This is how evolution works. But we can do better.
 
 - https://projectm-online.com/investing/why-maintenance-means-more-to-peoples-lives-than-innovation/
+
 - Monitoring:
    Best is if developer finds problem
    Else tech team
