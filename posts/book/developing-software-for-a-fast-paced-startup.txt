@@ -168,3 +168,7 @@
    Else business team
    Else the customer
    Else no one
+
+- Note that customer does not care about software quality. So, while you should strive to have the
+  best quality that you can have, don't stop because of that.
+- Generalists keep you in matches, specialists win you matches.

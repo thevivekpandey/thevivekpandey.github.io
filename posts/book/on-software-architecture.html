@@ -49,7 +49,176 @@ ad.
 </p>
 
 <p>
-The engineer 
+The product management team
+gave the requirement that there will be a "base bid",
+and then according to several rules, base bid will be multiplied by some factors. So,
+perhaps if the user was in California, base bid will be multiplied by 3, while if he was
+in Baghdad, it would be multipled by 0.3. We will arrive at final bid value after several
+multiplications.
+</p>
+
+<p>
+The engineer building the bidding engine was very enthusiastic. 
+He saw that the sepcifications can modeled by a list of "conditions". Each condition needs
+to be evaluated in one of the buckets. For example, the condition would be "country of the
+user" and various buckets would be "India", "USA", "France", "Others". Or else condition
+would be "Income group of the user", and various buckets would be "HNI, Affluence, middle class,
+poor"
+</p>
+
+<p>
+Our engineer decided to model conditions in a class called "Condition". He realized that there
+could be several types of conditions: in some conditions, each bucket was a range of
+values (e.g. for age, buckets could be: less than 18 years, between 18 and 25 years, between 25
+and 45 years, more than 45 years). Or they could be discrete valued (like gender being male
+or female). Or they could be ordered string match (A user falls in the first bucket that he matches)
+He decided to have "Condition" as an abstract super class and several specific condition
+classes inherit from it.
+</p>
+
+<p>
+So far so good. Above abstraction faithfully models the requirements. But being enthusiastic and
+bright, our engineer tried to foresee what the product team would demand in future. The idea
+was to code such that upcoming requirements are also coded up and require no futher changes
+to the code.
+</p>
+
+<p>
+He decided that in the future, each condition may have sub conditions. In other words, some
+conditions would be applicable subject to some other conditons falling in specific bucket.
+Perhaps we would apply age filter only if the user was from United States.
+</p>
+
+<p>
+To model this hypotetical need, he decided that each condition class will contain references
+to an array of array of subconditions. There was one array of sub conditions corresponding
+to each bucket of the condition. This complicated the whole code significantly and increased
+the development time.
+</p>
+
+<p>
+Our engineer remained for around 1 year after coding this up, and there was never a need
+for sub conditions. When new engineers were required to understand the component, he
+admitted that it was an overengineered peace of software and the newer engineers never
+needed to learn how the sub-conditions worked. When the original engineer moved out,
+there was no one in the company who understood sub-conditions.
+</p>
+
+<p>
+A few years later, the code was migrated to Java (the original code was in PHP), and
+sub-conditions were not required to be migrated.
+</p>
+
+<p>
+Different requirements from bidding engine did arise. However, they were along the lines
+which the original engineer had though. They were completely different and were coded up
+as they arose.
+</p>
+
+<p>
+The second story relates to the case when we needed to build a data ingestion system.
+The problem statement was simple: we had to build an HTTP server which received data
+and stored it in relevant database and relevant table in MongoDB.
+</p>
+
+<p>
+We were just starting out and had no visibility into scaling issues that may arise in
+future. We did not try to predict them either. We wrote a simple server in Django
+REST framework, which connected to MongoDB on each request and fired a query to
+store the data.
+</p>
+
+<p>
+We saw that in times of peak load, data ingestion was not working properly: it was
+taking too long to connect to MongoDB and requests were timing out. This was leading
+to data loss. We realized that we needed to have a message queue between our Django
+server and mongo db. A message queue can give us much higher throughput while writing
+data because it is the only thing that it does. We decided to use Kafka as the message
+queue. Now Django server writes to Kafka and there is a kafka consumer which inserts
+data to MongoDB. Now, at the time of peak loads, it does take a few minutes for data
+to get inserted to mongo, but at least there is no data loss.
+</p>
+
+<p>
+While looking at mongo logs, we saw that connection to mongodb was being repeatedly
+opened and closed by kafka consumer. On some reading on internet we came to know about
+connection pooling. We realized we needed to have a connection pool rather than open
+a new connection per request. We implemented this, and the CPU utilization of our
+mongo db servers went down a little.
+</p>
+
+<p>
+Things again went fine for a few months, when we started facing a fresh problem. MongoDB
+was not only ingesting the information, but other systems fired MongoDB queries
+for other purposes.
+</p>
+
+<p>
+Again, we realized that bulk operations to mongo were more performance that individual
+operations. We wrote a module, called mongo query aggregator, which provide similar
+interface to other mongo drivers, but which aggregated the write queries and fired
+them to mongo either when threshold number of queries were collected or when a threshold
+amount of tasks (few hundres of milliseconds) had elapsed. This again reduced CPU
+utilization of mongo and the system became reponsive again.
+</p>
+
+<p>
+A few months later, as the ingestion rate and query rate increased again we started
+having similar problems. Incidence of such problems rose from very infrequent (once 
+four weeks) to mildly frequent. (once a week). At the time of large read queries,
+the ingestion system would be too slow and it would take a lot of time for data
+to reach from kafka to MongoDB.
+</p>
+
+<p>
+We realized that a lot of data that we were getting was repeated data. For a given
+user, we got his profile information as many times as he did some action. The profile
+information that we got contained information like the name, email or the city
+of the user. This information tends to change very slowly, but we wrote it to MongoDB
+repeatedly. To reduce the query rate to MongoDB, we put an aerospike in front of
+MongoDB. As we wrote some information to MongoDB, we also wrote it to aerospike. However,
+we writing an info to MongoDB, we checked in aerospike if the same information
+was present already. If yes, we did not bother to write the information in MongoDB.
+This optimization reduced the MongoDB queries by around 60%.
+</p>
+
+<p>
+Along the way we also realized that not all data is equal. For some types of data
+it was important to get it to MongoDB as soon as possible. Other type of data could wait.
+Thus, we started from putting data in two different queues from Django framework. When
+there was delay in gettin data to Mongo, we could shutdown the consumption of lower
+priority queue, thus ensuring that high priority data reaches mongo on time. Once the
+peak traffic was over, we would start consuming the lower priority queue.
+</p>
+
+<p>
+As the traffic increased, we also realized the django was not most efficient
+framework to be used. The number of servers employed were increasing with increasing
+load and we believed latencies could we lower. We migrated this system to Java
+Jetty and brought down our infrastructure cost as well as reduced the latencies.
+</p>
+
+<p>
+While our server was written in Django, nginx was the front facing server which routed
+request to django via unicorn. When we shifted to Jetty, nginx continued to be front
+facing server. However, we realized that we no longer needed nginx, since jetty could
+serve well as front facing server. Thus, we removed nginx from our system.
+</p>
+
+<p>
+Data ingestion system began with a simple 30 line django code, and by now it has
+expaneded to several thousands of lines code, with multiple systems running on 
+various machines. When we began we did not know how the system will evolve, and
+we did not try to predict the problems that would happen. However, we kept our
+eyes and ears open and solved the problem as they came.
+</p>
+
+<p>
+The key is to be continually evaluating the systems for current performance bottlenecks
+and how they could be resolved. You need to know what the current limitations of
+systems and how they are currently impacting your uses. Then you take care to solve
+the problems before they become too severe.
+
 </p>
 </body>
 </html>
