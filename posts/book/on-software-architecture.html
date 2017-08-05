@@ -317,5 +317,44 @@ or
 <pre>
 def my_function(1)
 </pre>
+
+<p>
+In the code the I wrote, optional parameters need strong justification. They should be optional
+in the sense that correct behavior would be guaranteed even if some of the optional parameters
+are missed. Perhaps they are hint for some performance optimization, or some very unusual
+settings.
+</p>
+
+<p>
+Once in a code that I wrote, the default values were merely some "standard" values. A non standard
+value needed to be explicitly passed as argument, in absence of which standard value was used.
+As time passed and the product evolved, the use case for one of the non standard value surpassed
+the use case of the standard value. A new developer reasonable assumed that since the parameter
+is optional, the usual (early non-standard) value would be used as default. This led to a nasty
+bug, and a learning from the mistake, we abolished developers using default values unless there
+was a strong justification.
+</p>
+
+<p>
+The situation is a little different when writing components which face external world. Even if some external
+client is not honoring the interface, not performing the functionality may be detrimental to your
+business. In such cases, you may wish to log the error, and let the client know, but continue
+the functionality for the time being. A typical example is Google search engines. If you type
+in something to search and Google believes you probably mean something else (may be because of a typo), 
+it gives you search results according to what it thought you mean, and also lets you know that.
+So, Google is forgiving about the errors that external agent makes.
+</p>
+
+<p>
+What is internal and what is external may depend on your company size and team dynamics. For a small
+team of 4-6 people, all the company's code may be internal and outside code (libraries, API users)
+would be external. For a company with many large teams, each working on a separate component, code
+within each team could be internal, while code developed by two different teams could be regarded
+as external.
+</p>
+
+<p>
+Like all other ideas, they are general guideliness and not hard rules.
+</p>
 </body>
 </html>
