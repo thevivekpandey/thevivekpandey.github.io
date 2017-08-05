@@ -72,8 +72,12 @@
 - Need a strong technology leader
    o Rewriting/Refactoring has a up front cost
 
-- Be lenient with errors from external paraties, but be very strict with errors from
+- On softare architecture
+  o Be lenient with errors from external paraties, but be very strict with errors from
   internal components. Crash your components if internal data is not in correct format.
+  o Who should adjust: UI Or backend. The problem is disharmony of human thinking and some component
+    needs to adjust
+  
 
 - View software as an evolving organism, not as an instrument. Then you will be God. 
   Even God's creations are not perfect. Structure, function and evolution are the axes
@@ -114,6 +118,7 @@
      o How much does experience matter? [DONE]
      o What interview questions to ask? [DONE]
      o Don't overhire even if you get money. [DONE]
+   - How should teams be organized
 
 - Interpersonal skills
    - No news is bad news. If employee is complaining about systems and code, he is engaged. If he is
@@ -172,3 +177,6 @@
 - Note that customer does not care about software quality. So, while you should strive to have the
   best quality that you can have, don't stop because of that.
 - Generalists keep you in matches, specialists win you matches.
+- Engineers like it when you are innovating and use new tools
+- If someone asks for some data, revise before you give it to them. It like revising before submitting score sheet in examinations. Bhuppi did not partial marks in MOS.
+- Don't have an ostrich attitude. This is very tempting in face of difficulties. I once had a closet with cockroaches. I never opened it again.

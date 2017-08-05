@@ -218,7 +218,104 @@ The key is to be continually evaluating the systems for current performance bott
 and how they could be resolved. You need to know what the current limitations of
 systems and how they are currently impacting your uses. Then you take care to solve
 the problems before they become too severe.
-
 </p>
+
+<h3>Soft on external components, hard on internal components</h3>
+<p>
+In any non trivial system, there are various components interacting with each other
+in various combinations. Invariably, some of these components will misbehave. How
+should other components respond to a misbheaving component?
+</p>
+
+<p>
+Your system's components also interact with the world outside: perhaps you have
+provided an API which your customers can use. Your customer code can awry and
+starting sending you requests in an inappropriate format. What should you do then?
+</p>
+
+<p>
+We can handle misbehaving components in two ways: one is that we are forgiving about
+the input from the other component and try to do as good
+a job as possible. A web browser is a great example of this: even if you give it
+a malformatted HTML, it won't just refuse to render the web page. It will render
+in the best possible way possible given the invalid document that you gave.
+It is like a friend who tries to help you out despite your shortcomings.
+</p>
+
+<p>
+On the other hand, we can be merciless: unless other components talk to us in
+a rigorously predefined language, we will refuse to function. We will crash
+or complain. A typical example of such an approach is compiler. Even if you
+miss a single semi colon, it will refuse to compile the program.
+</p>
+
+<p>
+Examples of browser and compiler are two ends of a complete spectrum of the
+strategies that you can use to deal with incorrect inputs. The "right" approach
+depends on your use case, and it is important to get it right. Otherwise
+you may end up with a language like PHP where
+</p>
+
+<pre>
+"b" + "a" = "ba"
+but 
+"10" + "a" = 10
+and
+"10" + 10 = 20
+</pre>
+<p>
+causing all sorts of confusions.
+</p>
+
+<p>
+My strategy is to have internal components be harsh on each other: you decided on
+a data interachange format, and if the producer of the data does not follow the
+format, the consumer crashes. The consumer does not try to cover for the bugs
+in the producer.
+</p>
+
+<p>
+For example, in a typical use case, the UI takes the user input and populates some
+data in database in some predefined format. Some backend task needs to operate
+on this data and perform some activity. Now, what if there is a bug in the UI and
+the UI outputs the data in slightly incorrect format. Perhaps the UI does not
+provide the value of a required field. Should the backend assume some resonable
+default? Assuming something reasonable might ensure that the system will at least
+work. The answer is no. Between internal components, we do not forgive each other
+for mistakes. If someone makes a mistake, associated functionality comes to a halt.
+</p>
+
+<p>
+The advantage of this approach is that if there is a bug in some component it comes to
+light at an early stage, enabling the engineers to resolve it. If other components
+start covering for it, the bug may remain uncovered for a long time.
+</p>
+
+<p>
+Languages like Python allow for default values of parameters. Thus, a function definition
+may be
+</p>
+
+<pre>
+def my_function(a, b=v1, c=v2):
+    pass
+</pre>
+
+Here b and c are optional parameters whose default values are v1 and v2 respectively. These values
+will be used if you do not provide a value for these parameters.
+Now, the function may be used as:
+<pre>
+def my_function(1, 2, 3)
+</pre>
+
+or
+<pre>
+def my_function(1, 2)
+</pre>
+
+or
+<pre>
+def my_function(1)
+</pre>
 </body>
 </html>
