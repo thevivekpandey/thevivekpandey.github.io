@@ -174,5 +174,38 @@ hardware changes fast (faster processeors, more memory capacities, larger bandwi
 mobile devices), the best practices to develop software change too. Even for bright people
 it is not possible to operate in a perfect way. And most of, by definition, are mediocre.
 </p>
+
+<p>
+Despite our limitations, we need to write code and build systems that work. How are we 
+supposed to do this?
+</p>
+
+<p>
+We should try to make our systems what Nassim Nicholas Taleb calls "Antifragile": systems
+which become stronger from shocks. In other words, we try to make our systems such that
+what does not break it makes it stronger.
+</p>
+
+<p>
+The way we do this is by learning from our mistakes.
+</p>
+
+<p>
+Did you find a bug in your software? Don't just fix it and move on. Analyze why the bug happened.
+Is it because the developer missed something while implementing a new feature? Then write a test
+case for it, so that a similar mistake does not happen in future.
+</p>
+
+<p>
+Sometime, the bug may have happened because of duplicate code: while developer modified the code
+at one place, he forgot to modify it at the other place. This is a great reason to do the code
+deduplication now.
+</p>
+
+<p>
+While implementing a new functionality, you may realize that the code is not designed well. If it
+were designed some other way, new functionality could have been implemented more easily. Well,
+take time and do it right way.
+</p>
 </body>
 </html>
