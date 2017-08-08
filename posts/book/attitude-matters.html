@@ -235,7 +235,40 @@ forgot that he needed to make sure that frequency needs to be respected. He was 
 with the intriciacies of the code that he was writing that the through of respecting the frequency
 did not come to his mind. He simply called some_func() with one argument as one other module
 was doing, and everything seemed to be working. It was only in production that we found out
-that the behavior of 
+that the frequency was not being respected.
+</p>
+
+<p>
+Now, let us analyze why did the problem happen? The proximate cause is that the developer did
+not pay full attention to the code that he was writing. He should have paid attention to
+the default values of various arguments and seen if default values were suitable for him.
+</p>
+
+<p>
+But the ultimate cause is that using default values in this situation was a bad practice.
+Such a setting should not be hidden in defaults.
+</p>
+
+<p>
+When we encounter the bugs, we should not only try to solve the proximate cause of the bug
+(like using the correct value of the parameter in the above example), we should also solve
+the ultimate cause of the bug (perhaps making the particular value required, rather than optional,
+and taking a look whether you are using optional values at many places where you
+should be using required values)
+</p>
+
+<p>
+In other cases, the ultimate cause may lie outside tech. In one instance, I found that
+a particular component was broken for a long time and we did not detect it.
+</p>
+
+<p>
+The proximate cause of us not detecting the problem for a long time was that we had
+not set up any monitoring or alarm on the component. However, the ultimate cause was that
+no one owning the component. The developer who had written the component had left
+the company, and the developer who took knowledge transfer from him never really internalized
+the fact that the component was now his responsibility. The reliability of the component
+increased when it was made explicit to the engineer that the component was his responsibility.
 </p>
 
 </body>
