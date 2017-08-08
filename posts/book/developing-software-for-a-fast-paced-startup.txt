@@ -183,3 +183,4 @@
 - Engineers like it when you are innovating and use new tools
 - If someone asks for some data, revise before you give it to them. It like revising before submitting score sheet in examinations. Bhuppi did not partial marks in MOS.
 - Don't have an ostrich attitude. This is very tempting in face of difficulties. I once had a closet with cockroaches. I never opened it again.
+- Importance of documentation

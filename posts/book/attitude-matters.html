@@ -214,5 +214,29 @@ correctness of the code, but could be a lapse in monitoring. In that case, set u
 relevant monitoring. Set up proper charts and alarms to ensure that you know of the incidents
 soon after they happen.
 </p>
+
+<h3>Proximate and Ultimate causes</h3>
+<p>
+A framework which is to helpful in improving from the mistakes is to think in terms of proximate
+and ultimate causes.
+</p>
+
+<p>
+As discussed earlier, we had a Python function in our code
+</p>
+<pre>
+def some_func(param1, respect_frequency=False):
+   #some functionality. By default, frequency will not be respected.
+</pre>
+
+<p>
+Now, one developer, while coding up a feature which required him to use some_func(), completely
+forgot that he needed to make sure that frequency needs to be respected. He was so engrossed
+with the intriciacies of the code that he was writing that the through of respecting the frequency
+did not come to his mind. He simply called some_func() with one argument as one other module
+was doing, and everything seemed to be working. It was only in production that we found out
+that the behavior of 
+</p>
+
 </body>
 </html>
