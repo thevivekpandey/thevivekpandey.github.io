@@ -142,6 +142,8 @@
      o A bug was discovered: write test case
      o A problem went undetected: make proper charts
    - Don't bring ego in. It is for people who feel unsafe. Set the example by not bringing ego in.
+   - Hypothesis/Assumption/Conclusion: Don't jump to conclusion soon. Even when you do, remember why you are doing so.
+     Have a mental model, and be ready to revise it. It is like Physics where relativity superceded classical physics.
 
 - Interacting with clients [DONE]
    - Reply quickly. Keep udpated. [DONE]
@@ -184,3 +186,5 @@
 - If someone asks for some data, revise before you give it to them. It like revising before submitting score sheet in examinations. Bhuppi did not partial marks in MOS.
 - Don't have an ostrich attitude. This is very tempting in face of difficulties. I once had a closet with cockroaches. I never opened it again.
 - Importance of documentation
+- Opinion on scrum/sprint etc.
+- Types of startups on various dimensions: how much "tech" is it? VMware vs Amazon vs Your pet store
