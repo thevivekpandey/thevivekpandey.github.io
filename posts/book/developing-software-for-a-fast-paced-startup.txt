@@ -149,6 +149,7 @@
    - Reply quickly. Keep udpated. [DONE]
    - Customer is always right [DONE]
    - Reply on the same medium, so that there is a record [DONE]
+   - Updated. update often. You cannot overcommunicate.
 
 - Don't take shortcuts.
     We stored dropdown fields like:

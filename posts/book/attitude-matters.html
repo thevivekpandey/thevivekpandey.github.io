@@ -298,5 +298,83 @@ Consider medicine. Till some years ago, they used to think that meat is very goo
 but slowly vegetarianism and even veganism is gaining ground. They used to bad mounth egg yolk,
 but now they say it is okay to eat it.
 </p>
+
+<p>
+In Physics, they thought that classical mechanics was as all that there was to discover, 
+and then it was a matter of calculation to calculate the state of the world at any given time.
+But then we discovered quantum mechanics and found that the reality is much more complicated.
+</p>
+
+<p>
+Despite the hits and misses of the science, seems to be continually making improvement. The sum
+total of our knowledge keeps on increasing and as time passes, we understand the world around
+us in a better way.
+</p>
+
+<h4>Mental Models</h4>
+<p>
+As in science, so in systems development. Computer systems, starting from microprocessor and
+instruction set architecture, all the way up to opearating systems and compilers and network
+protocols, are incredibly complicated. It is not possible for you to have more than a superficial
+knowledge of most of the stack. What you should have a is a very simple mental model about
+what the things that you work with. When required, you should refine your mental model with
+finer details. At times, new facts will emerge which will be in conflict with the mental
+model that you have. In those situations, you revise your mental model.
+</p>
+
+<p>
+Any new software or technology that you come across should augment your mental model. It should
+find a place in your existing mental model. That way you will be able to understand new
+technology in a proper context.
+<p>
+
+<p>
+For instance, you can have a mental of model of a computer as a machine which
+executes instructions. Each instruction is about doing some arithmetic on numbers. We
+have discarded all I/O in above mental model, but it suffices as a basic model.
+</p>
+
+<p>
+In your mental model, you should be able to "explain" why the things are the way they are.
+For instance, disk access is slower than memory access because memory is located closer
+to the processor. C is faster than Python because being dynamically typed, the interepretor
+needs to infer the type before executing every instruction, which slows it down.
+</p>
+
+<p>
+Mental models can help you like they helped me in the following case.
+There was a time when I was not familiar with columnar dateabases. 
+We used to store our data in MySQL.
+We started facing scaling challenges with our OLAP workloads and we discovered
+columnar databases, in particular, Vertica. On a simple proof of concept, we
+found vertica to be blazingly faster compared to MySQL. So, now I needed to
+form a mental model about why Vertica is way faster than MySQL.
+</p>
+
+<p>
+On reading a few papers, I found that Columnar databases
+store data column wise, rather than row wise, which is what is done in usual, row
+oriented databases like MySQL. Thus, for the queries which access only a few columns,
+we avoid reading other columns, leading to better performance. Further, values in
+columns are similar to each other (all are strings, or all are integers), and
+can be efficiently compressed, leading to further performance gains.
+</p>
+
+<p>
+Given this mental model, I was able to design the DB schema, specificy compression
+algo for various columns (like, run length encoding would be very suitable
+for the columns in which value stored is usually 0), and achieve great performance
+gains.
+</p>
+
+<p>
+Once Amazon sales people came to our office and tried to sell us redshift. Redshift
+too is a columnar database. They claimed that redshift would be 5x faster than vertica.
+I asked them why that is so. I was ready to accept their claim, but their claim had
+to fit in my mental model. They just kept saying the redshift is faster. I researched
+about redshift, but could not find a fundamental difference. If vertica were written
+in Python and redshift in C, that could have helped me, but vertica itself was written
+in C. Both were column oriented. So, what is the secret sauce?
+<b/p>
 </body>
 </html>
