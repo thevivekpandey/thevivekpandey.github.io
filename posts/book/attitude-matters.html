@@ -271,7 +271,7 @@ the fact that the component was now his responsibility. The reliability of the c
 increased when it was made explicit to the engineer that the component was his responsibility.
 </p>
 
-<h3>A framework for learning and solving problems</h3>
+<h3>A framework for learning</h3>
 <p>
 STEM (Science, technology, engineering, mathematics) are different from the fields like religion or politics
 in that there is, for the most part, an objective reality in STEM which the pursuers of STEM
@@ -372,9 +372,71 @@ Once Amazon sales people came to our office and tried to sell us redshift. Redsh
 too is a columnar database. They claimed that redshift would be 5x faster than vertica.
 I asked them why that is so. I was ready to accept their claim, but their claim had
 to fit in my mental model. They just kept saying the redshift is faster. I researched
-about redshift, but could not find a fundamental difference. If vertica were written
-in Python and redshift in C, that could have helped me, but vertica itself was written
-in C. Both were column oriented. So, what is the secret sauce?
-<b/p>
+about redshift, but could not find a fundamental difference. Vertica was a well known
+name in columnar databases, so it was hard to believe that some other company can
+outperform vertica so drastically.
+</p>
+
+<p>
+Anyway, since Amazon sales people were insistent, they were able to make use do a
+proof of concept study on our real workloads. We found redshift's performance to
+be around 50% of that of vertica. Redshift people asked us for a slice of our
+workload so that they can do the study themselves. We complied and they never
+returned back.
+</p>
+
+<p>
+What saved me was the mental model. I tried to fit and redshift in my mental model,
+and when I could not, I had to discard it.
+</p>
+
+<p>
+There have been other scenarios where the mental model has failed me. I could not
+fit something, discarded it, only to find later that there was a way to neatly fit
+the new phenomena in the mental model. That is fine. You continually revise
+your mental models in light of all the facts that you know. 
+</p>
+
+<h3>A framework for solving problems</h3>
+<p>
+As programmars, we write a lot of code. With time, the code base grows and various systems that we have
+written interact with each other in ways which overwhelm our abilities to comprehend.
+</p>
+
+<p>
+When things don't work as planned, or there are unexpected problems, we need to do detective work
+to find out the source of the problem. Many a times, even otherwise good engineers have a hard
+time doing this.
+</p>
+
+<p>
+Humans are ingrained with certain biases, which hinder accurate redressal of problems. Here are 
+a few of them:
+</p>
+
+<p>
+Firstly, there is <u>Jumping to the conclusion fallacy</u>. We sometimes form unsubstantiated
+opinions about why things are the way they are, and start blaming incorrect things.
+</p>
+<p>
+At VMware, I worked with two teams: Virtual Machine Monitor (VMM) team and Virtual Machine
+Kernel (VMKernel) team. When new type of virtualization technology, called NPT (Short
+for nested page tables) was introduced, VMM team needed what is called "large pages" 
+to maintain enhanced levels of performance. It was the duty of VMKernel team to provide
+large pages. It was not very easy for VMKernel team to provide large pages: they did
+put only a small effort in providing large pages.
+</p>
+<p>
+Firstly, there is is <u>Post hoc fallacy</u>:
+Since event Y happened after event X, event Y must have been caused by event X. The problem is
+just before Y, there are so many events that happened. You will usually have an incomplete
+picture of what all happened before Y. Thus, you would be biased towards those activities which
+you did.
+</p>
+
+<p>
+You have to start somewhere, so it is okay to have the hypothesis that "X has caused Y". However,
+before you start taking actions, you need to validate your hypothesis. 
+</p>
 </body>
 </html>
