@@ -423,9 +423,52 @@ At VMware, I worked with two teams: Virtual Machine Monitor (VMM) team and Virtu
 Kernel (VMKernel) team. When new type of virtualization technology, called NPT (Short
 for nested page tables) was introduced, VMM team needed what is called "large pages" 
 to maintain enhanced levels of performance. It was the duty of VMKernel team to provide
-large pages. It was not very easy for VMKernel team to provide large pages: they did
+large pages. It was not very easy for VMKernel team to provide large pages: they
 put only a small effort in providing large pages.
 </p>
+
+<p>
+When performance measurements were made, workloads were running signficantly slower than
+earlier, and we could see stats that number of large pages being used was small.
+</p>
+
+<p>
+VMM put team put pressure on VMKernel team to provide more large pages, and VMkernel team
+reluctantly worked to improve the availability of large pages, but they could not increase
+it by much. The algorithm to drastically available the availability was complex and they
+were shying away from it. In private they complained that the number of large pages they
+were providing ought to be enough. Performance of workloads being deteroritated, there
+was perssure on VMM team to improve it, and there were noises that they be given control
+of VMKernel code if VMkernel engineers are reluctant to make desired changes.
+</p>
+
+<p>
+The two teams were nearly siloed, and had limited communications (partly the location was
+to blame: the two teams sat in different offices). I was a sort of intermediary and could
+appreciate the concerns of both teams: VMM team needed more large pages to increase performance,
+and VMkernel team argued that if its minor efforts were not yield measurable benefits, how
+are we sure that major efforts will. I did an investigation and found a startling fact:
+VMM was unable to use the large pages it was being provided. For reasons that had escaped
+our attention till now, VMM was "breaking" the large pages that were being provided to it.
+On this news, VMkernel team sighed with relief, and VMM team became busy with strategies
+to avoid breaking the pages.
+</p>
+
+<p>
+Why did all this happen? The reason is that everybody, including VMkernel team, jumped
+to the conclusion that deterioration in performance is because of unavailability of pages.
+In midst of all the heat and several tasks to be done, it is tempting to take such shortcuts.
+What we should have done is, to get an estimate of how many large pages are required for
+a good performance, and then check if VMkernel is giving those many large pages. That would
+have avoided a catch-all excuse to blame VMkernel for any performance problems.
+</p>
+
+<p>
+The lesson is that we our initial guess is only a hypothesis, which needs to be validated.
+You cannot conjure up something and start believing in it. There should be some validation
+that your hypothesis is indeed correct.
+</p>
+
 <p>
 Firstly, there is is <u>Post hoc fallacy</u>:
 Since event Y happened after event X, event Y must have been caused by event X. The problem is
@@ -436,7 +479,7 @@ you did.
 
 <p>
 You have to start somewhere, so it is okay to have the hypothesis that "X has caused Y". However,
-before you start taking actions, you need to validate your hypothesis. 
+before you start taking actions, you need to validate your hypothesis.
 </p>
 </body>
 </html>
