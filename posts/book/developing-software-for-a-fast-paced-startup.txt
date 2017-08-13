@@ -143,13 +143,12 @@
      o A problem went undetected: make proper charts
    - Don't bring ego in. It is for people who feel unsafe. Set the example by not bringing ego in.
    - Hypothesis/Assumption/Conclusion: Don't jump to conclusion soon. Even when you do, remember why you are doing so.
-     Have a mental model, and be ready to revise it. It is like Physics where relativity superceded classical physics.
+     Have a mental model, and be ready to revise it. It is like Physics where relativity superceded classical physics. [DONE]
 
 - Interacting with clients [DONE]
    - Reply quickly. Keep udpated. [DONE]
    - Customer is always right [DONE]
    - Reply on the same medium, so that there is a record [DONE]
-   - Updated. update often. You cannot overcommunicate.
 
 - Don't take shortcuts.
     We stored dropdown fields like:
@@ -189,3 +188,4 @@
 - Importance of documentation
 - Opinion on scrum/sprint etc.
 - Types of startups on various dimensions: how much "tech" is it? VMware vs Amazon vs Your pet store
+- What was a luxury yesterday becomes a necessity today.
