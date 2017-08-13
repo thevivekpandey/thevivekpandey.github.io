@@ -1,3 +1,4 @@
+- For whom is the book meant? Young people trying to build technology company
 - This book talks about nuts and bolts of tech.
    o There is plenty of material related to how to ideate, and how to iterate.
    o Born mostly out of personal experience
@@ -189,3 +190,5 @@
 - Opinion on scrum/sprint etc.
 - Types of startups on various dimensions: how much "tech" is it? VMware vs Amazon vs Your pet store
 - What was a luxury yesterday becomes a necessity today.
+- On fruitful discussion
+  - Some people just go round and round, they carry away the conversation to a different topic
