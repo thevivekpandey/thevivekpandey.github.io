@@ -87,8 +87,68 @@ which is not that impressive.
 <p>
 Note that if you are doing 10ms to 8ms change with code optimization, without introducing
 extra hardware (e.g., for caching), you may still justify your attempts if there is significant
-infrastructure cost reduction. You then need to checkout how much money you end up saving.
+infrastructure cost reduction. You then need to check how much money you end up saving.
 </p>
+
+<p>
+Perhaps, while reviewing the code you found that there is a linear search happening on an array,
+and using hash map can make search O(1). But before you implement improvement, consider the
+size of the array, and how many times that search is done. Will you be improving the 
+performance sizeably?
+</p>
+
+<p>
+Perhaps you found that a datbase table is being queried on a certain column and there is
+no index on that column. Before you create the index, consider how much does that buy you.
+Is the table size large enough for the index to matter at all?
+</p>
+
+<h3>Measurement driven optimization</h3>
+<p>
+"Premature optimization is the root of all evil" said Edgar Dijkstra. For him to come up with
+the quote, he himself would have wasted some time in premature optimization, or else seen
+others wasting their time. Indeed, premature optimization is an urge that is to be resisted
+continually.
+</p>
+
+<p>
+So, what is full term (as opposed to premature) optimization? It is an optimization driven by
+measurement. You measure, make an educated guess about the efficacy of the improvement
+that you are undertaking, do the improvement, and measure again. Then you repeat the process.
+</p>
+
+<p>
+The measurement consists of two parts: the metric and the profile.
+</p>
+
+The metric is usually a single
+number representing the performance of an entire sub system. It could be running time of a program. 
+For an HTTP server, this could
+be response time. For a build system, this would be time to build a fresh build. In a throughput
+oriented system, it could be how many requests per second a server can support before
+CPU utilization of the server exceeds 70%. For a chat server, it could be the number of
+concurrent connections supported before the response times exceed, say 10ms. For a frontend app
+it could be page load time. For a caching server, it could be the hit rate.
+</p>
+
+<p>
+Sometimes, the metrics could be at high level: how many batch jobs are failing per day? How many
+open bug reports are there?
+</p>
+
+<p>
+You often need to aggregate individual numbers to come up with a single metrics. For example,
+while calculating the overall latency of all the requests sent to an HTTP server over a day,
+you may take the average of individual latencies. While calculating aggregate metrics, while
+average sounds most natural, this may not always be the case: there are instances when
+90%ile value may be better, or maximum may be better.
+</p>
+
+<p>
+Note that they are metrics in our control, not like active users per day.
+</p>
+<h3>Choosing the right metrics</h3>
+<h3>Performance can always be improved</h3>
 <h3>What was luxury yesterday becomes a necessity today</h3>
 </body>
 </html>

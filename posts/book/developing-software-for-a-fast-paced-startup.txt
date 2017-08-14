@@ -70,6 +70,7 @@
   o What was a luxury yesterday becomes a necessity today.
   o Monitor performance
   o Taking an average may not be good: 90% ile may be better.
+  o Know your performance metrics
 
 - Look for harmony
       o Computers are harmonious, harmony is destroyed by unreasonable human expectations
