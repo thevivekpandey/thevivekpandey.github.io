@@ -34,6 +34,61 @@ this I realized that my destination was on the other side of the signal and I ne
 to cross the road. I waited for another green signal to cross the road back. Indeed, sometimes,
 overcoming the challenges becomes more important than practical considerations.
 </p>
+
+<p>
+Does it really matter if your nightly job takes 30 min instead of 1 hour? Does it matter
+if you reduce the memory consumption of program from 100 GB to 90GB? Would your users
+appreciate if the latency of requests goes down from 20ms to 19.8ms? In many situations,
+the answer is no, and you should move on to the next problem, which hopefully, matters.
+</p>
+
+<h3>Amadahl's / Gustafson's laws</h3>
+<p>
+Another factor to keep in mind while working on performance improvement is Amadahl's law.
+Amadahl's law, reworded as Gustafson's law
+--footnote--
+Amadah's law and Gustafson's law are very simple facts. These guys were lucky that they
+coined their laws which became so famous.  Gene Amadahl was an exciting fellow, who kept 
+on founding companies till his sixties, and led a remarkable life.
+
+states that overall speedup of a program is dependent not only on the speed up by which
+you increase the latency of some portion of the program, but also on the portion of the
+program which you do not improve.
+</p>
+
+<p>
+Consider an example. Suppose a program's execution time is 100s. Suppose its execution can be 
+divided into two parts: A and B. Part A takes 20s and Part B takes 80s. Now, if you speed up
+part A by 90%, such that Part A takes only 2s, overall the program will take 82s, and thus
+there is a speed up of 12% in overall program execution time. However, if you speed up 
+Part B by a more moderate 50%, Part B takes 40s, leading to an overall execution time of 60s,
+implying a speedup of 40%.
+</p>
+
+<p>
+While you may see green pastures of optimization opportunities in parts of your system, do not
+jump to work on them unless the overall impact of those improvements justifies the efforts.
+</p>
+
+<p>
+Say you are writing an HTTP server. Say it takes an average of 10ms for your server to respond to
+the request. You have figure out a way to reduce it by 20%, so that it will take only 8ms. 
+10ms vs 8ms sounds like a handsome improvement, and your end users will appreciate a faster
+website, won't they?
+</p>
+
+<p>
+Well, not so fast. You need to consider that from end user's persepective, there is network
+latency too: San Francisco to New York network latency is like is ~50ms, cross continent
+network latency is even higher. So, you are reducing user preceived latency from 60ms to 58ms,
+which is not that impressive.
+</p>
+
+<p>
+Note that if you are doing 10ms to 8ms change with code optimization, without introducing
+extra hardware (e.g., for caching), you may still justify your attempts if there is significant
+infrastructure cost reduction. You then need to checkout how much money you end up saving.
+</p>
 <h3>What was luxury yesterday becomes a necessity today</h3>
 </body>
 </html>

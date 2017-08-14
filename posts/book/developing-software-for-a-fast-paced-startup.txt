@@ -1,4 +1,7 @@
 - For whom is the book meant? Young people trying to build technology company
+   - Much of the advice might seem obvious, but consider that someone in quora asked a question that
+     implied codechef champ may rewrite google.
+
 - This book talks about nuts and bolts of tech.
    o There is plenty of material related to how to ideate, and how to iterate.
    o Born mostly out of personal experience
@@ -62,7 +65,11 @@
       o Monitoring as a first class citizen [DONE]
       o A program itself may send the mail
 
-- Don't optimise prematurely
+- Performance
+  o Don't optimise prematurely
+  o What was a luxury yesterday becomes a necessity today.
+  o Monitor performance
+  o Taking an average may not be good: 90% ile may be better.
 
 - Look for harmony
       o Computers are harmonious, harmony is destroyed by unreasonable human expectations
@@ -189,6 +196,6 @@
 - Importance of documentation
 - Opinion on scrum/sprint etc.
 - Types of startups on various dimensions: how much "tech" is it? VMware vs Amazon vs Your pet store
-- What was a luxury yesterday becomes a necessity today.
 - On fruitful discussion
   - Some people just go round and round, they carry away the conversation to a different topic
+- https://try.newrelic.com/rs/412-MZS-894/images/ArchitectingforScale_SponsoredExcerpt.pdf
