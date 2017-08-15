@@ -137,7 +137,10 @@ open bug reports are there?
 </p>
 
 <p>
-You often need to aggregate individual numbers to come up with a single metrics. For example,
+You often need to aggregate individual numbers to come up with a single metrics. 
+In statistics, they are called "measures of central tendency". Typical mesures
+of central tendecy are mean, median and mode.
+For example,
 while calculating the overall latency of all the requests sent to an HTTP server over a day,
 you may take the average of individual latencies. While calculating aggregate metrics, while
 average sounds most natural, this may not always be the case: there are instances when
@@ -145,9 +148,57 @@ average sounds most natural, this may not always be the case: there are instance
 </p>
 
 <p>
+For metrics which do not affect the end user directly, arithmetic mean is usually a good idea.
+Let's say a program runs once every hour, and you want to have a metric for its performance.
+An arithmetic mean of the 24 run times over the day would be a good choice. Similarly, if you
+are tracking CPU utilization of a machine and taking a measurement every 5 minutes (like
+you see in AWS CPU utilization dashboard), taking an average over a desired period is a good
+idea. For example, if a job takes
+t1, t2, ..., t24 units of time, you can take (t1 + t2 + ... + t24) / 24 as a respresentative 
+running time of the program.
+</p>
+
+<p>
+For some metrics, an average is an unsatisfactory measure. Let's say that you have a machine
+with 4GB memory, and you run a memory heavy program on it. You measure the memory utilization
+of the program at important points in your program (when you expect the program to take locally
+maximum amount of memory). Say you measure the memory at 4 points in your program and find it
+to be 200MB, 600MB, 800MB and 3.2GB. Then the average (200 + 600 + 800 + 3200) / 4 = 1200MB 
+= 1.2GB is not a good measure of aggregate memory utilization. You should watch for max value,
+since if this max gets close to 4GB, you have a problem in your hand: you either need to
+move to a bigger memory machine, or optimize your program to make it use a lesser amount of
+memory.
+</p>
+
+<p>
+Suppose you have written a backend to generate some report based on
+user input. Depending on the user input, report generation may range from being extremely
+fast to extremely slow. You want a single number to denote the aggregate performance. 
+In such a situaation, neither arithemetic mean nor maximum is a suitable measure
+of central tendency. Say, there are 100 requests, 99 of which took 1s while 1 request
+took 1000s. Now the average response time is (99 * 1 + 1000) / 100 = 10.99s, which is
+not representative since most requests are taking just 1s. Maximum is even worse.
+A good measure in this case is to take some percentile value, like 95 percentile, 
+or 99 percentile. If 95 percentile response time is t, it means that only 5 perecent
+of the requests takes more than time t. So, you have an idea how many users are being
+pained by poor performance. In the above case, 95 perecentile response time would be 1s,
+which is a good measure of central tendency.
+</p>
+
+<p>
+Percentile values are good to use in cases where a few abnormally large values may
+skew the aggregates like mean and cause it to become unrealistic. Remember that
+when Bill Gates walks in a room, the average net worth of a person in that room
+is north of a billion dollars.
+</p>
+<p>
 Note that they are metrics in our control, not like active users per day.
 </p>
-<h3>Choosing the right metrics</h3>
+<h3>Measuring some important metrics</h3>
+<p>
+
+</p>
+<h3>Some ideas to improve performance</h3>
 <h3>Performance can always be improved</h3>
 <h3>What was luxury yesterday becomes a necessity today</h3>
 </body>
