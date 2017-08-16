@@ -200,3 +200,4 @@
 - On fruitful discussion
   - Some people just go round and round, they carry away the conversation to a different topic
 - https://try.newrelic.com/rs/412-MZS-894/images/ArchitectingforScale_SponsoredExcerpt.pdf
+- throughput latency and concurrency

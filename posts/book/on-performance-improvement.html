@@ -205,7 +205,8 @@ patterns which are useful to know.
 </p>
 
 <p>
-<i>Caching</i> is perhaps the most important idea for performance improvements. Caching
+<b>Caching</b>
+Caching is perhaps the most important idea for performance improvements. Caching
 refers to the practice of storing the result of some computation or operation in a
 quickly accessible location so that next access is faster.
 </p>
@@ -251,6 +252,11 @@ and Aerospike are good caching servers for such purposes.
 </li>
 
 <li>
+Web browsers cache the pages that you view, so that the pages load faster next time. A web
+server can set directives about how long a page can be cached.
+</li>
+
+<li>
 As seen in chapter x.y.z, you can put a caching server in front of database, so that idempotent
 write queries to databases are reduced, thus reduce the load on the database servers.
 </li>
@@ -259,7 +265,8 @@ write queries to databases are reduced, thus reduce the load on the database ser
 </p>
 
 <p>
-<i>Precomputation</i> is another big idea for optimization. Instead of computing when the
+<b>Precomputation</b>
+Precomputation is another big idea for optimization. Instead of computing when the
 need arises, we perform do the computation speculativel, and return the result immediately
 when requested. This too is used across computer science.
 </p>
@@ -276,17 +283,47 @@ condition turns out.
 If for some reason, executing some instruction takes time (perhaps because they involve time
 taking mulitplication or division, or a fetch from memory), processor continues to execute
 next instructions, without waiting for previous instructions to finish (as long as input of
-those instructions are ready)
-
-
+those instructions are ready). This is called out of order processing. 
+If they encounter an "if" instruction while executing out of order, the processor makes
+an educated guess (called branch prediction) about which way the branch will be resolved
+and continues exeucting down that path. In case the guess turns out to be wrong, the processor
+discards the results related to computation after the branch and restarts from that point.
+Branch prediction and out of order execution are two of the chief mechanisms for processors
+to get higher IPS (instructions per second) speed.
 </p>
 </li>
+<p>
+When a program requests the operating system to read a part of the file from hard disk to memory,
+some file systems perform what is called "speculative prefetching". They fetch bytes of the
+file from hard disk to memory in anticipation of requirements of the program. Speculative
+prefetching is also performed by browsers in that they speculatively fetch the pages which
+the expect the user to request.
+</p>
+
+<p>
+Some databases implemente "materialized views", which is the result of a query computed periodically
+and kept aside for quick query response time.
+</p>
 </ul>
+
+<p>
+Idea of precomputation may be applied in a myriad number of ways. At QGraph, we had a popular
+use case where our customers segmented their user on the basis of city: for example they found
+out all user the users whose city was, say, New Delhi or Bangalore. For each segmentation, querying
+the database was time consuming, so we ran a nightly job which performed this segmentation.  When
+a user requested the segmentation, we could fetch the precomputed results, and add to it data which
+had since last night to output the final set of users.
+</p>
+
+<b>Batching</b>
+<p>
+Another idea to improve the performance of computer systems is batching, where 
 </p>
 Batching
 Compressing
 Indexing
 Tradeoff accuracy for performance
+Incremental computation
 
 <h3>Performance can always be improved</h3>
 <h3>What was luxury yesterday becomes a necessity today</h3>
