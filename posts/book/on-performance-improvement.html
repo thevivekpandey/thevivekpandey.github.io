@@ -171,6 +171,12 @@ memory.
 </p>
 
 <p>
+Similarly, some times, minimum rather than maximum can be appropriate value to use. For
+instance, if you are tracking free memory in the system, you need to know how close to 0
+do you reach, and hence tracking the min free memory of a time period is appropriate
+</p>
+
+<p>
 Suppose you have written a backend to generate some report based on
 user input. Depending on the user input, report generation may range from being extremely
 fast to extremely slow. You want a single number to denote the aggregate performance. 
@@ -191,14 +197,97 @@ skew the aggregates like mean and cause it to become unrealistic. Remember that
 when Bill Gates walks in a room, the average net worth of a person in that room
 is north of a billion dollars.
 </p>
+
+<h3>Some ideas to improve performance</h3>
 <p>
-Note that they are metrics in our control, not like active users per day.
+While performnace improvements are quite application dependent, there are some general
+patterns which are useful to know.
 </p>
-<h3>Measuring some important metrics</h3>
+
 <p>
+<i>Caching</i> is perhaps the most important idea for performance improvements. Caching
+refers to the practice of storing the result of some computation or operation in a
+quickly accessible location so that next access is faster.
+</p>
+
+<p>
+Idea of caching is used pervasively in computer systems:
+<ul>
+<li>
+Processors use memory hierarchy. L1, L2, L3 caches are on chip (or slightly off chip)
+caches with store data from memory. They are fast compared to memory. Processor
+utilizes the fact that most of the time you work on a small subset of data stored in
+the memory, and by storing this subset in the cache, program can be run much faster.
+</li>
+
+<li>
+All databases use in memory caches, in which they store data fetched from the hard disk.
+</li>
+
+<li>
+File system too implements a file sytem cache. The idea is that if a part of the file is
+accessed now, it is also likely to be accessed again, may be by a different program.
+</li>
+
+<li>
+Virtual Machines, which translate code on run time, cache the translation to be used
+at a later point of time. An example would be Java runtime environment.
+</li>
+<li>
+Content Delivery Networks (CDN) cache static web pages across geographical nodes so as to
+server static content to respective users from a location close to the end user. You can also
+use a CDN to speed up the delivery of static content. Amazon's CDN, called Amazon CloudFront,
+is easy to use.
+</li>
+
+<li>
+The popular memoisation technique in dynamic programming algorithms is a manifestation
+of caching.
+</li>
+
+<li>
+Many websites cache user data so that user login is fast. In memory data stores like Redis
+and Aerospike are good caching servers for such purposes.
+</li>
+
+<li>
+As seen in chapter x.y.z, you can put a caching server in front of database, so that idempotent
+write queries to databases are reduced, thus reduce the load on the database servers.
+</li>
+
+</ul>
+</p>
+
+<p>
+<i>Precomputation</i> is another big idea for optimization. Instead of computing when the
+need arises, we perform do the computation speculativel, and return the result immediately
+when requested. This too is used across computer science.
+</p>
+
+<p>
+<ul>
+<li>
+<p>
+In processors, there is a "pipeline" which executes instructions one by one. When it encounters
+an "if" instruction, it needs to take one of the two paths, depending on which way the "if"
+condition turns out.
+</p>
+<p>
+If for some reason, executing some instruction takes time (perhaps because they involve time
+taking mulitplication or division, or a fetch from memory), processor continues to execute
+next instructions, without waiting for previous instructions to finish (as long as input of
+those instructions are ready)
+
 
 </p>
-<h3>Some ideas to improve performance</h3>
+</li>
+</ul>
+</p>
+Batching
+Compressing
+Indexing
+Tradeoff accuracy for performance
+
 <h3>Performance can always be improved</h3>
 <h3>What was luxury yesterday becomes a necessity today</h3>
 </body>
