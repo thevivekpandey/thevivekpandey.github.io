@@ -317,13 +317,39 @@ had since last night to output the final set of users.
 
 <b>Batching</b>
 <p>
-Another idea to improve the performance of computer systems is batching, where 
+Another idea to improve the performance of computer systems is batching, where instead of invoking
+some service one by one, once for each request, you collect a bunch of requests and invoke the
+service just once.
 </p>
-Batching
+
+<p>
+Batching too is all pervasive in computer engineering. Let's have a look at some popular use cases.
+</p>
+
+<ul>
+<li>
+In processor caches, there is a concept of cacheline. Cache line size can be anywhere between
+64 bytes to 512 bytes. When a program accesses a memory location which is not present in the cache,
+cache line size is the granularity at which data is fetched from the meory to the cache. So, while
+you may be needing only 4 bytes, a 64 byte aligned 64 byte block will be fetched from the memory.
+This is an example of a batched read, the idea being that if a program accesses certain memory location
+now, it is likely to access nearby memory locations later.
+</li>
+
+<li>
+In a similar way, data fetching from hard disk to main memory is also batched.
+</li>
+
+<li>
+In databases, if, instead of doing lots of queries, each reading or writing one record, it is more
+performant to do a few large queries, each reading or writing several records
+</li>
+</ul>
 Compressing
 Indexing
 Tradeoff accuracy for performance
 Incremental computation
+Asyncrhonous operations
 
 <h3>Performance can always be improved</h3>
 <h3>What was luxury yesterday becomes a necessity today</h3>
