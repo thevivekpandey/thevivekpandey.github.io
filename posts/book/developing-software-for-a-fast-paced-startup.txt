@@ -200,4 +200,8 @@
 - On fruitful discussion
   - Some people just go round and round, they carry away the conversation to a different topic
 - https://try.newrelic.com/rs/412-MZS-894/images/ArchitectingforScale_SponsoredExcerpt.pdf
-- throughput latency and concurrency
+- throughput, latency and concurrency
+- A preface on computer science progress. We have enjoyed moore's law and some innovation (iphone).
+  Physics was hotshot in 1920s (show the photo), there was aviation (we flew and then reached the moon).
+  CS innovations will ultimately halt too, but right now we are going strong.
+- Security aspect

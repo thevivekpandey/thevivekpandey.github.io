@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title>On performance improvement</title>
+  <title>On Performance Improvement</title>
   <link rel="stylesheet" type="text/css" href="../style.css"/>
 </head>
 <body>
@@ -263,6 +263,15 @@ write queries to databases are reduced, thus reduce the load on the database ser
 
 </ul>
 </p>
+<p>
+At times, you can couple the idea of incremental computation with caching. You may be able
+to perform a computation by using the cache and then doing an incremental calculations. 
+If you want to find the set of users who have used an app in last 7 days, and you have
+cached the user list on a daily basis, you pick last 6 points (that is caching) and find
+out the users who have used the app today (that is incremental computation). [To be
+precise, you should also consider an interval of time which was 7 days ago, that too
+would be incremental computation]
+</p>
 
 <p>
 <b>Precomputation</b>
@@ -345,13 +354,225 @@ In databases, if, instead of doing lots of queries, each reading or writing one 
 performant to do a few large queries, each reading or writing several records
 </li>
 </ul>
-Compressing
-Indexing
-Tradeoff accuracy for performance
-Incremental computation
-Asyncrhonous operations
 
+<b>Compression</b>
+<p>Another optimization idea is compression. It can serve in two ways: Firstly you can store
+compressed data instead of raw to save disk space. Secondly, you can compress data before transferring
+it to reduce network bandwidth cost. Depending on how far the sender and receiver of the data are,
+it may take smaller time to compress the file, send it over the network and uncompress it at the
+receiver, rather than sending it uncompressed.
+</p>
+
+<ul>
+Compression too is widely used in computer systems.
+<li>
+<p>
+Databases often keep the contents compressed. Various database engines keep the data compressed.
+You can turn on compression in InnoDB engine of MySQL, and compression is an important feature
+for wired tiger storage enginer of MongoDB. Storing the data in compressed format is important
+for those NoSQL databases. In MongoDB, if there is record per user, it will look like:
+
+<pre>
+{
+   "firstName": "John"
+   "lastName": "Doe"
+   "city": "London"
+   "profilePic": "http://www.example.com/johndoe.jpg"
+}
+</pre>
+Each record contains the keys "firstName", "lastName" etc, which occupies a lot of space. Compression
+helps alleviate the extra disk storage that happens due to this.
+</p>
+
+<p>
+For OLAP workloads, columnar databases like Vertica are very popular. Once of the main featurs that
+makes columnar databases so effective for OLAP queries is that columns can usually be compressed
+very effectively.
+</p>
+</li>
+
+<li>
+Servers can compress the data before sending it to browsers. Browser uncompresses the received
+data and then renders it. This reduces the overall page load latency.
+</li>
+
+<li>
+Popular message queues like Kafka have an option where publisher compresses the data before putting
+it to the queue and subscriber uncompresses the data on receving it. This leads to faster tranmission
+of data from publisher to subscribers.
+</li>
+
+<li>
+Of course, all popular image, video and sound formats like JPG, MOV or MP3 compress the files
+for faster transmission.
+</li>
+</ul>
+
+<b>Indexing</b>
+<p>
+Another big idea to improve performance is indexing. Indexes are everywhere in real world.
+You find indexes in libraries, which are used to locate a particular book. You may say
+who goes to library in today's networked world. Well, internet is powered by a giant index
+called Domain Name Service!
+</p>
+
+<p>
+File system is an index to the pieces of data lying around in the disk.
+</p>
+
+<p>
+Creating suitable indexes for improved database performance is perhaps DB101, but its importance
+cannot be overemphasized. Indexes are particularly useful for searching by columns which have
+high specificity, i.e. given a column value, there are very few (ideally, only one) rows
+matching the column value. However, for the cases where there is low specificity, indexes
+are not that useful. For instance, each user may have a city, and you may wish to find
+all the users who belong to a specific city. In such cases, I have found the idea of
+precomputation (described earlier in this chapter) to be useful. At an abstract level,
+precomputation is like an index, except that index is updated not in real time but
+periodically.
+</p>
+
+<b>Asyncrhonous operation</b>
+<p>
+If you make a lot of requests to a server serially, you may consider firing the requests
+asyncrhonously: you do not wait for a request to finish before you fire another request.
+</p>
+
+<p>
+Popular langauges all support asyncrhonous operation. Since Javascript is asyncrhonous from 
+ground up, framework like nodeJS is very easy to write asyncrhonous programs in. However,
+I found it hard to control the fan out: the number of concurrent operations in progress.
+I found Java to be an excellent language in which I have been practically able to write
+non trivial asynchronous program. I have tried Python too, which support asyncrhonous
+programs since Python 3.5, but had lesser success in writing non trivial systems in Python.
+</p>
+
+<b>Tradeoff accuracy for performance</b>
+<p>
+Many engineers have an unspoken principle that they try write 100% correct programs.
+Like students who try to get 100% marks score low marks (because they get stuck
+in some topic and cannot even cover the whole syllabus), they disregard the fact
+that perfect is the enemy of good.
+</p>
+
+<p>
+Often you can tradeoff a bit of accuracy for giant improvement in performance.
+</p>
+
+<p>
+Consider the generation of a unique id. If you want to guarantee that the generated
+id is unique, you have a few choices. You can initialized a counter to 0. Each time
+an id is requested, you increment the counter and return the current value of counter.
+However, this requires you to maintain the current value of counter. You need to
+persist it too so that you do not lose the counter value if your program is restarted
+or crashes. You also need to worry about parallelism: what it two clients simultaneously
+request for an id, can they get teh same value of the id?
+</p>
+
+<p>
+Alternatively, you can keep
+storing generated ids in a database, and, on each request, generate a random id, and check
+if it is already present. If yes, you store it in database and return. If no, you generated
+another random id and repeat.
+</p>
+
+<p>
+However, the simplest solution would be to just generate a random id and return it. Very
+very likely it is going to be unique. Let's do some calculation. Say you are generating
+64 bit integers as id. Then you generated one of 2^64 numbers, which is roughly 10^18. 
+Suppose in the lifetime of your application, you will required to generate a billion
+ids. That is 10^9. The chances that two ids will match are less than 1 in 10^1000, and hence
+you should not worry about it. Infact, it is more likely that you may have an accident
+today, or even worse, a meteor may strike the earth.
+</p>
+
+<p>
+There is a class of algorithms, called randomized algorithms which you can deploy to
+get solutions which are very good, but not perfect, and are simple to code in.
+</p>
 <h3>Performance can always be improved</h3>
+<p>
+Sometimes, after months or years of working, one may tend to get jaded. One may think
+that no further performance improvement that matters is possible.  
+</p>
+
+<p>
+In such scenarios, you should start questioning your assumptions. Perhaps, given your
+assumptions, various incremental steps that could be taken, have been taken. But what
+if we remove the assumptions: is it possible to do drastically better, from the point
+of view of user? The important thing is not view your problem as technology problem,
+but try to improve a user visible metrics. 
+</p>
+
+<p>
+We had a program called "daily report", which used to run nightly and calculate some
+reports for our clients. It started off by taking a few minutes, but gradually
+started taking several hours. If it crashed in the night, we used to run in the
+morning (after fixing the cause of the crash), but in that case it used to be a little
+late, and our clients would complain about the unavailability of the report after
+checking it out in the morning.
+</p>
+
+<p>
+We worked on the report and after a lot of effort, optimized it so that it started
+taking only a few minutes rather than a few hours. This improved our system signficantly:
+if it crashed, running it will take only a few minutes, and thus the reports 
+were available soon.
+</p>
+
+<p>
+Once we got running time to a few minutes, there was not point in getting it down further.
+It was very hard anyway. So, how could we improve the daily reports? Well, we could
+have tried to make it realtime, rather than nightly. Giving visibility to the client
+on a realtime basis is a vast improvement over giving it nightly. Perhaps we could have
+put in a place a system of anomaly detection, where an unsual data point would be
+caught and an alert thrown in (this is not a performance improvement though). The point
+is, an enthusiastic engineer always tries to make his systems more and more useful
+and responsive.
+</p>
+
 <h3>What was luxury yesterday becomes a necessity today</h3>
+<p>
+A final word on performance improvement: while your users will be initially thankful to 
+the improvements you do, soon the new performance will be necessity, and expected.
+</p>
+
+<p>
+My father grew up in a village, and while growing up, he did not have an idea that
+hair should be combed. There was no concept of a comb in the village. Then the comb
+got introduced, and it was initally used only by fashionable youth of the village.
+Then slowly, people started using a comb when attending festivals or marriages.
+Gradually, over tens of years, the comb became a necessity. If you do not comb
+your hair, you are perceived to be unclean, unkempt and generally careless.
+</p>
+
+<p>
+What was a fashion statement yesterday became common place today.
+</p>
+
+<p>
+We built a segmentation engine, where our customer could put in some conditions and
+find the users satifying the condition. For instance, he could try to find the
+people who viewed a product in last 10 days. More the number of days he inputted,
+more was the running time of program. We saw this use case and optimized for
+this use case. We brought down the running time of the program from minutes to
+seconds. As soon as the users accusomted to several minutes of running time
+noticed their jobs being finished in seconds, they simply increased the duration
+and the program continued to take several minutes.
+</p>
+
+<p>
+Were our efforts useless? No, because were delivering more value to the clients.
+</p>
+
+<p>
+Scaling of expectations happens not only with humans, but machines too. To improve
+the scalability of our data ingestion, we put several caches in the system. This
+helped us scale with increasing number of requests without increasing infrastructure
+cost signficantly. However, now the caches become indispensable. If they go down
+for whatever reasons, whole data ingestion pipeline gets clogged. Initially the
+caches were a luxury, but with time, they become an integral part of the system.
+</p>
+
 </body>
 </html>
