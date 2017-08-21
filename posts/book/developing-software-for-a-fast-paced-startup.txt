@@ -1,8 +1,8 @@
-- For whom is the book meant? Young people trying to build technology company
+- For whom is the book meant? Young people trying to build technology company [DONE]
    - Much of the advice might seem obvious, but consider that someone in quora asked a question that
      implied codechef champ may rewrite google.
 
-- This book talks about nuts and bolts of tech.
+- This book talks about nuts and bolts of tech. [DONE]
    o There is plenty of material related to how to ideate, and how to iterate.
    o Born mostly out of personal experience
 
