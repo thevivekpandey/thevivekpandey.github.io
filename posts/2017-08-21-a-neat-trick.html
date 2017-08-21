@@ -1,0 +1,72 @@
+<html>
+<head>
+  <title> A neat trick</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <style>
+     li {
+        margin-bottom: 10px;
+     }
+  </style>
+</head>
+<body>
+<h2>A neat trick</h2>
+<p>
+We run campaigns, and we need to store the latest campaign's creative for each user.
+The default way to store this data would be to have documents like:
+
+<pre>
+{
+    "userId": 123,
+    "creative": {...}
+}
+</pre>
+<p>
+
+<p>
+The problem is that there are millions of users, and thus, millions of these documents.
+Most of the time, "creative" value is same for all userIds, but sometimes it can be different
+on a per user basis. Since it is same most of the time, it seems atrocious to store it
+repeatedly in many many documents. So, to save on space, we can have a table with entries like this:
+</p>
+
+<pre>
+{
+    "userId": 123
+    "creativeId": 1
+}
+
+{
+    "userId": 234
+    "creativeId": 2
+}
+</pre>
+
+<p>
+And then, a separate table, containing creative id to creative mapping:
+
+<pre>
+{
+    "creativeId": 1,
+    "creative": {...}
+}
+{
+    "creativeId": 2,
+    "creative": {...}
+}
+</pre>
+</p>
+
+<p>
+Surely, this increases the number of lookups to find creative from 1 to 2, but since creatives
+are mostly repeated, massive storage reduction is worth it. But there is a new question: how
+to find out creative ids? How do you know whether a certain creative id is not yet mapped, so that
+you can use it?
+</p>
+
+<p>
+That is where <a href="https://www.linkedin.com/in/dheeraj-pande-36949254/?ppe=1">Dheeraj</a> gave a neat trick:
+the way we find creativeId is by taking a hash of the dump of the creative! Once you do this, the administration
+of creative ids becomes trivial!
+</p>
+</body>
+</html>
