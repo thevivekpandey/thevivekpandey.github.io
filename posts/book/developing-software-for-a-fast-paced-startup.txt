@@ -1,3 +1,16 @@
+Chapters:
+=========
+1. Basic Principles
+2. Development
+3. Testing
+4. Monitoring
+6. Continuous improvement
+7. Performnace improvement
+8. Building a team
+9. Interacting with clients
+10. Attitude matters
+
+5. Documentation
 - For whom is the book meant? Young people trying to build technology company [DONE]
    - Much of the advice might seem obvious, but consider that someone in quora asked a question that
      implied codechef champ may rewrite google.
@@ -158,6 +171,7 @@
    - Reply quickly. Keep udpated. [DONE]
    - Customer is always right [DONE]
    - Reply on the same medium, so that there is a record [DONE]
+   - Event client is human. They appreciate you taking time. So, do not hestitate to set up call. or communicate.
 
 - Don't take shortcuts.
     We stored dropdown fields like:
@@ -205,3 +219,7 @@
   Physics was hotshot in 1920s (show the photo), there was aviation (we flew and then reached the moon).
   CS innovations will ultimately halt too, but right now we are going strong.
 - Security aspect
+- stateful vs stateless [be stateless at the cost of performance]
+- Configuration manaagement
+proposals@oreilly.com
+http://www.aristeia.com/authorAdvice.html
