@@ -12,18 +12,119 @@
 <h2>Human: A Manifesto for Programming Language for Humans</h2>
 <h3>Abstract</h3>
 <p>
-Over the last 50 years, programming languages have been become increasingly human.
-It is far more easier to write programmes in the languages of today than it was
+Over the last 50 years, programming languages have become increasingly human.
+It is far easier to write programmes in the languages of today than it was
 50 years ago. I argue that we are currently at the beginning of a wave of entirely 
-new class of programming languages programming in which productivity will be 
+new class of programming languages, in which productivity will be 
 orders of magnitude higher and quality will be orders of magnitude better. These
-programming languages will be very close to natural langues, and their compilers
-will be artifically intelligent. I discuss various charaterstics of this yet
-to be designed language, which I christen: Human.
+programming languages will be very close to natural languages, and their compilers
+will be artificially intelligent. I discuss various charaterstics of this yet
+to be designed language, which I christen: <b>Human</b>.
 </p>
 <h3>Programming languages are approaching natural lanauges</h3>
 <p>
+Programming languages serve as the bridge between humans and computers. While
+humans think (mostly) in natural languages<sup>1</sup>, computers understand machine language.
+Programming languages say to the user: "Hey! we need to cover this distance between
+your thoughts, which are in natural language and the machine languages, which
+computer understands. Your natural language is too ambiguous and incosistent,
+so why don't you please use a programming language which is very close to
+natural language, except that it is unambiguous and consistent. Then the compiler
+will take care of converting programming language to machine language"
+</p>
 
+<p>
+So, the deal with computer systems is: "Humans cover part of the distance: translating
+from natural language to programming lanauge, while the computers (in the form
+of compilers) will do the rest: translating from programming language to the machine
+language.
+</p>
+
+<p>
+With the advancement of languages, the distance required to be travelled by humans
+has gradually reduced. Consider assembly programming, where humans cover most of
+the distance, with compiler needing to do a one to one translation between assembly
+instructions and machine instructions.
+</p>
+
+<p>
+Programming languages, being the bridge to machines, are inspired from them. They
+retain constructs inspired by machines, and shed these structures only gradually.
+Let's observe a few of these constructs and what is their status.
+</p>
+
+<h4>Imperativeness</h4>
+<p>
+Imperative programming is the paradigm of programming where statements are used
+to mutate the state of the program.
+</p>
+<p>
+The fact that a microprocessor executes instructions one after the other, and changes
+the values of various regisers,  makes
+imperativeness inherent in the computation stack. This
+is the reason why earliest languages were imperative, imperativeness permeates
+the art of programming today. The problem is that humans do not think imperatively
+and forcing them to write imperative code reduces their productivity and code
+quality.
+
+</p>
+
+<p>
+There have been a few paradigms different from procedural programming, each getting
+a fair degree of success. Declarative programming languages (like SQL) have
+achieved success in some domains. There are no popular general purpose declarative
+programming languages. Functional programming is relatively more widespread, but
+statelessness is its Achilles Heel. With mainstream languages like Python and Java 
+adopting functional features, some of the imperativeness is being replaced by
+functional programming.
+</p>
+
+<p>
+If you can't beat them, join them. That is the mantra of object oriented programming.
+If state is inevitable, let's promote them from low level atomic values (like
+integer, floating points and characters) to objects. Style is still procedural, you still
+execute instructions one after the other mutating the state, but the state 
+stands for something more meaningful to humans.
+</p>
+
+<h4>Goto</h4>
+<p>
+Earlier languages had a "goto" instruction, which was inspirted by jump instruction
+in microprocessor. Goto instructions led to very confusing code because you can 
+jump to arbitrary points in the code, making it hard to reason about the code. While
+there may be some valid uses of using goto, it has been almost completely eradicated
+in modern programming practice, and replaced by various other constructs such as
+structured programming and exceptions.
+</p>
+
+<h4>Typing</h4>
+<p>
+Since instruction set cares about types (integer addition is different from floating
+point addition), initial programming languages were all statically typed. However,
+since humans do not think in types, many modern languages are dynamically typed.
+</p>
+
+<h4>Function call</h4>
+<p>
+Function calls are very interesting. The idea of function call is very natural to
+humans. We often delegate work to other people. Initially, there was no support
+for function calls in the microprocessor, they needed to be implemented by the
+programmar. However, it was such a popular idea that microprocessors started to
+provide "call" and "ret" instructions to make function calls faster. This is one
+instance where human style of thinking has had effect all the way till microprocessor.
+</p>
+<h3>Artificial intelligence is advancing</h3>
+<p>
+
+</p>
+
+<h3>Efforts in natural language programming</h3>
+<p>
+Footnotes
+
+<ol>
+<li>Yes, we think in language [Throw some research]</li>
+</ol>
 </p>
 </body>
 </html>
