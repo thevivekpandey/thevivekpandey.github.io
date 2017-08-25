@@ -9,24 +9,29 @@
   </style>
 </head>
 <body>
-<h2>Human: A Manifesto for Programming Language for Humans</h2>
-<h3>Abstract</h3>
+<h1>Human: A Manifesto for Programming Language for Humans</h1>
+<h2>Abstract</h2>
 <p>
 Over the last 50 years, programming languages have become increasingly human.
 It is far easier to write programmes in the languages of today than it was
-50 years ago. I argue that we are currently at the beginning of a wave of entirely 
+in FORTRAN. I argue that we are currently at the beginning of a wave of entirely 
 new class of programming languages, in which productivity will be 
 orders of magnitude higher and quality will be orders of magnitude better. These
 programming languages will be very close to natural languages, and their compilers
 will be artificially intelligent. I discuss various charaterstics of this yet
-to be designed language, which I christen: <b>Human</b>.
+to be designed language, which I christen in advance: <b>Human</b>.
 </p>
-<h3>Programming languages are approaching natural lanauges</h3>
+
+<p>
+A lot of what follows is a rosy picture of the future with lots of hand waving.
+However, I believe there is a kernel of realism in the ideas proposed here.
+</p>
+<h2>Programming languages are approaching natural lanauges</h2>
 <p>
 Programming languages serve as the bridge between humans and computers. While
-humans think (mostly) in natural languages<sup>1</sup>, computers understand machine language.
+humans think (mostly) in natural languages, computers understand machine language.
 Programming languages say to the user: "Hey! we need to cover this distance between
-your thoughts, which are in natural language and the machine languages, which
+your thoughts, which are in natural language and the machine language, which
 computer understands. Your natural language is too ambiguous and incosistent,
 so why don't you please use a programming language which is very close to
 natural language, except that it is unambiguous and consistent. Then the compiler
@@ -41,7 +46,7 @@ language.
 </p>
 
 <p>
-With the advancement of languages, the distance required to be travelled by humans
+With the advancement of natural languages, the distance required to be travelled by humans
 has gradually reduced. Consider assembly programming, where humans cover most of
 the distance, with compiler needing to do a one to one translation between assembly
 instructions and machine instructions.
@@ -53,7 +58,7 @@ retain constructs inspired by machines, and shed these structures only gradually
 Let's observe a few of these constructs and what is their status.
 </p>
 
-<h4>Imperativeness</h4>
+<h3>Imperativeness</h3>
 <p>
 Imperative programming is the paradigm of programming where statements are used
 to mutate the state of the program.
@@ -74,7 +79,7 @@ There have been a few paradigms different from procedural programming, each gett
 a fair degree of success. Declarative programming languages (like SQL) have
 achieved success in some domains. There are no popular general purpose declarative
 programming languages. Functional programming is relatively more widespread, but
-statelessness is its Achilles Heel. With mainstream languages like Python and Java 
+statelessness is its Achilles heel. With mainstream languages like Python and Java 
 adopting functional features, some of the imperativeness is being replaced by
 functional programming.
 </p>
@@ -87,7 +92,7 @@ execute instructions one after the other mutating the state, but the state
 stands for something more meaningful to humans.
 </p>
 
-<h4>Goto</h4>
+<h3>Goto</h3>
 <p>
 Earlier languages had a "goto" instruction, which was inspirted by jump instruction
 in microprocessor. Goto instructions led to very confusing code because you can 
@@ -97,14 +102,16 @@ in modern programming practice, and replaced by various other constructs such as
 structured programming and exceptions.
 </p>
 
-<h4>Typing</h4>
+<h3>Typing</h3>
 <p>
 Since instruction set cares about types (integer addition is different from floating
 point addition), initial programming languages were all statically typed. However,
 since humans do not think in types, many modern languages are dynamically typed.
+There is a performance penalty for dynamic typing, but for most use cases, faster
+development trumps the poorer performance.
 </p>
 
-<h4>Function call</h4>
+<h3>Function call</h3>
 <p>
 Function calls are very interesting. The idea of function call is very natural to
 humans. We often delegate work to other people. Initially, there was no support
@@ -113,17 +120,166 @@ programmar. However, it was such a popular idea that microprocessors started to
 provide "call" and "ret" instructions to make function calls faster. This is one
 instance where human style of thinking has had effect all the way till microprocessor.
 </p>
-<h3>Artificial intelligence is advancing</h3>
-<p>
 
+<p>
+Thus we see that over the decades programming languages have got increasingly humanized.
+</p>
+<h2>Artificial intelligence is advancing</h2>
+<p>
+In the past decade or so, artifical intelligence has made major advances. This is primarily
+driven by two factors. Firstly, we have enormous amount of data available to train
+AI systems. Secondly, we have enormous amount of compute power available to perform
+this training. As a result of these two factors, machines can now perform tasks which
+they could not do earlier.
 </p>
 
-<h3>Efforts in natural language programming</h3>
 <p>
-Footnotes
+Natural language processing has advanced enough that we have tools like Siri and Amazon
+Alexa which can do simple tasks seamlessly. 
+</p>
 
+<p>
+Programming in natural language would be significantly harder than that. However, it should
+be possible to create a intelligent, learning compiler which understands a subset of English
+and translates it to a different programming language.
+</p>
+
+<h2>Efforts in natural language programming</h2>
+<p>
+There have been efforts, for a long time, in the area of natural language programming.
+</p>
+
+<p>
+One active area of research is "Programming by example"<sup>1</sup>, where you give the computer
+sample inputs and outputs and then leave it to generate programs. For example you may provide
+<table border="1">
+<tr><th>Input</th><th>Output</th></tr>
+<tr><td>Missing page numbers, 1993</td><td>1993</td></tr>
+<tr><td>64-67, 1995</td><td>1995</td></tr>
+<tr><td>1992 (1-27)</td><td>1992</td></tr>
+</table>
+
+The system would learn from inputs and outputs and produce a program that can perform
+the translation on any input.
+</p>
+
+<p>
+Mathematica provides a natural language interface to generate Mathematica programs.<sup>2</sup>
+</p>
+
+<p>
+Edsger Dijkstra, considered natural language programming to be a foolish exercise.<sup>3</sup>.
+However, his views are from 80's and 90's, and computation has advanced far beyond those times.
+His chief concern is that natural languge is imprecise and thus unsuitable for programming.
+However, given far more computational resources and maturation of deep learning technologies,
+a compiler should be able to compile natural language programs correctly in most cases. As
+for the other cases, well, even humans don't write bug free code, and test cases should anyway
+be written to test the software thoroughly.
+</p>
+
+<p>
+A paper from Mihalcea et. al. <sup>4</sup> outlines some challenges involved in building
+such a system.
+</p>
+
+<h2>A Few Examples of what Human should look like</h2>
+<p> I recently wrote a program, whose natural description would be the following</p>
+<p>
+"File a.txt contains three comma separated fields: username, first name and last name.
+File b.txt also contains three comma seperated fields: email, first name and last name.
+For each email in b.txt, if corresponding first name and last name are present in a.txt,
+I want to know its username."
+</p>
+
+<p>
+The corresponding code which I wrote in Python was this:
+</p>
+
+<pre>
+import sys
+
+name_2_uids = {}
+f = open('a.txt')
+for line in f:
+    uid, first_name, last_name = line.strip().split(',')
+    uid = uid.strip()
+    first_name = first_name.strip()
+    last_name = last_name.strip()
+    name_2_uids.setdefault((first_name, last_name), []).append(uid)
+f.close()
+
+f = open('b.txt')
+name_2_email = {}
+for line in f:
+    email, first_name, last_name = line.strip().split(',')
+    email = email.strip()
+    first_name = first_name.strip()
+    last_name = last_name.strip()
+    if (first_name, last_name) in name_2_uids:
+        print first_name.encode('utf-8') + '\t' + last_name.encode('utf-8') + '\t' + ','.join(name_2_uids[(first_name, last_name)])
+f.close()
+</pre>
+
+<p>
+Here is another example:<br>
+"I have a file called user.txt, which contains userId's.
+From the events table in database 1772e3a9bb92fdc2810a_web of mongodb(hostname: 10.0.0.1, port 27010), find all the rows
+such that userId is contained in user.txt, eventName is page_viewed and _id is more than ObjectId("595698a80000000000000000")"
+<br>
+And here is the Python program I wrote for it:
+</p>
+<pre>
+def get_user_ids(filename):
+    f = open(filename)
+    field_ids = []
+    for line in f:
+        field_ids.append(int(line.strip()))
+    f.close()
+    return field_ids
+
+if __name__ == '__main__':
+    client = MongoClient("10.0.0.1:27010")
+    db = client['1772e3a9bb92fdc2810a_web']
+    collection = db['events']
+    user_ids = get_user_ids(filename)
+
+    query = {'eventName': 'page_viewed', '_id': {'$gt': ObjectId("595698a80000000000000000")}, 'userId': {'$in': user_ids}}
+    events = collection.find(query)
+    for event in events:
+        print event
+</pre>
+
+<h2>How should we make Human?</h2>
+<p>
+How should we go about making Human? There are two steps:
 <ol>
-<li>Yes, we think in language [Throw some research]</li>
+<li>
+First we create a basic version of Human which can solve some specific use cases. Perhaps it should be able
+to do text file manipulation, akin to awk. In this stage, we may use some hard coded rules to translate
+from natural language to human language, and we can impose some constraints on natural language too.
+We choose Python as the target language, just because I am most comfortable with this language.
+</li>
+
+<li>
+Once some level of maturity is reached, we write a learning compiler: the users of Human correct the 
+incorrectly compiled programs, and the &lt;source code, incorrectly compiled code, corrected compiled code&gt;
+is uploaded to the server. These samples are used by the compiler to learn and become better.
+</li>
+</ol>
+</p>
+
+<h2>A prediction</h2>
+<p>
+I predict that a Human (there can be multiple versions of Human, by different people) would find a 
+mention in Tiobe Index<sup>5</sup> by December 2022.
+</p>
+<h2>Related Links</h2>
+<ol>
+<li>Learning to Learn Programs from Examples: Going beyond Program Structures. https://www.microsoft.com/en-us/research/wp-content/uploads/2017/04/ranking-ijcai17.pdf</li>
+<li>Programming with Natural Language Is Actually Going to Work. http://blog.wolfram.com/2010/11/16/programming-with-natural-language-is-actually-going-to-work/</li>
+<li>On the foolishness of "natural language programming". https://www.cs.utexas.edu/users/EWD/transcriptions/EWD06xx/EWD667.html</li>
+<li>NLP (Natural Lanaguage Processing) for NLP (Natural Language Programming), http://alumni.media.mit.edu/~hugo/publications/papers/CICLING2006-nlp4nlp.pdf
+<li>Tiobe Index, https://www.tiobe.com/tiobe-index/</li>
 </ol>
 </p>
 </body>
