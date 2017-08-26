@@ -1,0 +1,21 @@
+Chhaya
+------
+Preface:
+Cost of microprocessor has decreased, so how can you say that software engineering becomes important?
+Preface has two distinct parts, and there is abrupty change
+You say do not think about future, so what if I am successful and face problems in future?
+
+There is only one electron
+First Science, then religion, then science. Very distracting.
+You talk about uniqueness then deduplication. They are not the same.
+Why to keep filepath in database? Why not in some class? Why not in file or environment variable? DB access is harder.
+
+Why computers being state machines make programming complex?
+Death can be compared to program crash, not to bug.
+Bugs also happen (so do car crashes) because there are other people involved
+
+You give three steps: develop, test, monitor. But what about requirement gathering?
+Introduction is good.
+A program should not talk abruptly change the context.
+Why do we have functions and classes: a psychological viewpoint
+Sometimes bugs are because of lack of clarity of requirements to developers

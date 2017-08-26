@@ -3,14 +3,14 @@ Chapters:
 1. Basic Principles
 2. Development
 3. Testing
-4. Monitoring
+4. Deployment
+5. Monitoring
 6. Continuous improvement
 7. Performnace improvement
 8. Building a team
 9. Interacting with clients
 10. Attitude matters
 
-5. Documentation
 - For whom is the book meant? Young people trying to build technology company [DONE]
    - Much of the advice might seem obvious, but consider that someone in quora asked a question that
      implied codechef champ may rewrite google.
@@ -58,6 +58,7 @@ Chapters:
        - Similarly, when system evolves, it may be hard to get a good big picture
    o Convention: camelCase etc
          dropdown or drop_down
+         User same name everywhere. some time is UDF, sometime it is UserDefinedFunction.
 
 - You do not need Hadoop [DONE]
    Don't blindly copy big companies
@@ -223,3 +224,4 @@ Chapters:
 - Configuration manaagement
 proposals@oreilly.com
 http://www.aristeia.com/authorAdvice.html
+Code review
