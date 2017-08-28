@@ -1,14 +1,25 @@
 Chapters:
 =========
+- preface
 1. Basic Principles
+   - intro
 2. Development
+   - empty set is a set
+   - on sofware architecture
+   - there is only one electron
+   - you do not neeed hadoop
 3. Testing
 4. Deployment
 5. Monitoring
+   - how to avoid drowning
 6. Continuous improvement
-7. Performnace improvement
+7. Performance improvement
+   - on performance improvement
 8. Building a team
+   - how to be a good cto
 9. Interacting with clients
+   - interacting with clients
+
 10. Attitude matters
 
 - For whom is the book meant? Young people trying to build technology company [DONE]
