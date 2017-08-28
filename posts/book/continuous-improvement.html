@@ -1,0 +1,118 @@
+<html>
+<head>
+  <title>Continuous Improvement</title>
+  <link rel="stylesheet" type="text/css" href="../style.css"/>
+</head>
+<body>
+<h2>Continuous Improvement</h2>
+<h3>Don't max out</h3>
+<p>
+One difference between good and not good engineers that I have seen is that not good engineers
+"max out" too soon.
+</p>
+
+<p>
+I once interviewed an android developer for our company. When asked why he wanted to leave is
+current company, he replied that "there was nothing left to do" in the android app of the
+current company.
+</p>
+
+<p>
+That was clearly untrue: the app was mediocre at best: its look and feel could be improved,
+its usability could be improved and its performance could be improved. However, the candidate
+thought that there was nothing else to be done, since a raw product was out in the place.
+</p>
+
+<p>
+On the other hand, we had a super engineer at VMware who, every few days, would submit a new
+change to the Virtual Machine Monitor (the core virtualization code). Each checkin would
+improve the performance of our product in a minor way, and he would submit comparision like
+this:
+<table border="1">
+<tr><td></td><td>Earlier</td><td>Now</td></tr>
+<tr><td>Component A</td><td>12.2</td><td>9.6</td></tr>
+<tr><td>Component B</td><td>5.6</td><td>5.9</td></tr>
+<tr><td>Component C</td><td>2.1</td><td>2.1</td></tr>
+<tr><td>Component D</td><td>0.8</td><td>0.9</td></tr>
+<tr><td>Total</td><td>20.7</td><td>18.5</td></tr>
+</table>
+Gain: 2.2 cycles per invocation.
+
+<br>
+Someone remarked that the said engineer improves performance one cycle at a time. But over time,
+it adds up, and VMware was the leader in hypervisor performance.
+</p>
+
+<p>
+The lesson to be learnt it not be satisfied with status quo. A good engineer is always on lookout
+to improve the quality, performance, debuggability, maintanability, deployability, reliability of
+his systems. He never maxes out.
+</p>
+
+<h3>Learn from each mistake</h3>
+<p>
+Most human endeavours are so vast that no one person, nor even a team consisting of great persons
+can be perfect. The more you learn, the more you realize about your ignorance and folly. That's
+why they say that while doing PhD, you learn more and more about less and less and finally you
+know everything about nothing.
+</p>
+
+<p>
+This holds so much true in Sciences. The nature is so vast and so mysterious that while very 
+smart and hardworking humans have worked on uncovering its mysteries since the dawn of the
+civilization, a complete understanding is no where on the horizon. Theroems like Godel's
+incompleteness theorem actually seem to suggest that it is not possible for us complete
+understand the universe. Who knows we are all a simulation in a giant computer program
+and we can never understand our true nature.
+</p>
+
+<p>
+As in Science, so in Computer Engineering. Several generations of bright computer scientists
+have developed computer engineering to the discipline that it is now. Since the underlying
+hardware changes fast (faster processeors, more memory capacities, larger bandwidths,
+mobile devices), the best practices to develop software change too. Even for bright people
+it is not possible to operate in a perfect way. And most of, by definition, are mediocre.
+</p>
+
+<p>
+Despite our limitations, we need to write code and build systems that work. How are we 
+supposed to do this?
+</p>
+
+<p>
+We should try to make our systems what Nassim Nicholas Taleb calls "Antifragile": systems
+which become stronger from shocks. In other words, we try to make our systems such that
+what does not break it makes it stronger.
+</p>
+
+<p>
+The way we do this is by learning from our mistakes.
+</p>
+
+<p>
+Did you find a bug in your software? Don't just fix it and move on. Analyze why the bug happened.
+Is it because the developer missed something while implementing a new feature? Then write a test
+case for it, so that a similar mistake does not happen in future.
+</p>
+
+<p>
+Sometime, the bug may have happened because of duplicate code: while developer modified the code
+at one place, he forgot to modify it at the other place. This is a great reason to do the code
+deduplication now.
+</p>
+
+<p>
+While implementing a new functionality, you may realize that the code is not designed well. If it
+were designed some other way, new functionality could have been implemented more easily. Well,
+take time and do it right way.
+</p>
+
+<p>
+Sometimes, some incorrect behavior may persist for days. It may be related or unrelated to the 
+correctness of the code, but could be a lapse in monitoring. In that case, set up the
+relevant monitoring. Set up proper charts and alarms to ensure that you know of the incidents
+soon after they happen.
+</p>
+
+</body>
+</html>
