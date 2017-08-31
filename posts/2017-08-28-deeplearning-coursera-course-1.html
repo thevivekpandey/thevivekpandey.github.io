@@ -1,0 +1,148 @@
+<html>
+<head>
+  <title> Notes on Cousera Deep Learning Course: Course 1</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <style>
+     li {
+        margin-bottom: 10px;
+     }
+  </style>
+
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML"></script>
+</head>
+<body>
+<a href="http://thevivekpandey.github.io">Home</a>&nbsp;&nbsp; <a href="https://qgraph.io">QGraph</a>
+<h1>Notes on Logistic Regression</h1>
+<p>
+I am doing Andrew Ng's course on deep learning, and summarising the lectures here.
+</p>
+
+<h2>Welcome</h2>
+<p>
+AI is new electricity, transforming numerous industries.
+</p>
+
+<h2>Neural Network</h2>
+Looks like this<br>
+<img src="neural-net.png" width=500/>
+<br>
+Multidimensional input goes to the neurons in first layer. Output of first layer neurons goes to second layer, and so on.
+
+<br/>
+Housing problem is structured, ads clicked or not is structured. Audio, image, and are unstructured.
+<br/>
+Deep learning is taking off now because there is lot of data to train on, and computing power to perform this training.
+
+<h2>Logistic Regression</h2>
+We are given $(x, y)$ pairs where $x \in R^{n_x}$ and $y \in \{0, 1\}$.
+<br/> <br/>
+$x$ is written as a column vector.
+<br/> <br/>
+We want $\hat{y} = P(y = 1 \mid x)$.
+<br/> <br/>
+We denote those pairs as $(x^{(1)}, y^{(1)}), (x^{(2)}, y^{(2)}) \dots (x^{(m)}, y^{(m)}) $
+<br/> <br/>
+We say $\hat{y} = \sigma(w^{T}x + b)$, or $\hat{y} = \sigma(z)$ where $z = w^{T}x + b$
+<br/> <br/>
+by which we mean
+<br/> <br/>
+$\hat{y^{(i)}} = \sigma(w^{T}x^{(i)} + b)$ for $i = 1\dots m$
+<br/> <br/>
+where $w \in R^{n_x}$ is again a column vector, and $b \in R$ and
+$\sigma(z) = \frac{1}{1 + e^{-z}}$
+<br/> <br/>
+
+Now we need to find $w$ and $b$ such that cost function 
+<br/> <br/>
+$J(w,b) = \frac{1}{m} \sum_{i=1}^{m}L(\hat{y^{(i)}}, y^{i})$
+<br/> <br/>
+is minimized, where
+<br/> <br/>
+$L(\hat{y}, y) = -(ylog\hat{y} + (1 - y)log(1 - \hat{y}))$
+<h2>Gradient Descent to Solve the Problem</h2>
+Main idea is, start with some value of $w$ and $b$, and then repeatedly:
+<br/> <br/>
+$w = w - \alpha\frac{dJ(w,b)}{dw}$
+<br/> <br/>
+$b = b - \alpha\frac{dJ(w,b)}{db}$
+<br/> <br/>
+till $w$ and $b$ converge.
+<br/> <br/>
+Now, for one training example, let us use $\hat{y} = a$.
+<br/> <br/>
+$\frac{dL(a,y)}{dw_1} = \frac{dL(a,y)}{da}\frac{da}{dz}\frac{dz}{dw_1}$
+<br/> <br/>
+where $z = \sigma({w^{T}x + b})$
+<br/> <br/>
+It simplifies to
+<br/> <br/>
+$\frac{dL(a,y)}{dw_1} = (-\frac{y}{a} + \frac{1-y}{1-a}) * a(1-a) * x_1$
+<br/> <br/>
+$= (a - y)x_1$
+<br/> <br/>
+Similarly, we can find that
+$\frac{dL}{db} = \frac{dL}{dz}$
+<h4>Some notation</h4>
+We denote $da = \frac{dL(a,y)}{da}$, $dz = \frac{dL(a,y)}{dz}$ and $dw = \frac{dL(a,y)}{dw}$
+<br/> <br/>
+Thus we write:
+<br/> <br/>
+$dz = (a - y)$, $dw_i = x_idz$
+<br/> <br/>
+Now, since you know $dw_i$, if there were just one training example, you could do
+$w_i = w_i - \alpha dw_i$
+<br/> <br/>
+repeatedly till $w_i$ converged.
+<br/> <br/>
+But we have $m$ training examples.
+<h3>Gradient descent on $m$ training examples</h3>
+Thus, summing over $m$ training examples,
+<br/> <br/>
+$\frac{dJ}{dw_1} = \frac{1}{m}\Sigma_{i=1}^{m}\frac{d}{dw_1}L(a^i, y^i)$
+$= \frac{1}{m}\Sigma_{i=1}^{m}dw_1^{(i)}$
+<br/> <br/>
+We call $dw_1 = \frac{dJ}{dw_1}$
+<br/> <br/>
+and set $w_1 = w_1 - \alpha dw_1$
+<br/> <br/>
+Similarly for $dw_2\dots dw_{n_x}$
+<br/> <br/>
+And $b = b - \alpha db$
+<h2>Vectorizing Logistic Regression</h2>
+Since $x$'s are written as column vector, we can introduce
+<br/> <br/>
+$X = 
+\begin{bmatrix} 
+\mid & \mid & & \mid\\
+x^{(1)}& x^{(2)} & \dots & x^{(m)}\\
+\mid & \mid & & \mid
+\end{bmatrix}$,
+
+$X \in R^{n_x \times m}$
+<br/> <br/>
+Also, $Z = [z_1,\dots z_m]$
+<br/> <br/>
+And, $W^T = [w_1, \dots w_{n_x}]$
+<br/> <br/>
+So, $Z = W^TX + b$
+<br/> <br/>
+$A = \sigma(Z)$
+<br/> <br/>
+$dZ = A - Y$
+<br/> <br/>
+where $A = [a^{(1)}, \dots, a^{(m)}]$, $Y = [y^{(1)}, \dots, y^{(m)}]$
+<br/> <br/>
+$db = \frac{1}{m} sum(dZ)$
+<br/> <br/>
+$dw = \frac{1}{m}Xdz^{T}$
+<br/> <br/>
+$w = w - \alpha dw$
+<br/> <br/>
+$b = b - \alpha db$
+</body>
+</html>
