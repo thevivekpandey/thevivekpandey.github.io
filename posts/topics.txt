@@ -1,2 +1,4 @@
 - Why deep learning is suprising for me.
 - Writing is bottleneck. Can there be a speech to text code editor?
+- Code comments in markdown
+- The yin and yang of software development

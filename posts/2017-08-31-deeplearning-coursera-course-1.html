@@ -57,6 +57,11 @@ $\hat{y^{(i)}} = \sigma(w^{T}x^{(i)} + b)$ for $i = 1\dots m$
 where $w \in R^{n_x}$ is again a column vector, and $b \in R$ and
 $\sigma(z) = \frac{1}{1 + e^{-z}}$
 <br/> <br/>
+$w^T = [w_1, w_2, \dots w_{n_x}]$
+<br/> <br/>
+$\sigma(z)$ called "activation function". There can be many activation functions. They are the
+ones which give rise to non linearity in logistic regression and neural networks.
+<br/> <br/>
 
 Now we need to find $w$ and $b$ such that cost function 
 <br/> <br/>
@@ -65,10 +70,12 @@ $J(w,b) = \frac{1}{m} \sum_{i=1}^{m}L(\hat{y^{(i)}}, y^{i})$
 is minimized, where
 <br/> <br/>
 $L(\hat{y}, y) = -(ylog\hat{y} + (1 - y)log(1 - \hat{y}))$
+<br/> <br/>
+$J$ is called cost function, $L$ is called loss function.
 <h2>Gradient Descent to Solve the Problem</h2>
 Main idea is, start with some value of $w$ and $b$, and then repeatedly:
 <br/> <br/>
-$w = w - \alpha\frac{dJ(w,b)}{dw}$
+$w_i = w_i - \alpha\frac{dJ(w,b)}{dw_i}$ for $i = 1\dots n_x$
 <br/> <br/>
 $b = b - \alpha\frac{dJ(w,b)}{db}$
 <br/> <br/>
@@ -128,7 +135,7 @@ $X \in R^{n_x \times m}$
 <br/> <br/>
 Also, $Z = [z_1,\dots z_m]$
 <br/> <br/>
-And, $W^T = [w_1, \dots w_{n_x}]$
+And, $W^T = [w_1, \dots w_{n_x}]$. Note that we just declare $W = w$
 <br/> <br/>
 So, $Z = W^TX + b$
 <br/> <br/>
