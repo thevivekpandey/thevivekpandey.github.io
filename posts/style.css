@@ -1,11 +1,11 @@
 @import 'https://fonts.googleapis.com/css?family=Roboto:300,400,500';
 body {
   margin: 0 auto;
-  max-width: 50em;
+  max-width: 40em;
   font-family: "Roboto",Corbel,Avenir,"Lucida Grande","Lucida Sans",sans-serif!important;
   line-height: 1.5;
   color: #3e4349;
-  font-size: 14px;
+  font-size: 17px;
   text-align: justify;
 }
 

@@ -2,3 +2,5 @@
 - Writing is bottleneck. Can there be a speech to text code editor?
 - Code comments in markdown
 - The yin and yang of software development
+- Meta classes in Python
+- All the noise about being leaders!
