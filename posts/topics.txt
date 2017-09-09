@@ -5,3 +5,5 @@
 - Meta classes in Python
 - All the noise about being leaders!
 - We are at inflection point in computer science
+- Write 10 sample programs for Human
+- How to not die
