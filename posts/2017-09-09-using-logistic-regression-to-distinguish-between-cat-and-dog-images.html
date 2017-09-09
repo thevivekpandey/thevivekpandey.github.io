@@ -54,8 +54,8 @@ a few images look like:
 <p>
 I ran logistic regression model on 500 cat images and 500 dog images. I took rather few images because
 even in our assignment we had taken only ~200 images. To my surprise, all the
-weights came close to 1 (larger than 0.9999), and thus all predictions are that the the image is
-a cat.
+weights came close to 1 (larger than 0.9999), and thus all predictions are that the image is that of
+a cat. This is clearly incorrect.
 </p>
 
 <p>
@@ -74,7 +74,8 @@ components of $w$ turn out to be close to 1.
 
 <p>
 I need to figure out if I am commiting some error in coding, or is there some inherent limitation
-of 1 layer neural network here. Any points from readers would be appreciated. I'll upload a docker
+of 1 layer neural network here. Perhaps there is a lot of divergence in cat vs non cat images, but
+not that much divergence between cat and dog images. Any points from readers would be appreciated. I'll upload a docker
 image if I find time. I have put my code <a href="https://github.com/quantumgraph/deeplearning/tree/master/deeplearning/detect-cat">here</a>.
 </p>
 </body>
