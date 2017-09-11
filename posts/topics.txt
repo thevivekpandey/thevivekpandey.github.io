@@ -1,9 +1,12 @@
-- Why deep learning is suprising for me.
+- Why deep learning is suprising for me. [DONE]
 - Writing is bottleneck. Can there be a speech to text code editor?
 - Code comments in markdown
-- The yin and yang of software development
+- The yin and yang of software development [DONE]
 - Meta classes in Python
 - All the noise about being leaders!
 - We are at inflection point in computer science
 - Write 10 sample programs for Human
 - How to not die
+- How neural nets can detect shades of different types. How do more layers mean more power
+  Inspired by https://www.youtube.com/watch?v=ILsA4nyG7I0
+- How neural nets really work: a case of detecting circles vs non circles and observe the weights

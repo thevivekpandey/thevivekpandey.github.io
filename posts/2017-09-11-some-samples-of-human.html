@@ -1,0 +1,140 @@
+<html>
+<head>
+  <title>Some Samples of Human</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <style>
+     li {
+        margin-bottom: 10px;
+     }
+  </style>
+
+</head>
+<body>
+<a href="http://thevivekpandey.github.io">Home</a>&nbsp;&nbsp; <a href="https://qgraph.io">QGraph</a>
+<h1>Some Samples of Human</h1>
+<h2>Example 1</h2>
+<h3>Human</h3>
+<pre>
+File a.txt contains three comma separated fields: username, first name and last name. 
+File b.txt also contains three comma seperated fields: email, first name and last name. 
+For each email in b.txt, if corresponding first name and last name are present in a.txt, 
+I want to know its username.
+</pre>
+<h3>Python</h3>
+<pre>
+import sys
+
+name_2_uids = {}
+f = open('a.txt')
+for line in f:
+    uid, first_name, last_name = line.strip().split(',')
+    uid = uid.strip()
+    first_name = first_name.strip()
+    last_name = last_name.strip()
+    name_2_uids.setdefault((first_name, last_name), []).append(uid)
+f.close()
+
+f = open('b.txt')
+name_2_email = {}
+for line in f:
+    email, first_name, last_name = line.strip().split(',')
+    email = email.strip()
+    first_name = first_name.strip()
+    last_name = last_name.strip()
+    if (first_name, last_name) in name_2_uids:
+        print first_name.encode('utf-8') + '\t' + last_name.encode('utf-8') + '\t' + ','.join(name_2_uids[(first_name, last_name)])
+f.close()
+</pre>
+
+<h2>Example 2</h2>
+<h3>Human</h3>
+<pre>
+Read an integer from stdin. Output YES if the integer is even but not 2. Output NO otherwise.
+</pre>
+<h3>Python</h3>
+<pre>
+import sys
+
+line = sys.stdin.read().strip()
+if int(line) % 2 == 0 and int(line) != 2:
+    print 'YES'
+else:
+    print 'NO'
+</pre>
+
+<h2>Example 3</h2>
+<h3>Problem</h3>
+<p> Taken from <a href="http://codeforces.com/problemset/problem/110/A">Code Forces 110A</p></a>
+<h3>Human</h3>
+<pre>
+Read an integer from stdin.
+Count the numbers of digits in the integer which are either 4 or 7.
+If all the digits of this count are either 4 or 7, output YES, else output NO.
+</pre>
+<h3>Python</h3>
+<pre>
+import sys
+
+x = sys.stdin.read().strip()
+count = 0
+for c in x:
+    if c in ('4', '7'):
+        count += 1
+
+y = str(count)
+for c in y:
+    if c not in ('4', '7'):
+        print 'NO'
+        sys.exit()
+print 'YES'
+</pre>
+<h2>Example 4</h2>
+<h3>Problem</h3>
+<p> Taken from <a href="http://codeforces.com/problemset/problem/208/A">Code Forces 110A</p></a>
+<h3>Human</h3>
+<pre>
+Read a sentence from the input. Replce all WUB's by whitespace. Then 
+remove whitespaces from the ends and deduplicate white spaces within the sentence.
+</pre>
+<h3>Python</h3>
+<pre>
+import sys
+
+sentence = sys.stdin.readline().strip()
+sentence = sentence.replace('WUB', ' ').strip()
+sentence = ' '.join(sentence.split())
+print sentence
+</pre>
+
+<h2>Example 5</h2>
+<h3>Human</h3>
+<pre>
+I have a file called user.txt, which contains userId's. 
+From the events table in database 1772e3a9bb92fdc2810a_web of mongodb(hostname: 10.0.0.1, port 27010), 
+find all the rows such that userId is contained in user.txt, 
+eventName is page_viewed and _id is more than ObjectId("595698a80000000000000000")" 
+</pre>
+<h3>Python</h3>
+<pre>
+def get_user_ids(filename):
+    f = open(filename)
+    field_ids = []
+    for line in f:
+        field_ids.append(int(line.strip()))
+    f.close()
+    return field_ids
+
+if __name__ == '__main__':
+    client = MongoClient("10.0.0.1:27010")
+    db = client['1772e3a9bb92fdc2810a_web']
+    collection = db['events']
+    user_ids = get_user_ids(filename)
+
+    query = {'eventName': 'page_viewed', '_id': {'$gt': ObjectId("595698a80000000000000000")}, 'userId': {'$in': user_ids}}
+    events = collection.find(query)
+    for event in events:
+        print event
+</pre>
+
+</body>
+</html>
