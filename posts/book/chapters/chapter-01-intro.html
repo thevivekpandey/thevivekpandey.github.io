@@ -13,12 +13,16 @@ These are exciting times to be a practitioner of Computer Science!
 For past several decades, Computer Science has been changing our lives
 at an unprecedented rate, so much so that we call the phenomena as
 information revolution, at par with agricultural revolution and 
-industrial revolution.
+industrial revolution. What is more, while the agricultural revolution
+happened over a few centuries, and industrial revolution happened
+over around a century, information revolution is happening in the
+timescale of decades, thus allowing us to experience the changes
+within our lifetimes.
 </p>
 
 <p>
 What makes computers so powerful? What makes computers connected to the
-internet even more powerful? Calculators to can calculate, but they
+internet even more powerful? Calculators too can calculate, but they
 don't have as dramatic impact on our lives. Data transfer is possible
 by means other than internet, but that too does not impact our lives
 quite so dramatically as the internet.&lt;1&gt;To be fair, printed books,
@@ -30,13 +34,15 @@ but the impact is smaller compared to the impact of the internet.
 <p>
 Information ingestion, manipulation and storage are the requirements for
 survival of any living being. Consider a bird for example. It must take
-in information via vision and sound, manipulate it (to locate potential
-food items, or its nest), and also store the information (for example,
-it needs to remember the location of its nest)
+in information via vision and sound, manipulate it (to locate food items, 
+nest, or predators), and also store the information (for example,
+it needs to remember the location of its nest). Humans are no different.
+Whether it be trade, war, love, sport or politics: information ingestion,
+manipulation and storge plays a key role in our activities.
 </p>
 
 <p>
-Various of our inventions help in information ingestion (like camera,
+Various inventions help humans in information ingestion (like camera,
 television), information manipulation (like calculators) and information
 storage (like books). Computer systems, however, dramatically increase
 the capacity of ingestion, manipulation and storage. Furthermore, 
@@ -44,6 +50,7 @@ computer systems continue to increase these three aspects continuously,
 thus enabling newer problems that can be solved using computers.
 </p>
 
+<h3>It has been a big party for last 3 decades</h3>
 <p>
 Let's have a look at various metrics related to computers, and appreciate
 the tremendous rate at which some of have been growing.
@@ -59,27 +66,11 @@ First let's look at information ingestion rates per online user.
 <tr><td>2016</td><td>26,600 GB per second</td> <td>3600 million</td><td>638GB</td></tr>
 <tr><td>2021</td><td>105,800 GB per second</td><td>5400 million</td><td>1.7TB</td></tr>
 </table>
-</p>
-
 1. https://www.cisco.com/c/en/us/solutions/collateral/service-provider/visual-networking-index-vni/vni-hyperconnectivity-wp.html
-<p>
-So, we are consuming close to 1TB per online user per day, and the number continues to rise.
-Just how big is this number? Let's compare it to data ingestion done by a human
-without using any technology. Most of the data ingestion for humans is via eyes
-and ears, which are roughly equivalent to a video, which keeps on playing for
-us for 16 hours a day. A high quality 1 hour video consumes around 40GB of space.
-Thus, over the course of a day, an average human consumers around 640GB worth of
-information. Note that not all information is the same: information coming via
-the reading of a book has a much higher information density compared to gazing
-in a field, since the book contains the distilled knowledge of the author.
-However, such a comparison of total information ingested per human gives us some
-idea of how advanced our technology is compared to our biology.
 </p>
 
 <p>
-Above analysis seems to suggest that per capita computer data transfer has reached
-the level of our eyes and ears just recently. Since data transfer is on the rise,
-we can expect computers to augment the humans ever more, at least by this metric.
+That's an astounding 53% annual growth rate in data transfer per online user!
 </p>
 
 <p>
@@ -113,15 +104,15 @@ rate of roughly 50% per year, sustained for over 35 years! Disk space has simila
 </p>
 
 <p>
-Secondly, there has been advent of internet, with increasing bandwidths and decreasing
-costs.
+Similar is the case with increasing hard disk capacities, and internet bandwidth.
 </p>
 
 <p>
-Above two phenomena at the hardware level led to creation of software enabling
+Above phenomena at the hardware level led to creation of software enabling
 a myriad number of use cases.
 </p>
 
+<h3>How long will the party last</h3>
 <p>
 No party goes on forever and no field grows on for ever. 1920s and 1930s was the period 
 when rapid advances were made in Quantum Physics. Indeed, in a popular photograph taken at 
@@ -152,6 +143,7 @@ got stalled: no human has yet landed on the Mars and flights to Moon are quite r
 there have only been 6 manned missions to Moon!
 </p>
 
+
 <p>
 Computer Science is one of the most exciting fields today, and the main engine
 of technological advancement that we see today. The world is getting connected
@@ -162,7 +154,6 @@ ultimately lead us to, the journey is surely exciting for those make this happen
 </p>
 
 <h2>Why is writing software so complex</h2>
-
 <p>
 Writing any non trivial piece of software is hard. As the software becomes
 more complex, the rate at which you can modify it becomes slower, and the
@@ -194,6 +185,7 @@ Why is writing software so complex? Can't we be a little more careful and write 
 of software arises from two fundamental reasons.
 </p>
 
+<h3>Humans can be aware of limited state information</h3>
 <p>
 First, humans have a capability to hold a limited amount
 of state in their brains. In his paper "The Magical Number Seven, Plus or Minus Two: Some Limits 
@@ -201,6 +193,12 @@ on Our Capacity for Processing Information",
 George A. Miller, a cognitive psychologist at Princeton University, posits that human beings
 are able to hold between five and nine pieces of information at a time. Give them more than that
 and things start falling apart.
+</p>
+
+<p>
+You have experienced this yourself: if I ask you to remember a random sequence of digits, you
+will have difficulty in remembering it once the length of sequencey goes beyond eight or nine
+digits.
 </p>
 
 <p>
@@ -214,22 +212,23 @@ state in our head.
 <p>
 Computers are giant state machines. The content on the hard disk, the memory, various caches and the 
 processor registers constitutes the state, and various instructions are rules to change the state
-from one to another.
+from one to another. This giant machine is abstracted to the programmer in the form of variables and
+objects. Since writing correct program, depends on the developer's comprehension of the information
+that the variables hold, he is likely to write incorrect code as the number of variables increase.
+In a give context, there may be hundreds of variables that the developer may be exepected to keep
+track of. 
 </p>
 
+<h3>We don't know how software will be used</h3>
 <p>
-To manipulate such a giant state machine is very hard, and thus, higher level programming languages
-provide us with a simple, abstracted out state machine. Variables and objects are the states and
-statements operate on those states.
-</p>
-
-<p>
-It remains a state machine nonetheless and human capacity to hold a non trivial state information
-is just not there.
-</p>
-
-<p>
-Were computer programming 
+The second reason why it is difficult to write correct programs is that the developers are
+often ill aware of the contexts in which the program will be used. Your program expects a
+number, but the user may enter a string. Your program may be written for ascii characters,
+but the user may enter the value in their own (non English) characters. In any software design,
+there are some implicit assumptions about size and scale. A simple program meant to multiply
+two numbers might not be able to multiply to 100 digit numbers (if you use int or long as
+data type). A simple web server running on a small server cannot handle the request rate
+of millions per second.
 </p>
 
 <h2>Handling software complexity</h2>
@@ -264,7 +263,7 @@ There is a three pronged strategy that software developers need to follow to del
 </p>
 
 <p>
-First, since software development is bug prone because it is complex, we strive to reduce the complexity
+Since software development is bug prone because it is complex, we strive to reduce the complexity
 of the software. Further since software is complex because of large state involved, we strive to reduce
 the number of states that we have to deal with.
 </p>
@@ -298,6 +297,31 @@ Lastly, even after thorough testing may not reveal problems related to the lack 
 about how the code will be actually used. The input provided to the program may be in a different
 format than assumed by the developers, network requests may time out or provide unreasonable responses
 and so on. Thus, it is important that we monitor the behavior of the code in production. 
+</p>
+
+<p>
+In the coming chapters we will see how to do development, testing and monitoring to deliver quality
+software at a fast rate.
+</p>
+
+<h2>How development for startup is different?</h2>
+<p>
+While the principles of software development remain the same irrespective of the size or stage of a company,
+startups exhibit some unique characterstics which dictate some of the choices that developers should take.
+Firstly, startups struggle to find the product market fit. Thus, the product that you make may not take
+off. Thus the emphasis is on building quickly rather than building perfectly, so as to enable more iterations
+of various feature development. At the same time, you want to be cognizant of the possibility that your product may turn out to be useful, and if that happens, then you have to scale up while users are using your project. Some people find it akin to jumping off a plane and building a parachute on your way down.
+</p>
+<p>
+Secondly, since there are fewer team members in a startup, many problems that happen due to large team sizes simply do not exist. Thus, using tools meant for larger teams may be counter productive.
+</p>
+
+<p>
+Thirdly, except for startups building niche products, skill requirements in a startup require more breadth than depth, when compared to a large company. Thus, while in a big company, developers may not need to know about testing or deployment, in a startup, a single engineer may be managing all all of these.
+</p>
+
+<p>
+Thus, while the suggestions given in this book are for most part applicable to companies of all sizes, they are written with startups in mind, and some of them may not be applicable to large teams.
 </p>
 </body>
 </html>

@@ -152,5 +152,46 @@ $dw = \frac{1}{m}Xdz^{T}$
 $w = w - \alpha dw$
 <br/> <br/>
 $b = b - \alpha db$
+<h2>Multi layered neural networks</h2>
+First layer, i.e. input layer: provides the input $x$, also called $a^{[0]}$
+<br/> <br/>
+<img src="./neural-net-2.png"/>
+<br/> <br/>
+Second layer computes $z^{[1]} = \begin{bmatrix} z^{[1]}_1\\z^{[1]}_2\\\vdots\\z^{[1]}_k\end{bmatrix}$
+$=\begin{bmatrix} w^{[1]T}_1 * a^{[0]} + b^{[1]}_1\\ w^{[1]T}_2 * a^{[0]} + b^{[1]}_2\\ \vdots\\w^{[1]T}_k * a^{[0]} + b^{[1]}_k \end{bmatrix}$
+<br/> <br/>
+and then, $a^{[1]}_i = \sigma(z^{[1]}_i)$
+<br/> <br/>
+Superscript $[1]$ denotes the first layer of neural network and subscript $i$ denotes the $i^{th}$ element
+of the first layer.
+<br/> <br/>
+Now that you have $a^{[1]}$ ready, can compute $a^{[2]}$ applying similar logic.
+<br/> <br/>
+<h3>Vectorizing computation of $z^{[1]}$ etc.</h3>
+We stack various $w^{[i]T}$'s below each other and call it $W^{[1]}$, and then call
+<br/> <br/>
+$z^{[1]} = W^{[1]} * x + b^{[1]}$
+<br/> <br/>
+or
+<br/> <br/>
+$z^{[1]} = W^{[1]} * a^{[0]} + b^{[1]}$
+<br/> <br/>
+and $a^{[1]} = \sigma(z^{[1]})$
+<h3>Vectorizing across multiple training examples</h3>
+Now vectorizing across multiple training examples is also not too hard:
+<br/> <br/>
+As usual, various columns denote various training examples
+$Z^{[1]} = W^{[1]} * A + b^{[1]}$
+<h3>Various activation functions</h3>
+Activation functions are the source of non linearity.
+<ol>
+<li>sigmoid: $\frac{1}{1 + e^{-z}}$</li>
+<li>tanh: $\frac{1 - e^{-z}}{ 1 + e^z}$</li>
+<li>RelU</li>
+<li>LeakyRelu</li>
+</ol>
+Their derivatives:
+<li>sigmoid: $g(z) (1 - g(z)$</li>
+<li>tanh: $1 - tan^2(z)$ </li>
 </body>
 </html>

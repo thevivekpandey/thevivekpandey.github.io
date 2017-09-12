@@ -1,0 +1,1119 @@
+<html>
+<head>
+  <title> Development </title>
+  <link rel="stylesheet" type="text/css" href="../../style.css"/>
+</head>
+<body>
+<h1>Development</h1>
+<p>
+As explained in the previous chapter, we divide the process of building a product
+in four stages:
+<ol>
+<li>Development</li>
+<li>Testing</li>
+<li>Deployment</li>
+<li>Monitoring</li>
+</ol>
+In this chapter, we discuss some philosophies related to development.
+
+<h2>Empty Set is a set</h2>
+<h3>Silence is Nirvana</h3>
+<p>
+We are conditioned to view action as good and inaction as bad. We want "men of action". We are conditioned
+to view material as good and void as bad. We want "men of substance". Noise is for the living and silence
+is the symbol of dead. We carry these traits to creating software.
+</p>
+
+<p>
+<h4>Perfect is the enemy of good</h4>
+At IIT Kanpur, I had a friend, and mid semester examinations were near. We were both studying, and
+my friend got stuck in solving a complicated problem. He asked me, and I was unable to solve the problem.
+I said that the problem was quite difficult and the concept it involved was peripheral to the topics
+we had been taught, and thus it was unlikely to appear in the question paper. Thus, we should just
+ignore the problem and solve other problems.
+</p>
+
+<p>
+My friend protested: "What if it appears tomorrow in the question paper?". 
+</p>
+
+<p>
+What a dumb concern! If it appears tomorrow in the question paper, we will not solve it and we will lose marks. Simple.
+It is not the first time we will lose marks. But, given the limited time that we have, it makes sense to thoroughly
+study those questions which are much more likely to appear, rather than fretting over the corner case.
+</p>
+
+<p>
+Perfect is the enemy of good. If you aim for perefect score, you might end up not even getting a good score.
+</p>
+<p>
+
+<h4>Empty set is a set</h4>
+Empty set is a set. We all know that. Infact, it is such a special set, it has a symbol for itself: phi.
+</p>
+
+<p>
+Zero is a number. We all know that. In case it sounds obvious to you, be humbled by the fact that Romans
+did not have a symbol for that.
+</p>
+
+<p>
+As software engineer, our goal is to deliver systems which work, not to entangle ourselves in needless complexities.
+</p>
+
+<h4>Less is more</h4>
+<p>
+Let's say you are a startup starting with a couple of engineers. Idea behind your startup is to build the website 
+for a SaaS product. Specifically, it is a marketing automation software.
+Marketing person from your client company makes an account on your website, and then he can run online ads
+on Facebook, Google, and several other providers. Your pitch is that users need not manage
+those ad platforms independently. Your platform allows an integrated view of campaigns
+on all those platforms and you can manage ad spend on all those platforms from a single place.
+</p>
+
+<p>
+Your are quite excited about the business potential of your idea and start designing how the platform would work.
+In particular, you figure out user management system. What all features do you need? Let's start making a list:
+
+<ol>
+<li>A user should be able to sign up. When he signsup, he gets an activation link on the email that he provided. 
+When he clicks on the activation  </li>
+<li>A user should be able to sign in using his password.</li>
+<li>If a user forgets his password, he should be able to click on a "Reset password" link. If he clicks on that link,
+he should get a mail with the reset link. Clicking the reset link should take him to a page where he can enter
+his new password twice. If he types same password twice his password should get changed and he should taken to
+the login page.</li>
+<li>We may sometime need to disable the login for a certain user, because perhaps his account is suspended because
+of non payment. If a disabled user tries to login, he should not be allowed to login, but a message should prompting
+him to contact the relevant person should be displayed</li>
+<li>We would wish that a user should be able to invite other users. He needs to enter the email of the invitee. The
+system will send a mail to the invitee, tell him the user that is inviting him. When the invitee clicks on a link,
+he will prompted to enter his password twice. If the passwords match, he is assigned the same account as the person
+who invited him.</li>
+<li>We will also need the concept of roles: an "admin" is the person who has all the privileges, a "user" is a person
+who can only create and run campaigns. The admin can make another user admin. An admin can also remove another user
+from the account.</li>
+</ol>
+</p>
+
+<p>
+The list could go on and on, depending on how creative and experienced the list creator is. 
+You may even think of something like Amazon IAM (Identity and Access Management)
+</p>
+
+<p>
+But, are all the above feature required in your platform? Remember, your idea is just an idea. Your time is better
+spent in writing code for core application rather than worrying about user management. Just the first 3 points
+from above list are good enough to be implemented initially. You do not need many users to share the same account:
+people can just share the account details for your site. When your site does indeed become popular, you can always
+add on more features related to user management.
+</p>
+
+<p>
+Remember, every line of code you write makes the software more bug prone, and needs investment in maintenance. Thus,
+features which we implement require business or technical justification which outweights the maintenance cost.
+</p>
+
+<h4>Yes, the API is ready</h4>
+<p>Often, not doing soemthing is the best way to do it. We once had a client who used to request for some APIs. 
+Can I have an API to download this data? Can I have an API to download that data? We noticed that the client 
+asked for the APIs but never used them once we built them. What is more, till the time the API was built, they
+would follow up with us regularly. If we said it would take 2 weeks to build it, they would try to negotiate
+for a week. But once we delivered the API, they never talked about it. They never used it. We figured that
+now their tech team needs to build the systems to use the API. And their tech team never finished.</p>
+
+<p>So, we adopted a trick. When they asked for an API, we simply took some time (it takes time to build
+something, right?), did nothing, and said that it was done. Our idea was that when they actually tried to
+access the API, they would complain that it is not working, and then we would actually build it. That
+never happened, they never complained.</p>
+
+<h4>Lazy stuff is all over the place</h4>
+<p>
+This "Lazy doing" is all over the place. Ever heard of lazy loading classes? Or lazy evluation? Just in time
+compiliation in JVMs is the process of compiling byte code to machine code just when it is required. So, if
+you are being lazy, you have good company.
+</p>
+
+<h4>Good problem to have</h4>
+<p>
+Once I worked at a startup, where the CTO used to distinguish between a "good problem to have" and a
+"bad problem to have". If customers are using your product very rigorously and are demanding features
+at the rate at which you cannot build them, it is a good problem to have. If your servers are being
+overworked with requests, it is too a good problem to have (which needs to be solved quickly, else the
+customers will go away). However, if you built needless things, which you maintain but nobody uses
+them, it is a bad problem to have.
+</p>
+<h4>Empty set is not the only set</h4>
+<p>
+Lastly note that empty set is not the only set. Not building things is not the final goal. We decide not
+to build some things so that we can build other, important things. Putting things off beyond a certain
+point can be harmful too. That is the topic of one of the next chapters.
+</p>
+<h2>On Software Architecture</h2>
+<p>
+This chapter deals with miscellaneous topics on software architecture.
+</p>
+<h3>Don't theorize, do it, and then improve</h3>
+<p>
+There is a story which I have read from more than one sources:
+
+The ceramics teacher announced on opening day that he was dividing the class into two groups. 
+All those on the left side of the studio, he said, would be graded solely on the quantity of 
+work they produced, all those on the right solely on its quality. His procedure was simple: 
+on the final day of class he would bring in his bathroom scales and weigh the work of the 
+"quantity" group: fifty pound of pots rated an "A", forty pounds a "B", and so on. Those being 
+graded on "quality", however, needed to produce only one pot - albeit a perfect one - to get an "A".
+
+Well, came grading time and a curious fact emerged: the works of highest quality were all produced 
+by the group being graded for quantity. It seems that while the "quantity" group was busily churning 
+out piles of work - and learning from their mistakes - the "quality" group had sat theorizing about 
+perfection, and in the end had little more to show for their efforts than grandiose theories and a 
+pile of dead clay.
+</p>
+
+<p>
+Similarly, computer architecture is learnt only by practice. If you don't know how to architect
+elegantly or correct, do not delay your project to think too deeply about architechure. Just do things
+that seem logical, and be ready to change when the moment of truth strikes. You learn only
+by experience.
+</p>
+
+<p>
+I have two stories first hand, one when a system was architected badly and other where it was
+architected well.
+</p>
+
+<p>
+The first story relates to when we writing a realtime bidding engine. A realtime bidding enginer
+receives a bid request from the supply side provider to bid on an ad slot. As a part of
+the request, the bidding engine receives various properties of the ad slot (like the
+website on which the ad is to be shown, the size of the slot, the location of the slot) and
+that of the user (location of the user, his interests, etc). Based on all these parameters,
+the bidding engine needs to decide how much money it is willing to pay for a particular
+ad.
+</p>
+
+<p>
+The product management team
+gave the requirement that there will be a "base bid",
+and then according to several rules, base bid will be multiplied by some factors. So,
+perhaps if the user was in California, base bid will be multiplied by 3, while if he was
+in Baghdad, it would be multipled by 0.3. We will arrive at final bid value after several
+multiplications.
+</p>
+
+<p>
+The engineer building the bidding engine was very enthusiastic. 
+He saw that the sepcifications can modeled by a list of "conditions". Each condition needs
+to be evaluated in one of the buckets. For example, the condition would be "country of the
+user" and various buckets would be "India", "USA", "France", "Others". Or else condition
+would be "Income group of the user", and various buckets would be "HNI, Affluence, middle class,
+poor"
+</p>
+
+<p>
+Our engineer decided to model conditions in a class called "Condition". He realized that there
+could be several types of conditions: in some conditions, each bucket was a range of
+values (e.g. for age, buckets could be: less than 18 years, between 18 and 25 years, between 25
+and 45 years, more than 45 years). Or they could be discrete valued (like gender being male
+or female). Or they could be ordered string match (A user falls in the first bucket that he matches)
+He decided to have "Condition" as an abstract super class and several specific condition
+classes inherit from it.
+</p>
+
+<p>
+So far so good. Above abstraction faithfully models the requirements. But being enthusiastic and
+bright, our engineer tried to foresee what the product team would demand in future. The idea
+was to code such that upcoming requirements are also coded up and require no futher changes
+to the code.
+</p>
+
+<p>
+He decided that in the future, each condition may have sub conditions. In other words, some
+conditions would be applicable subject to some other conditons falling in specific bucket.
+Perhaps we would apply age filter only if the user was from United States.
+</p>
+
+<p>
+To model this hypotetical need, he decided that each condition class will contain references
+to an array of array of subconditions. There was one array of sub conditions corresponding
+to each bucket of the condition. This complicated the whole code significantly and increased
+the development time.
+</p>
+
+<p>
+Our engineer remained for around 1 year after coding this up, and there was never a need
+for sub conditions. When new engineers were required to understand the component, he
+admitted that it was an overengineered peace of software and the newer engineers never
+needed to learn how the sub-conditions worked. When the original engineer moved out,
+there was no one in the company who understood sub-conditions.
+</p>
+
+<p>
+A few years later, the code was migrated to Java (the original code was in PHP), and
+sub-conditions were not required to be migrated.
+</p>
+
+<p>
+Different requirements from bidding engine did arise. However, they were along the lines
+which the original engineer had though. They were completely different and were coded up
+as they arose.
+</p>
+
+<p>
+The second story relates to the case when we needed to build a data ingestion system.
+The problem statement was simple: we had to build an HTTP server which received data
+and stored it in relevant database and relevant table in MongoDB.
+</p>
+
+<p>
+We were just starting out and had no visibility into scaling issues that may arise in
+future. We did not try to predict them either. We wrote a simple server in Django
+REST framework, which connected to MongoDB on each request and fired a query to
+store the data.
+</p>
+
+<p>
+We saw that in times of peak load, data ingestion was not working properly: it was
+taking too long to connect to MongoDB and requests were timing out. This was leading
+to data loss. We realized that we needed to have a message queue between our Django
+server and mongo db. A message queue can give us much higher throughput while writing
+data because it is the only thing that it does. We decided to use Kafka as the message
+queue. Now Django server writes to Kafka and there is a kafka consumer which inserts
+data to MongoDB. Now, at the time of peak loads, it does take a few minutes for data
+to get inserted to mongo, but at least there is no data loss.
+</p>
+
+<p>
+While looking at mongo logs, we saw that connection to mongodb was being repeatedly
+opened and closed by kafka consumer. On some reading on internet we came to know about
+connection pooling. We realized we needed to have a connection pool rather than open
+a new connection per request. We implemented this, and the CPU utilization of our
+mongo db servers went down a little.
+</p>
+
+<p>
+Things again went fine for a few months, when we started facing a fresh problem. MongoDB
+was not only ingesting the information, but other systems fired MongoDB queries
+for other purposes.
+</p>
+
+<p>
+Again, we realized that bulk operations to mongo were more performance that individual
+operations. We wrote a module, called mongo query aggregator, which provide similar
+interface to other mongo drivers, but which aggregated the write queries and fired
+them to mongo either when threshold number of queries were collected or when a threshold
+amount of tasks (few hundres of milliseconds) had elapsed. This again reduced CPU
+utilization of mongo and the system became reponsive again.
+</p>
+
+<p>
+A few months later, as the ingestion rate and query rate increased again we started
+having similar problems. Incidence of such problems rose from very infrequent (once 
+four weeks) to mildly frequent. (once a week). At the time of large read queries,
+the ingestion system would be too slow and it would take a lot of time for data
+to reach from kafka to MongoDB.
+</p>
+
+<p>
+We realized that a lot of data that we were getting was repeated data. For a given
+user, we got his profile information as many times as he did some action. The profile
+information that we got contained information like the name, email or the city
+of the user. This information tends to change very slowly, but we wrote it to MongoDB
+repeatedly. To reduce the query rate to MongoDB, we put an aerospike in front of
+MongoDB. As we wrote some information to MongoDB, we also wrote it to aerospike. However,
+we writing an info to MongoDB, we checked in aerospike if the same information
+was present already. If yes, we did not bother to write the information in MongoDB.
+This optimization reduced the MongoDB queries by around 60%.
+</p>
+
+<p>
+Along the way we also realized that not all data is equal. For some types of data
+it was important to get it to MongoDB as soon as possible. Other type of data could wait.
+Thus, we started from putting data in two different queues from Django framework. When
+there was delay in gettin data to Mongo, we could shutdown the consumption of lower
+priority queue, thus ensuring that high priority data reaches mongo on time. Once the
+peak traffic was over, we would start consuming the lower priority queue.
+</p>
+
+<p>
+As the traffic increased, we also realized the django was not most efficient
+framework to be used. The number of servers employed were increasing with increasing
+load and we believed latencies could we lower. We migrated this system to Java
+Jetty and brought down our infrastructure cost as well as reduced the latencies.
+</p>
+
+<p>
+While our server was written in Django, nginx was the front facing server which routed
+request to django via unicorn. When we shifted to Jetty, nginx continued to be front
+facing server. However, we realized that we no longer needed nginx, since jetty could
+serve well as front facing server. Thus, we removed nginx from our system.
+</p>
+
+<p>
+Data ingestion system began with a simple 30 line django code, and by now it has
+expaneded to several thousands of lines code, with multiple systems running on 
+various machines. When we began we did not know how the system will evolve, and
+we did not try to predict the problems that would happen. However, we kept our
+eyes and ears open and solved the problem as they came.
+</p>
+
+<p>
+The key is to be continually evaluating the systems for current performance bottlenecks
+and how they could be resolved. You need to know what the current limitations of
+systems and how they are currently impacting your uses. Then you take care to solve
+the problems before they become too severe.
+</p>
+
+<h4>Theorization ad infinitum</h4>
+<p>
+Some fields are just so ripe for theorization that one can keep theorizing indefinitely
+and not get started on real work.
+</p>
+
+<p>
+Consider the problem of time series forecasting. Suppose you have a stream of numbers 
+coming in, which represent some real world metrics, like CPU utilization on minute basis, or sales
+of a product on daily basis. Your job is to make a component to predict the next value
+of the metric.
+</p>
+
+<p>
+This simply stated problem is such a ripe problem for theorization that you can spend
+days or weeks or months just surveying literature. From ARMA models, to ARIMA models, 
+to STL model, to incorporating seasonality, you can read several books and not
+get started on real coding.
+</p>
+
+<p>
+In such cases, you need to limit your study time, and start building soemthing so that
+you can get some real world experience, and only bookish knowledge.
+</p>
+
+<h3>Soft on external components, hard on internal components</h3>
+<p>
+In any non trivial system, there are various components interacting with each other
+in various combinations. Invariably, some of these components will misbehave. How
+should other components respond to a misbheaving component?
+</p>
+
+<p>
+Your system's components also interact with the world outside: perhaps you have
+provided an API which your customers can use. Your customer code can awry and
+starting sending you requests in an inappropriate format. What should you do then?
+</p>
+
+<p>
+We can handle misbehaving components in two ways: one is that we are forgiving about
+the input from the other component and try to do as good
+a job as possible. A web browser is a great example of this: even if you give it
+a malformatted HTML, it won't just refuse to render the web page. It will render
+in the best possible way possible given the invalid document that you gave.
+It is like a friend who tries to help you out despite your shortcomings.
+</p>
+
+<p>
+On the other hand, we can be merciless: unless other components talk to us in
+a rigorously predefined language, we will refuse to function. We will crash
+or complain. A typical example of such an approach is compiler. Even if you
+miss a single semi colon, it will refuse to compile the program.
+</p>
+
+<p>
+Examples of browser and compiler are two ends of a complete spectrum of the
+strategies that you can use to deal with incorrect inputs. The "right" approach
+depends on your use case, and it is important to get it right. Otherwise
+you may end up with a language like PHP where
+</p>
+
+<pre>
+"b" + "a" = "ba"
+but 
+"10" + "a" = 10
+and
+"10" + 10 = 20
+</pre>
+<p>
+causing all sorts of confusions.
+</p>
+
+<p>
+My strategy is to have internal components be harsh on each other: you decided on
+a data interachange format, and if the producer of the data does not follow the
+format, the consumer crashes. The consumer does not try to cover for the bugs
+in the producer.
+</p>
+
+<p>
+For example, in a typical use case, the UI takes the user input and populates some
+data in database in some predefined format. Some backend task needs to operate
+on this data and perform some activity. Now, what if there is a bug in the UI and
+the UI outputs the data in slightly incorrect format. Perhaps the UI does not
+provide the value of a required field. Should the backend assume some resonable
+default? Assuming something reasonable might ensure that the system will at least
+work. The answer is no. Between internal components, we do not forgive each other
+for mistakes. If someone makes a mistake, associated functionality comes to a halt.
+</p>
+
+<p>
+The advantage of this approach is that if there is a bug in some component it comes to
+light at an early stage, enabling the engineers to resolve it. If other components
+start covering for it, the bug may remain uncovered for a long time.
+</p>
+
+<p>
+Languages like Python allow for default values of parameters. Thus, a function definition
+may be
+</p>
+
+<pre>
+def my_function(a, b=v1, c=v2):
+    pass
+</pre>
+
+Here b and c are optional parameters whose default values are v1 and v2 respectively. These values
+will be used if you do not provide a value for these parameters.
+Now, the function may be used as:
+<pre>
+def my_function(1, 2, 3)
+</pre>
+
+or
+<pre>
+def my_function(1, 2)
+</pre>
+
+or
+<pre>
+def my_function(1)
+</pre>
+
+<p>
+In the code the I wrote, optional parameters need strong justification. They should be optional
+in the sense that correct behavior would be guaranteed even if some of the optional parameters
+are missed. Perhaps they are hint for some performance optimization, or some very unusual
+settings.
+</p>
+
+<p>
+Once in a code that I wrote, the default values were merely some "standard" values. A non standard
+value needed to be explicitly passed as argument, in absence of which standard value was used.
+As time passed and the product evolved, the use case for one of the non standard value surpassed
+the use case of the standard value. A new developer reasonable assumed that since the parameter
+is optional, the usual (early non-standard) value would be used as default. This led to a nasty
+bug, and a learning from the mistake, we abolished developers using default values unless there
+was a strong justification.
+</p>
+
+<p>
+The situation is a little different when writing components which face external world. Even if some external
+client is not honoring the interface, not performing the functionality may be detrimental to your
+business. In such cases, you may wish to log the error, and let the client know, but continue
+the functionality for the time being. A typical example is Google search engines. If you type
+in something to search and Google believes you probably mean something else (may be because of a typo), 
+it gives you search results according to what it thought you mean, and also lets you know that.
+So, Google is forgiving about the errors that external agent makes.
+</p>
+
+<p>
+What is internal and what is external may depend on your company size and team dynamics. For a small
+team of 4-6 people, all the company's code may be internal and outside code (libraries, API users)
+would be external. For a company with many large teams, each working on a separate component, code
+within each team could be internal, while code developed by two different teams could be regarded
+as external.
+</p>
+
+<p>
+Like all other ideas, they are general guideliness and not hard rules.
+</p>
+<h2>There is only one electron</h2>
+
+<p> According to Feynman: </p>
+<p>
+I received a telephone call one day at the graduate college at Princeton from Professor Wheeler, 
+in which he said, "Feynman, I know why all electrons have the same charge and the same mass" "Why?" 
+"Because, they are all the same electron!"
+</p>
+
+<p>
+While one electron theory does not have a wide acceptance in scientific circles, the idea of oneness
+of things has been the guiding principle for Science.
+</p>
+
+<p>
+"Ekam sad vipra bahudha vadanti", declares the Rigveda, composed several millenia before christ. It
+means that the truth is one, but knowledgeable people known it in different ways. Infact, the idea
+of oneness, or singularity is embedded deeply in the Hindu thought. The advaita (which literally means
+not-two) philosophy is one of prominent Hindu philosophies arguing that the soul is indistinguishable
+from the supreme reality (God). The aim of human life is to realize this truth.
+</p>
+
+<p>
+Unity has been a guiding force in Physics too. We could have five fundamental forces: gravitational,
+electric, magnetic, strong nuclear and weak nuclear. Electric and magnetic forces were combined
+as one: electromagnetic force by the James Clerk Maxwell in 1873 (Damn it: these guys in nineteenth
+century without computers, aeroplanes and even electricity, were able to accomplish so much. And
+here we are, unable to move the needle with so much amenities!) Standard Model explains electromagnetic,
+strong nucler and weak nuclear forces, leaving us with just different forces.
+</p>
+
+<p>
+Similar is the case with the constituents of matter. There such a huge variety of things in the world:
+the animals, the plants, rocks, soils, air, water, glass and so on. We now know that ultimately,
+all the matter is utlimately made of just around 100 elements. Dmitri Mendeleev gave his periodic
+table in 1869. (Say what you want about authoritarian regime of Vladimir Putin, but Russians have
+a scientific bent of mind, isn't it?), which put elements in a table so that their properties were
+a function of their position in the table. This was the culmination of decades of efforts to classify
+the elemnts in an insightful way.
+</p>
+
+<p>
+It was also discovered that utlimately, each of these 100 or so elemnts are composed of just three
+constituents: electrons, protons and neutrons. Number of electrons, protons and neutrons determines
+what element would it be.
+</p>
+
+<p>
+Even eletrons, protons and neutrons were then found to be composed of more fundamental particles:
+fermions and bosons. String theory posits that even these particles ultimately consist of strings.
+So, ultimately, all matter is strings, oscillating in myriad number of ways.
+</p>
+
+<p>
+The spirit of unification extends to Biology too. Despite the multitudes of shapes and sizes
+of plants and animals that we see around us, theory of evolution tells us that ultimately all the 
+organisms are derived from the same ancestory: some unicelullar organism that figured out how
+to multiply itself. It is humbling to think that you and the dog next to you have some common
+ancestor who breathed several million years go!
+</p>
+
+<p>
+Why do we have a tendency to unify and why is it so successful? I think there can be two answers
+to this question: the first is that we have a limited capacity to process a large state, so we
+look to simplify the world by unification, so that we can understand it better. The second is that
+as "ekam sad vipra bahudha vadanti" above says, the world is inherently just one, some singularity,
+and so that is the way we are led to when we try to discover the truths of the world.
+</p>
+
+<p>
+So, what does this have to do with the practice of programming? The answer is that we have to
+continuously look for opportunities to deduplicate code, information and systems. Why would
+we like to deduplicate? First, maintaining something at two places is a maintenance overhead.
+Second, it is likely that at some point you will forget to make changes at all the places,
+and that would lead to buggy code or inconsistent data.
+</p>
+
+<p>
+Let's begin with a simple example. You may have a function like this:
+
+<pre>
+def compute_average_height(heights):
+    total = 0
+    count = 0
+    for height in heights:
+        # If height is less than 1 feet or more than 8 feet 4 inch, 
+        # we consider data to be erroneous
+        if height &gt; 12 and height &lt; 100:
+            total += height
+            count += 1
+    return total / count
+</pre>
+
+and you could have a similar function for weight:
+<pre>
+def compute_average_weight(weights):
+    total = 0
+    count = 0
+    for weight in weights:
+        # If weight is less than 5 kg or more than 200 kg, 
+        # we consider data to be erroneous
+        if weight &gt; 5 and weight &lt; 200:
+            total += weight
+            count += 1
+    return total / count
+</pre>
+</p>
+
+Perhaps you wrote the function compute_average_height() first, and then you needed to write compute_average_weight().
+The similarities between the two functions should immediately lead you to refactor the code, perhaps as following:
+
+<pre>
+def compute_average(quantities, lower_threshold, upper_threshold):
+    total = 0
+    count = 0
+    for quantity in quantities:
+        if quantity &gt; lower_threshold and quantity &lt; higher_threshold:
+            total += quantity
+            count += 1
+    return total / count
+
+def compute_average_height(heights):
+    return compute_average(heights, 12, 100)
+
+def compute_average_weight(weights):
+    return compute_average(weights, 5, 200)
+</pre>
+
+<p>
+Apart from repetition in function, there may ba repitition between classes. At QGraph, we had a concept of campaign:
+A user could specify the segment (which is a set of users) and a message, press a send button, and push notifications would
+get delivered to the relevant users. Following seems like a good class for that.
+
+<pre>
+class Campaign {
+    int campaignId;
+    int accountId;
+    Segment segment;
+    Creative creative;
+
+    public void send() {
+    }
+    public void computeUsers() {
+    }
+}
+</pre>
+</p>
+
+<p>
+Sometime later, another requirement came up: we needed to send notifications not on the press of a button, but automatically
+to a set of users who met certain conditions. For example, we may be required to send a notification to the users who add a
+product to shopping cart, 1 day after they do so, unless they complete the purchase. We called them trigger campaigns
+since they were triggered by certain events. To solve this case, we made another class:
+</p>
+
+<pre>
+class TriggerCampaign {
+    int campaignId;
+    int accountId;
+    Trigger trigger;
+    Creative creative;
+
+    public void send() {
+    }
+    public void computeUsers() {
+    }
+}
+</pre>
+<p>
+Note that the method computeUsers() will be different from trigger campaigns, but send() would remain the same.
+</p>
+<p>
+It is OK to code it up like this initially so that feature gets implemented and business improves. But immediately after that,
+you should take a look for removing duplication. In this case, there are various types of campaigns. We should have a class
+called Campaign which has the common features of various types of campaigns, and subclasses that implement specific types
+of campaigns. These subclasses can be called RegularCampaign and TriggerCampaign. Here is the refactored code:
+
+<pre>
+class Campaign {
+    int campaignId;
+    int accountId;
+    Creative creative;
+    public void send() {
+
+    }
+}
+
+
+class RegularCampaign extends Campaign {
+    Segment segment;
+    public void computeUsers() {
+
+    }
+}
+
+class TriggerCampaign extends Campaign {
+    Trigger trigger;
+    public void computUsers() {
+    }
+}
+</pre>
+</p>
+
+<h3>Code duplication between projects</h3>
+<p>
+Apart from code duplication between methods and classes of the same project, there may be inter-project code
+duplications. For instance, we may wish to send a mail to some developers in case some extreme event happens:
+
+<pre>
+try {
+    // Do something
+} catch (MyExtremeEvent e) {
+    send_email(e.getStackTrace());
+}
+</pre>
+
+Now, presumably, the function send_email() is defined somewhere in the same class, or perhaps in the same project.
+However, various different projects may need such a function, and thus instead of replicating the method 
+in various projects, it is good to have it in a project of its own, and then import the relevant class:
+
+<pre>
+import com.mycompany.CommonUtils;
+CommonUtils utils = new CommonUtils();
+try {
+    // Do something
+} catch (MyExtremeEvent e) {
+    utils.send_email(e.getStackTrace());
+}
+</pre>
+</p>
+
+<p>
+Other functionalities that could be put in a such a utilities class are popular conversions, such as time zone
+conversions.  You can also put popular translations. Perhaps, given a transaction id, you need to find customer id, 
+or given a customer id, need to find all the transactions by that customer. These functions may be needed
+across a wide array of projects.
+</p>
+
+<h3>Duplication of information</h3>
+<p>
+Apart from duplication of code, there can be duplication of information too. For instance, you can have a writer
+of the file, which writes file with a particular filepath. A reader is supposed to read it from the same filepath.
+The writer and reader may be written by different teams, and could be in different programming languages. If you
+hard code the filepath in both these programs, it is a duplication of information. If you need to change the
+filepath, you need to make changes at two places. 
+</p>
+
+<p>
+How do we avoid this duplication? The way have I have found suitable is to store this common information in a
+database. I have a "settings" table which contains essentially two rows: component name and settings. I like
+settings to be json for easy parseability. Both reader and writer of the information read the settings for
+getting the filpath. For me the row in database looks like following:
+</p>
+
+<table border="1">
+<tr><th>component_name</th><th>comonent_settings</th></tr>
+<tr><td>my_component</td><td>{"filepath": "/path/to/my/file/filename.txt"}</td></tr>
+</table>
+</body>
+
+<h3>Duplication between code and comments</h3>
+<p>
+Fundamentally, comments are duplications: comments explain in English (or whatever
+language you write the comment in) what the code describes in a programming language.
+It is best if the flow of the code and the names of the variables are so clear that
+there is no need of a comment. However, there are often cases when this is not possible,
+and comments in natural languages are required in that case. As Martin Fowler says,
+"Comments are good smell, but they are too often used as deodorant"
+</p>
+
+<p>
+Too often I have seen comments that are vacuous:
+</p>
+
+<pre>
+//Find the number of employees
+int len = getNumEmployees();
+</pre>
+
+<pre>
+//Initialize arrayLength
+int arrayLength = 0
+</pre>
+
+<p>
+Vacuous comments are duplications that can simply be deleted.
+</p>
+
+<p>
+Too often naming variables better can avoid comments. E.g.
+</p>
+<pre>
+#convert to cents
+b = a * 100
+
+#add to total purchase value, increment num purchases
+p += b
+n += 1
+
+#recompute average purchase value in cents
+av = p / n
+</pre>
+
+is better written as:
+
+<pre>
+order_in_cents = order_in_dollars * 100
+
+total_purchase_in_cents += order_in_cents
+num_purchases += 1
+
+average_purchase_value_in_cents = total_purchase_in_cents / num_purchases
+</pre>
+
+<p>
+As programming language become closer to natural languages (assembly language, C, Java, Python
+are progressivley closer to natural languages), the need for comments reduces since 
+programming languages are less cryptic.
+</p>
+
+<h3>Convention</h3>
+<p>
+Conventions are powerful. They take some mental load away. Imagine how hard it would be to drive
+each car had its own convention about the relative location of accelerator, brake and clutch.
+</p>
+
+<p>
+It was news when the Japan Sanitary Equipment Industry Association, in January 2017, decided
+standardize the iconography used on the control panels of Japanese toilets. Before standardization,
+foreign tourists used to complain that they were unable to understand the controls, which
+operate features often not found in Western toilets.
+</p>
+
+<figure>
+<img src = "Japan_Toilet_Convention.jpg" height="500"/>
+<figcaption>Japanese Toilet Association decided to adopt a convention to avoid confusing foreigners</>
+</figure>
+
+<p>
+In your company, you should have convention wherever possible. While you can make conventions for your
+own company, there are some conventions (sometimes called standards), which wider programming community
+has made. It is good to just piggyback on those conventions, and perhaps override some of them to
+suit your particular needs.
+</p>
+
+<p>
+Here are some tips for adopting convention:
+</p>
+
+<h4>Use correct spellings</h4>
+
+<p>
+This may seem no brainer, but I have often seen people writing incorrect spellings. This may be
+unique to India where I have worked for last few years. Beautiful becomes beautifull, etc.
+One can argue that it is English which is incorrect, but we cannot do anything about it and we
+just have to learn correct English.
+</p>
+
+<p>
+I once had an engineer who used to write updater as updator. I sympathize with him: if one who
+creates is creator then one who updates should be updater. Whenever I would ask him to correct
+the spelling, he corrected, but always made the spelling error again. It was too bad that
+he was working on a component called "Feed Updater". After seeing "updator", I myself started
+getting confused about the correct spelling.
+
+I finally gave him an ultimatum: if he ever miswrote updater as updator, he would have to
+write "updater" on a sheet of paper 100 times. Suddenly misspellings stopped.
+</p>
+
+<h4>Correct case in programming languages</h4>
+<p>
+Programming languages have their own conventions about variable names, class names, etc.
+In Python, variable names should be in snake case. Thus:
+</p>
+
+<pre>
+# This is correct
+num_students = 42 
+
+# This is incorrect
+numstudents = 42
+
+# This is incorrect
+numStudents = 42
+</pre>
+
+<p> In Python class names are in UpperCamelCase:</p>
+<pre>
+# This is correct
+class MyClass:
+    pass
+
+# This is incorrect
+class myClass:
+    pass
+
+# This is incorrect
+class my_class:
+    pass
+</pre>
+
+<p>
+Similarly there are conventions for various programming languages. If you are starting out, a
+good resource for conventions are style guides from Google. For instance look at,
+</p>
+
+<a href="https://google.github.io/styleguide/javaguide.html">Google Java Style Guide</a>
+<br>
+<a href="https://google.github.io/styleguide/pyguide.html">Google Python Style Guide</a>
+<br>
+<a href="https://google.github.io/styleguide/cppguide.html">Google C++ Style Guide</a>
+<br>
+<a href="https://google.github.io/styleguide/jsguide.html">Google JavaScript Style Guide</a>
+<br>
+<p>
+Apart from these, Python has its own <a href="https://www.python.org/dev/peps/pep-0008/">PEP8</a> standard,
+which you may wish to follow.
+</p>
+
+<p>
+The important thing is to stick to a convention. So, that when you are manipulating a variable that
+talks about "maximum count", you don't have to remember what exactly that variable was: maxCount or maxcount or max_count.
+</p>
+
+<h4>Conventions everywhere</h4>
+<p>
+The idea of conventions applies everywhere. Other places where I want consistent style is: naming repositories in 
+github or bitbucket (should be words separated by dashes), naming branches in github or bitbucket (should be words separated by dashes), naming directories
+(should be words separated by dashes), keys in json data (camel case). Any place where you can let convention drive,
+do it, since that helps reduce the amount of state your brain needs to hold while doing real work.
+</p>
+<p>
+- Further item in convention: date should be YYYY-MM-DD, not any other way
+- Timestamps should be stored in UTC
+</p>
+
+<h2>You do not need Hadoop</h2>
+<p>
+Large software companies of our times: Google, Facebook, Amazon etc are at the
+forefront of innovation in Computer Science. Because of their traffic, their
+systems experience scalability challenges not encountered by other, smaller
+companies. Further, unprecedented amount of user data that these
+companies have collected can be used in ways which was unthought of before.
+Need to analyse such large amounts of data and draw conclusions have spurred
+several innovative products from these companies.
+</p>
+
+<p>
+While the ideas behind many of the innovations were known to the research
+community for long, these companies are the first to have the scale to be
+able to implemnet real system with those ideas.
+</p>
+
+<p>
+For example, in 2003 and 2004, Google published two papers: "The Google File
+System" and "MapReduce: Simplified Data Processing on Large Clusters", in
+which they described novel ways (or rather, described the novel implementations
+of known ideas) to store and process large amounts of data. The key idea is 
+that GFS was optimized to store and retrieve files of large size, while
+map reduce was a framework which enabled a programmar to write programs which
+could be parallelized easily. Thus, if the programmar wrote the programs in
+map reduce, he did not need to worry about parallelizing it: the framework
+take care of parallelizing it across many, potentially thousands of computers.
+Further, when running a program across thousands of computers, one needs to
+minimize data transfer across computers, do data transfers preferably between
+computers which are physically close to each other (so that data transfer is
+fast), and implement fault tolerance, because when there are thousands
+of machines running some program for tens of hours, it is highly likely that
+some machine would crash or have network problems.
+</p>
+
+<p>
+The good thing about map reduce was that the framework took care of solving
+all these problems associated with writing parallel programs, and thus a programmer
+needed to worry about only the business logic associated with his needs.
+</p>
+
+<p>
+Inspired by Google's paper, engineers at Yahoo did another implementation of 
+map reduce, called it Hadoop and released it as open source software. As
+more and more internet companies came to vogue, they needed to analyze large
+amounts of data, and started using Hadoop for this. As such, Hadoop became
+the de-facto software for analyzing large amounts of data.
+</p>
+
+<p>
+Now, while we wish all the best for your company, unless it is all about
+analyzing large data (like Qubole, Horton works, Cloudera or the like), you do
+not need to invest in Hadoop at all.
+</p>
+
+<p>
+Implementing such a heavyweight solution in your just launched startup is suboptimal 
+for several reasons:
+<ul>
+<li>
+Firstly, initially you should be focussing on getting a product market fit, rather
+than worrying about your big data strategy. It sounds cool to use big data technologies
+but first you need to have big data.
+</li>
+
+<li>
+Secondly, employing a sophisticated infrastructure like hadoop requires investment
+either in terms of both people and money, and you should not waste either of these,
+even if you have them in plenty.
+</li>
+
+</ul>
+</p>
+
+<p>
+I once had an employee who resigned from my company because he was starting his own
+company. His idea was to build an app where people would share their locations and
+meet each other serendipitously. Around a week before his last day, I asked him what 
+he was doing. He replied he was learning hadoop, because large amounts of data would 
+be generated from his app, and he needed to analyze it.
+</p>
+
+<p>
+While learning about Hadoop is all good, justifying it because you will need it
+in your yet to be launched app is misplaced. You better launch the first version
+of your app as soon as possible.
+</p>
+
+<p>
+I emphasize this point because too often I have seen technologists and business people
+alike to get carried away into implementing these technologies when they should not be
+doing so. Technologists are happy because they get to work on "cutting edge" technology
+and business people are happy because some awesome work seems to be getting done. This
+is as misplaced as it would be to take an air plane to go from Indira Nagar to 
+Koramanagala (two neighborhoods a few miles apart). Aeroplanes are meant for longer
+distances and for shorter distances you are better off taking your car (or riding
+your bicycles to keep yourself and your environement healthy)
+</p>
+
+<h2>"Facebook uses it" is not an argument</h2>
+
+<p>
+On the similar lines, sometimes engineers are enticed to use a technology because some
+large company uses it.
+</p>
+
+<p>
+Facebook is famously written in PHP. PHP is the oldest main stream lanauges around to generate
+dynamic web pages, and gets you started on a project very fast. In 2004, when Facebook
+was started, it was the de-facto language to write web apps.
+</p>
+
+<p>
+However, its performance very
+low compared to other lanauages. As they evolved, they faced severe performance problems.  
+Being an engineering heavy company, they wrote HipHop compiler which compiled PHP code 
+to C++. They later developed HipHop Virtual Machine to run PHP efficiently.
+</p>
+
+<p>
+Since Facebook is a successful company, I have met people in 2015 arguing that PHP is good language
+to write your web app in because "Facebook uses it". In the opinion of those people, if you
+use PHP, there is an added advantage that you can use cool tools like HipHop compiler or
+HipHop virtual machine to speed it up!
+</p>
+
+<p>
+Little do they realise that in 2017, there are at least half a dozen languages to choose from,
+which have more mature framework support, are more pleasure to write the code in, and are
+more performant at the same time.
+</p>
+
+<p>
+It is of course important to take inspiration from large companies: some of the best engineers
+work in those companies and some very interesting developments happen there. The way to
+ignore the irrelevant lessons is to continously read about various technologies and always
+be curious about why things are doing in a certain way.
+</p>
+
+<p>
+In Biology, when you trying to understand why some organisms are the way they are, you have
+to take into account the evolutionary path you have taken. Understand the form of organisms
+just on the basis of their environment or their place in the ecosystem makes up for only
+partial explanations.
+</p>
+
+<p>
+Same holds true for the software development. The current state of any software is sum total
+of choices by individual developers. It depends on the team structures, time pressures
+faced by the developers when implementing, order in which features were developed, and
+the experience and aptitude of the developers involved. So, it is not wise to naively
+copy someone else's choice without knowing about what led them to make those choices.
+</p>
+</body>
+</html>

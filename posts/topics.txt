@@ -11,3 +11,4 @@
   Inspired by https://www.youtube.com/watch?v=ILsA4nyG7I0
 - How neural nets really work: a case of detecting circles vs non circles and observe the weights
 - Comparing brain with computers
+- Segmentation logic
