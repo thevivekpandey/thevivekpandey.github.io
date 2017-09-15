@@ -12,3 +12,4 @@
 - How neural nets really work: a case of detecting circles vs non circles and observe the weights
 - Comparing brain with computers
 - Segmentation logic
+- Rename all files in a directory, plus rename the content over all the files. [Some shell commands]

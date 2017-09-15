@@ -193,5 +193,63 @@ Activation functions are the source of non linearity.
 Their derivatives:
 <li>sigmoid: $g(z) (1 - g(z)$</li>
 <li>tanh: $1 - tan^2(z)$ </li>
+<h2>Gradient descent implementation</h2>
+Parameters are $w^{[1]}$, $b^{[1]}$, $w^{[2]}$, $b^{[2]}$
+<br/><br/>
+First layer has $n_x = n^{[0]}$ units, second layer has $n^{[1]}$
+units and last layer (for two layer neural net) has $n^{[2]} = 1$
+units.
+<br/><br/>
+$w^{[1]}$ is $n^{[1]}\times n^{[0]}$ matrix.
+<br/>
+$w^{[2]}$ is $n^{[2]}\times n^{[1]}$ matrix.
+<br/>
+$b^{[1]}$ is $n^{[1]}\times 1$ matrix.
+<br/>
+$b^{[2]}$ is $n^{[2]}\times 1$ matrix.
+<br/>
+$J(w^{[1]}, w^{[2]}, b^{[1]}, b^{[2]}) = \frac{1}{m}\sum_{i=1}^mL(\hat{y}, y)$
+<br/>
+Repeat {
+<br/>
+   &nbsp;&nbsp;&nbsp;Compute $\hat{y^{(1)}}, \hat{y^{(2)}}, \hat{y^{(m)}}$
+   &nbsp;&nbsp;&nbsp;<br/>
+   &nbsp;&nbsp;&nbsp;$dw^{[1]} = \frac{dJ}{dw^{[1]}}$, $dw^{[2]} = \frac{dJ}{dw^{[2]}}$
+   &nbsp;&nbsp;&nbsp;<br/>
+   &nbsp;&nbsp;&nbsp;$db^{[1]} = \frac{dJ}{db^{[1]}}$, $db^{[2]} = \frac{dJ}{db^{[2]}}$
+   &nbsp;&nbsp;&nbsp;<br/>
+   &nbsp;&nbsp;&nbsp;$w^{[1]} = w^{[1]} - \alpha dw^{[1]}$
+   &nbsp;&nbsp;&nbsp;<br/>
+   &nbsp;&nbsp;&nbsp;and so on
+   &nbsp;&nbsp;&nbsp;<br/>
+}
+<br/>
+where
+<br/>
+$dz^{[2]} = a^{[2]} - y$
+<br/>
+$dw^{[2]} = dz^{[2]} a^{[1]T}$
+<br/>
+$db^{[2]} = dz^{[2]}$
+<br/>
+$dz^{[1]} = W^{[2]T}dz^{[2]}  * g^{[1]'}z^{[1]}$
+<br/>
+$dw^{[1]} = dz^{[1]} x^{T}$
+<br/>
+$db^{[1]} = dz^{[1]}$
+<br/>
+and thus
+<br/>
+$dZ^{[2]} = A^{[2]} - Y$
+<br/>
+$dW^{[2]} = \frac{1}{m}dZ^{[2]}A^{[1]T}$
+<br/>
+$db^{[2]} = \frac{1}{m}np.sum(dZ^{[2]},axis=1,keepdims=True)$
+<br/>
+$dZ^{[1]} = W^{[2]T}dZ^{[2]}  * g^{[1]'}Z^{[1]}$
+<br/>
+$dW^{[1]} = dZ^{[1]} X^{T}$
+<br/>
+$db^{[1]} = \frac{1}{m}np.sum(dZ^{[1]},axis=1,keepdims=True)$
 </body>
 </html>
