@@ -12,15 +12,12 @@ Chapters:
 4. Deployment
 5. Monitoring
    - how to avoid drowning
-6. Continuous improvement
-7. Performance improvement
+6. Attitude matters
+7. Continuous improvement
+8. Performance improvement
    - on performance improvement
-8. People Aspects
+9. People Aspects
    - how to be a good cto
-9. Interacting with clients
-   - interacting with clients
-
-10. Attitude matters
 
 - For whom is the book meant? Young people trying to build technology company [DONE]
    - Much of the advice might seem obvious, but consider that someone in quora asked a question that

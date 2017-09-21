@@ -1,24 +1,25 @@
 <html>
 <head>
   <title>Continuous Improvement</title>
-  <link rel="stylesheet" type="text/css" href="../style.css"/>
+  <link rel="stylesheet" type="text/css" href="../../style.css"/>
 </head>
 <body>
-<h2>Continuous Improvement</h2>
-<h3>Don't max out</h3>
+<h1>Continuous Improvement</h1>
+<h2>Don't max out</h2>
 <p>
 One difference between good and not good engineers that I have seen is that not good engineers
 "max out" too soon.
 </p>
 
 <p>
-I once interviewed an android developer for our company. When asked why he wanted to leave is
+I once interviewed an android developer for our company. When asked why he wanted to leave his
 current company, he replied that "there was nothing left to do" in the android app of the
-current company.
+current company. For the candiate, the finishing of a workable app the point at which he maxed
+out.
 </p>
 
 <p>
-That was clearly untrue: the app was mediocre at best: its look and feel could be improved,
+That was clearly untrue: the app was mediocre at best, its look and feel could be improved,
 its usability could be improved and its performance could be improved. However, the candidate
 thought that there was nothing else to be done, since a raw product was out in the place.
 </p>
@@ -39,17 +40,17 @@ this:
 Gain: 2.2 cycles per invocation.
 
 <br>
-Someone remarked that the said engineer improves performance one cycle at a time. But over time,
+Someone remarked that the said engineer improves performance one cycle at a time. Over time,
 it adds up, and VMware was the leader in hypervisor performance.
 </p>
 
 <p>
-The lesson to be learnt it not be satisfied with status quo. A good engineer is always on lookout
+The lesson to be learnt it not be satisfied with status quo. A good engineer is always on the lookout
 to improve the quality, performance, debuggability, maintanability, deployability, reliability of
 his systems. He never maxes out.
 </p>
 
-<h3>Learn from each mistake</h3>
+<h2>Learn from each mistake</h2>
 <p>
 Most human endeavours are so vast that no one person, nor even a team consisting of great persons
 can be perfect. The more you learn, the more you realize about your ignorance and folly. That's
@@ -60,9 +61,9 @@ know everything about nothing.
 <p>
 This holds so much true in Sciences. The nature is so vast and so mysterious that while very 
 smart and hardworking humans have worked on uncovering its mysteries since the dawn of the
-civilization, a complete understanding is no where on the horizon. Theroems like Godel's
-incompleteness theorem actually seem to suggest that it is not possible for us complete
-understand the universe. Who knows we are all a simulation in a giant computer program
+civilization, a complete understanding is nowhere on the horizon. Theorems like Godel's
+incompleteness theorem actually suggest that it is not possible for us have complete
+understanding of the universe. Who knows we are all a simulation in a giant computer program
 and we can never understand our true nature.
 </p>
 
@@ -114,5 +115,75 @@ relevant monitoring. Set up proper charts and alarms to ensure that you know of 
 soon after they happen.
 </p>
 
+<h2>Avoid accumulating technical debt</h2>
+<p>
+Technical debt is a metaphor that reflects the additional work caused by an easy choice
+now instead of a better choice that would take longer to implement.
+</p>
+
+<p>
+Accumulating a small amount of technical debt is fine, even desirable. Just as monetary 
+debt speeds up the growth of a company, technical debt can speed up the development of
+features. However, the debt must be paid of timely so as not hamper future growth of
+technology. Furthermore, when developing some features, it is not clear if it will be
+adopted by the users, or will be axed due to non adoption. So, it is prudent to 
+accmulate the technical debt when first developing a feature. To extend the analogy
+a bit, it is prudent to take debt if your company is going for bankruptcy (except that
+there no annoyed lenders in this case).
+</p>
+
+<p>
+There can be several types of technical debts: lack of test cases, lack of documentation,
+less readable code, or a suboptimal design. You should attempt to pay back the debt
+at a suitable time. The suitable time depends on the type of the type of debt. 
+</p>
+
+<p>
+For missing test case, you should see the complexity of the code you have written, how
+much does it overlap with the existing codebase. For a simple code, or a code that does
+not overlap with existing codebase (e.g. new code consists of a new function that is
+only caused while satisifying the new use case), test case may even be indefinitely
+deferred. 
+</p>
+
+<p>
+Documentation debt is something which is best paid as soon as possible. A badly
+written documentation now is better than a well written documentation tomorrow,
+which never happens anyway.
+</p>
+
+<p>
+For debt related to the coding (readability, variable names, class design etc), 
+I like the "rule of three": I work on improving the code when I have to deal
+with the code for the third time after writing it. I pay the extra cost of
+working around the badly written code once and then twice. Working on it for
+the third time is proof enough that the code is used often enough to warrant
+time to improve it.
+</p>
+
+<p>
+Architectural design debt is something harder to give a general solution too.
+Usually it should be paid of when scalability or maintainability problems
+arise due to poorer architectural choice. Or, it should be changed when
+more and more (perhaps three) newer systems start piggybacking on the same
+architectural choice.
+</p>
+
+<h2>Continous Evolution of Code</h2>
+<p>
+Many times, the code starts of in a good shape, but over time, as developers
+take short cuts, the code gets in a poorer and poorer shape. Let's consider
+a few examples, and how to avoid them.
+</p>
+
+<h3>Keep the variable names up to date</h3>
+<p>
+We once had a component which downloaded "campaign details" for a given
+account. The developer defined a constant whose value was the URL at which
+the camapign details were available:
+<pre>
+
+</pre>
+</p>
 </body>
 </html>
