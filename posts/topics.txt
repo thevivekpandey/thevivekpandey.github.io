@@ -1,11 +1,11 @@
 - Why deep learning is suprising for me.                             [DONE]
-- Writing is bottleneck. Can there be a speech to text code editor?
-- Code comments in markdown
 - The yin and yang of software development                           [DONE]
+- Write 10 sample programs for Human                                 [DONE]
 - Meta classes in Python
+- Code comments in markdown
+- Writing is bottleneck. Can there be a speech to text code editor?
 - All the noise about being leaders!
 - We are at inflection point in computer science
-- Write 10 sample programs for Human                                 [DONE]
 - How to not die
 - How neural nets can detect shades of different types. How do more layers mean more power
   Inspired by https://www.youtube.com/watch?v=ILsA4nyG7I0
@@ -13,3 +13,6 @@
 - Comparing brain with computers
 - Segmentation logic
 - Rename all files in a directory, plus rename the content over all the files. [Some shell commands]
+- System calls behind popular operations
+- Queuing theory in web server capacity planning
+- The world is a slaughterhouse, and we do not know it.

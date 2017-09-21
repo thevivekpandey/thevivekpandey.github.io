@@ -15,7 +15,7 @@ Chapters:
 6. Continuous improvement
 7. Performance improvement
    - on performance improvement
-8. Building a team
+8. People Aspects
    - how to be a good cto
 9. Interacting with clients
    - interacting with clients

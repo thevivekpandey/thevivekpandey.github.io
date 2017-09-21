@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title> How to avoid drowning</title>
+  <title>Monitoring </title>
   <link rel="stylesheet" type="text/css" href="../style.css"/>
 </head>
 <body>
@@ -125,7 +125,7 @@ infrastrcuture cost grew did we invest in writing backend in Java. There are oth
 which continue to be in Python Django.)
 
 <figure>
-<img src = "cpu-utilization.png" height="300"/>
+<img src = "../images/cpu-utilization.png" height="300"/>
 <figcaption>CPU utilization dropped when we switched from Python Django to Java Jetty</>
 </figure>
 </p>
@@ -172,7 +172,7 @@ to track how many requests my servers are receiving per unit. As of time of writ
 last 24 hours looks like this:
 
 <figure>
-<img src = "elb-request-rate-24-hours.png" height="300"/>
+<img src = "../images/elb-request-rate-24-hours.png" height="300"/>
 <figcaption>Request rate on my servers for past 24 hours</>
 </figure>
 
@@ -191,7 +191,7 @@ rose around 13 days ago. It was probably related to a new client using product, 
 high activity from one of our existing clients. Perhaps one of them blasted off too many notifications
 to their users.
 <figure>
-<img src = "elb-request-rate-1-day.png" height="300"/>
+<img src = "../images/elb-request-rate-1-day.png" height="300"/>
 <figcaption>Request rate on a daily basis</>
 </figure>
 </p>
@@ -199,7 +199,7 @@ to their users.
 <p>
 Similarly you should track the average response times of your servers, like so:
 <figure>
-<img src = "elb-latency.png" height="300"/>
+<img src = "../images/elb-latency.png" height="300"/>
 <figcaption>Latency during last 24 hours</>
 </figure>
 The latency is lower when the request rate is lower. Important thing is that the latency varies from
@@ -232,7 +232,7 @@ to find the aggreate number of requests we process per 5 minutes. Here is that r
 the appids (app ids are identifiers for clients). Thus, this chart also tells us which clients are
 sending us most data.
 <figure>
-<img src = "kibana-event-counter.png" height="400"/>
+<img src = "../images/kibana-event-counter.png" height="400"/>
 <figcaption>Number of requests consumed by consumers in last 24 hours, split by app ids</>
 </figure>
 </p>
@@ -245,7 +245,7 @@ writes to ElasticSearch the number of message it is consuming. In a healthy syst
 better match, like this (ignore slight variations between production vs consumption figures):
 
 <figure>
-<img src = "crunner-vs-message-sender-1.png" height="400"/>
+<img src = "../images/crunner-vs-message-sender-1.png" height="400"/>
 <figcaption>Number of requests produced vs number of requests consumed</>
 </figure>
 </p>
@@ -266,7 +266,7 @@ consumers some memory.  In our systems, typically a few hundreds of campaigns ru
 I like to track what are various metrics for each campaign that goes through our system, and thus
 I make a table as following:
 <figure>
-<img src = "crunner-dashboard.png" height="300"/>
+<img src = "../images/crunner-dashboard.png" height="300"/>
 <figcaption>For monitoring some metrics, you need a table</>
 </figure>
 </p>
@@ -292,7 +292,7 @@ notifications are customised in what ways, but I found it useful to just generat
 visually shows what notifications are going to various users. A quick glance through this page
 is good enough to check if everything is going fine.
 <figure>
-<img src = "notification-viewer.png" height="400"/>
+<img src = "../images/notification-viewer.png" height="400"/>
 <figcaption>A pictoral representation of notifications, along with the actual jsons.</>
 </figure>
 </p>
@@ -377,7 +377,7 @@ of lots of links which take me to other dashboards of kibana or various tools th
 and various buttons that provide specific information. This is what it looks like:
 
 <figure>
-<img src = "internal-dashboard.png" height="500"/>
+<img src = "../images/internal-dashboard.png" height="500"/>
 <figcaption>Internal Dashboard</>
 </figure>
 
