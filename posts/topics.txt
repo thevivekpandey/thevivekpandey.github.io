@@ -1,6 +1,7 @@
 - Why deep learning is suprising for me.                             [DONE]
 - The yin and yang of software development                           [DONE]
 - Write 10 sample programs for Human                                 [DONE]
+- System calls behind popular operations                             [AXED]
 - Meta classes in Python
 - Code comments in markdown
 - Writing is bottleneck. Can there be a speech to text code editor?
@@ -13,6 +14,6 @@
 - Comparing brain with computers
 - Segmentation logic
 - Rename all files in a directory, plus rename the content over all the files. [Some shell commands]
-- System calls behind popular operations
 - Queuing theory in web server capacity planning
 - The world is a slaughterhouse, and we do not know it.
+- Why I love MongoDB, despite all the naysayers
