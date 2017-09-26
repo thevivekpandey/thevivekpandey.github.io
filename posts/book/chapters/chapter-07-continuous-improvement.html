@@ -178,12 +178,59 @@ a few examples, and how to avoid them.
 
 <h3>Keep the variable names up to date</h3>
 <p>
-We once had a component which downloaded "campaign details" for a given
+We once had a component C which downloaded "campaign details" for a given
 account. The developer defined a constant whose value was the URL at which
 the camapign details were available:
 <pre>
-
+public static String CAMPAIGN_FETCH_URL = "https://api.qgraph.io/campaign_fetch";
 </pre>
+<p>
+The variable was used in some other part of the code to perform an HTTP request
+to fetch the campaign details.
 </p>
+
+<p>
+Things worked just fine then. A few months later, the need arose that the
+component C should download not only campaign details, but some other configuration
+information as well. We modified the backend url from
+</p>
+<pre>
+https://api.qgraph.io/campaign_fetch
+</pre>
+<p>
+to
+</p>
+<pre>
+https://api.qgraph.io/info_fetch
+</pre>
+<p>
+The client could pass query parameters "campaign" and "config" depending on what
+information they wanted. For instance, if a client wanted only "config", he would
+query the URL <code>https://api.qgraph.io/info_fetch?config=1</code> and if he
+wanted both campaign and config, he would query the URL
+<code>https://api.qgraph.io/info_fetch?campaign=1&amp;config=1</code
+</p>
+
+<p>
+The developer of the component C dutifully implemented the new logic. In particular,
+he changed value of the variable <code>CAMPAIGN_FETCH_URL</code> and the new code
+looked like this:
+</p>
+<pre>
+public static String CAMPAIGN_FETCH_URL = "https://api.qgraph.io/info_fetch";
+</pre>
+<p>
+What's wrong with the above code? The variable <code>CAMPAIGN_FETCH_URL</code> is now
+a misnomer, because the URL no longer fetches just campaign info, but something more.
+A reader without having the context will likely be misunderstand the purpose for
+which the URL is used.
+</p>
+
+<h3>Keep data structures up to date</h3>
+</p>
+
+<h3>Keep architecture up to date</h3>
+<p>How we switched to kafka based email system </p>
+
 </body>
 </html>
