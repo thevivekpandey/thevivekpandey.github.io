@@ -291,9 +291,65 @@ null after all.
 This resulted in a bug in our code which was uncovered only around after a month
 when a client complained of obviously incorrect results.
 </p>
+
+<p>
+Keeping the variable names consistent with their functionality is a small task which
+if you keep doing while developing, saves a lots of bugs later on.
+</p>
 <h3>Keep data structures up to date</h3>
+<p>
+Apart from the code, the data structures too tend to atrophy over time and we need
+to put deliberate effort to keep them up to date.
 </p>
 
+<p>
+Suppose you implement an feature f1, and then feature f2, and then feature f3 and
+so on, till f10. Every time we need to implement a new feature, we tend to take
+the least energy path from feature n to feature n + 1. As a result, the code
+and data structures we end up with are very different from what we would have
+implemented had we known all the features in advance.
+</p>
+
+<p>
+As a result, overall code and data structures tend to be a function of not only
+the features that are implemented but the order in which they are implemented.
+This is usually a sub optimal design containing a lot of cruft and hard to understand
+design and code.
+</p>
+
+<p>
+Let us consider a few examples of data structures should evolve with the evolution
+of the code.
+</p>
+
+<p>
+In one of the projects, we created a database "accounts". There were two main functionalities
+that were providing, each account could have one more both of those functionalities
+enabled. Thus, we created two columns, one for each functionality, denoting whether
+or not that functinality was enabled.
+</p>
+
+<p>
+After a few months, we need to implement a third functionality. Further, it was clear that
+more functionalities may needed to be implemented. 
+When we implemented above code , we did not envisage that many more functionalities might be required of the system. 
+Now, creating one column for each functionality was proving to be cumbersome since it involved
+database migration. Thus, we decided to have just one column "functionalities" which contained
+a json indicating which functionalities were disabled.
+</p>
+
+<p>
+However, migrating the two functionalties continued to have their own columns since many database
+users assumed that. The problem was further exacerbated when we need to store some parameters related
+to the first two functionalities in the database. These parameters ended up residing the 
+"functionalities" column, although whether or not they were enabled was dictated by another column.
+</p>
+
+<p>
+This convoluted structure was hard to understand to any new developer and became a source of pain and bugs.
+Much later we decided to bite the bullet and brought in the original two functionalities under the 
+"functionalites" column and the code was uniform after a long time.
+</p>
 <h3>Keep architecture up to date</h3>
 <p>How we switched to kafka based email system </p>
 
