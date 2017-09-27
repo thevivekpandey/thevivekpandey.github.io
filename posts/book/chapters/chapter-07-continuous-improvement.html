@@ -226,6 +226,71 @@ A reader without having the context will likely be misunderstand the purpose for
 which the URL is used.
 </p>
 
+<p>
+Names getting misaligned with the purpose for which an entity is used
+leads to misunderstanding on the part of the reader of the code and this misunderstanding
+results in buggy code. Let's consider an example how a nasty bug sneaked in our code
+base because of this.
+</p>
+
+<p>
+At QGraph, we had a concept of "campaigns", which could of several types: "regular
+campaigns", "trigger campaigns" and "inapp campaigns". (You do not need know the details
+what the campaigns did). They were implemented
+in the classes <code>RegularCampaign</code>, <code>TriggerCamapign</code> and
+<code>InappCamapaign</code>. Each of these three classes inherited from a base
+calss called <code>Campaign</code>. Of these, the regular campaign
+needed a "progress updater", while the others did not.
+</p>
+
+<p>
+For the sake of uniformity, we decided that all campaign would use a progress 
+updater, which will be passed to as an argument in the constructor of campaign
+classes and through there to the constructor of class <code>Campaign</code>.
+However, regular campaign would use an instance of class <code>ProgressUpdater</code>,
+and trigger and inapp campaigns would use an instance of class <code>NullProgressUpdater</code>.
+<code>NullProgressUpdater</code> would have the same functions exposed as the
+regular <code>ProgressUpdater</code>, but would do nothing. That way, the functionality
+of updating progress could reside in the base class <code>Campaign</code> and all
+individual campaign classes could continue to inherit from <code>Campaign</code>.
+</p>
+
+<p>
+This design of having two updaters <code>ProgressUpdater</code> and <code>NullProgressUpdater</code>
+served us very well. We were able use <code>NullProgressUpdater</code> for writing
+test cases for various campaigns too.
+</p>
+
+<p>
+As time passed, more functionalities were added to <code>ProgressUpdater</code>.
+Once there was a progress update related need which was required by all campaigns,
+not just regular campaigns. And here the developer did what he should not have done:
+he added that functionality to both <code>ProgressUpdater</code> and
+<code>NullProgressUpdater</code>.
+</p>
+
+<p>
+Why is that bad? This is bad because now the name "NullProgressUpdater" is not longer
+consistent with the fact that this progress updater is actually doing some work.
+</p>
+
+<p>
+After a few more months, there was another requirement which fit well in putting the
+code in <code>ProgressUpdater</code>. However, the requirement was unrelated to
+"progress update". Thus, we decided to upgrade to name "progress updater" to slightly
+more general "stats updater". Thus <code>ProgressUpdater</code> was to be renamed to
+<code>StatsUpdater</code> and <code>NullProgressUpdater</code> was to be renamed
+to <code>NullStatsUpdater</code>. However, the developer, rather than renaming the
+file <code>null_progress_udpater.py</code> to <code>null_stats_updater.py</code>
+decided that to rewrite all the functions by himself, since they all had to do 
+nothing anyway. The developer missed that <code>NullProgressUpdater</code> was not
+null after all.
+</p>
+
+<p>
+This resulted in a bug in our code which was uncovered only around after a month
+when a client complained of obviously incorrect results.
+</p>
 <h3>Keep data structures up to date</h3>
 </p>
 
