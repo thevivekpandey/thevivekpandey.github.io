@@ -1,0 +1,150 @@
+<html>
+<head>
+  <title> The Name Fail</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <style>
+     li {
+        margin-bottom: 10px;
+     }
+  </style>
+</head>
+<body>
+<a href="http://thevivekpandey.github.io">Home</a>&nbsp;&nbsp; <a href="https://qgraph.io">QGraph</a>
+<h1>The Name Fail</h1>
+<p>How misnaming a class hurt us royally.</p>
+
+<h2>Importance of meaningful names</h2>
+<p>
+Naming things properly is important. Since human brain can hold limited information
+at one time, it is important to minimize the difference between what an entity is called
+and its functionality. A popular mind game has the words 
+<span style="color:red">GREEN</span>, 
+<span style="color:yellow">RED</span>, 
+and 
+<span style="color:green">YELLOW</span>, 
+written in red, yellow and green respectively, and the challenge is to speak out
+the colors (and not the words) as fast as you can.
+</p>
+
+<h2>Choosing meaningful names is not that hard</h2>
+<p>
+Choosing meaningful name is actually not that hard. Of course number of items will
+be denoted by <code>nItems</code>, and total height will be denoted by
+<code>totalHeight</code>. A function to compute the sum will be called <code>
+computeSum()</code> and a function to check for alerts will be called as
+<code>checkForAlerts</code>.
+</p>
+
+<h2>Keeping the names meaningful is hard</h2>
+<p>
+What is hard is that the names continue to be meaningful. It is hard for the names to keep
+up with change in the functionality of the underlying entity. Let's say you 
+have a function which sends messages.
+You begin by call it <code>sendMessages()</code>. Do you update the name when the function
+starts to update some stats? Do you update the name when the function modifies
+the message a little before sending to the recipients? How about the scenario when
+the function validates the message before sending it and decides <i>not</i> to send
+it if validation fails?
+</p>
+
+<p>
+Functionality overload creeps in in small bits, with each bit being 
+innocuous enough to not warrant a change in the name of the variable (which may involve changes across
+mulitple files). This results in gradual accmulation of technical debt.
+</p>
+
+<h2>How a misnamed class led to an embarassing bug</h2>
+<p>
+At QGraph, we have a concept of "campaign", which can of several types: "regular
+campaign", "trigger campaign" and "inapp campaign". (You do not need to know the details
+what the campaigns are). They were implemented
+in the classes <code>RegularCampaign</code>, <code>TriggerCamapign</code> and
+<code>InappCamapaign</code>. Each of these three classes inherits from a base
+class called <code>Campaign</code>. Of these, the regular campaign
+needed a "progress updater", while the others did not.
+</p>
+
+<p>
+For the sake of uniformity, we decided that all campaign would use a progress 
+updater, which will be passed to as an argument in the constructor of campaign
+classes and through there to the constructor of class <code>Campaign</code>.
+However, regular campaign would use an instance of class <code>ProgressUpdater</code>,
+while trigger and inapp campaigns would use an instance of class <code>NullProgressUpdater</code>.
+<code>NullProgressUpdater</code> would have the same functions exposed as the
+regular <code>ProgressUpdater</code>, but would do nothing. That way, the functionality
+of updating progress could reside in the base class <code>Campaign</code> and all
+individual campaign classes could continue to inherit from <code>Campaign</code>.
+</p>
+
+<p>
+This design of having two updaters <code>ProgressUpdater</code> and <code>NullProgressUpdater</code>
+served us very well. We were also able use <code>NullProgressUpdater</code> for writing
+test cases for various campaigns.
+</p>
+
+<p>
+As time passed, more functionalities were added to <code>ProgressUpdater</code>.
+It so turned out that <code>ProgressUpdater</code> was the only class in whole
+code flow that was updating the database, and thus developers started to use
+<code>ProgressUpdater</code> for updating the database with various statistics
+and metadata. All this seemed logical too: we were happy that there was a single
+gateway to the databse, and all the updates anyway seemed related, if only
+tangentially, to "progress".
+</p>
+
+<p>
+It so happened that once there was a progress updater related requirement which was 
+required by <i>all</i> campaigns, not just regular campaigns. 
+
+And here the developer did what he should not have done:
+he added that functionality to both <code>ProgressUpdater</code> and
+<code>NullProgressUpdater</code>. That was the easiest thing to do, though
+not the correct thing. 
+</p>
+
+<p>
+Why is that bad? This is bad because now the name "NullProgressUpdater" is no longer
+consistent with the fact that this progress updater is actually doing some work.
+</p>
+
+<p>
+We could have introduced another progress updater, say <code>MinimalProgressUpdater</code>,
+which would have been used by campaigns other than <code>RegularCampaign</code> i.e.
+<code>TriggerCampaign</code> and <code>InappCampaign</code>. <code>NullCampaign</code>
+
+</p>
+<p>
+After a few more months, there was another requirement which fit well in putting the
+code in <code>ProgressUpdater</code>. However, the requirement was so unrelated to
+"progress update" that we finally decided to change the name "progress updater" to 
+more general "stats updater". Thus <code>ProgressUpdater</code> was to be renamed to
+<code>StatsUpdater</code> and <code>NullProgressUpdater</code> was to be renamed
+to <code>NullStatsUpdater</code>. However, the developer, rather than renaming the
+file <code>null_progress_udpater.py</code> to <code>null_stats_updater.py</code>
+decided to copy <code>stats_updater.py</code> to <code>null_stats_updater.py</code>
+and then modify all the functions to no-op. He assumed that since it is <i>null</i>
+stats updater, all the function calls should be dummy.
+</p>
+
+<p>
+Thus, <code>NullProgressUpdater</code> went back to being true to its name. This resulted 
+in a bug in our code which was uncovered only around after a month when a client complained of 
+obviously incorrect results. Only then we then introduced the new stats updater, called
+<code>TriggerStatsUpdater</code>.
+</p>
+
+<p>
+It requires discipline and good judgement to decide when to make the extra effort of
+refactoring while implementing an added functionality.
+We lacked the good judgement in above case.
+</p>
+
+<h2>No silver bullet</h2>
+<p>
+Unfortunately, just like car accidents, there is no way to avoid the bad judgement
+calls. The best we can do is to adopt best practices and be disciplined. And just
+as we expect car accidents to go down with self driving cards, coding utopia will
+be achieved when computers start writing code.
+</p>
+</body>
+</html>
