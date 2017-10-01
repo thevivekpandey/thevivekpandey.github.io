@@ -124,7 +124,7 @@ now instead of a better choice that would take longer to implement.
 <p>
 Accumulating a small amount of technical debt is fine, even desirable. Just as monetary 
 debt speeds up the growth of a company, technical debt can speed up the development of
-features. However, the debt must be paid of timely so as not hamper future growth of
+features. However, the debt must be paid off timely so as not hamper future growth of
 technology. Furthermore, when developing some features, it is not clear if it will be
 adopted by the users, or will be axed due to non adoption. So, it is prudent to 
 accmulate the technical debt when first developing a feature. To extend the analogy
@@ -135,7 +135,7 @@ there no annoyed lenders in this case).
 <p>
 There can be several types of technical debts: lack of test cases, lack of documentation,
 less readable code, or a suboptimal design. You should attempt to pay back the debt
-at a suitable time. The suitable time depends on the type of the type of debt. 
+at a suitable time. The suitable time depends on the type of debt. 
 </p>
 
 <p>
@@ -162,7 +162,7 @@ time to improve it.
 </p>
 
 <p>
-Architectural design debt is something harder to give a general solution too.
+Architectural design debt is something harder to give a general solution to.
 Usually it should be paid of when scalability or maintainability problems
 arise due to poorer architectural choice. Or, it should be changed when
 more and more (perhaps three) newer systems start piggybacking on the same
@@ -395,11 +395,79 @@ Let's consider another example.
 
 <p>
 We needed to store event names and event parameters so that they could be displayed in the UI. Event
-names would be like "viewed a product". Each even would have a few parameters.
-For instance, "launched the app" event could have pareame
+names would be like "viewed a product", or "checkout completed". Each event would have a few parameters.
+For instance, the event "viewed a product" event could have parameters "product id", "product price",
+"product url", etc. We stored this information in a database, with the following structure: 
 </p>
+
+<pre>
+{
+    "e1": ["p1", "p2", "p3"],
+    "e2": ["p4", "p5", "p6"]
+}
+</pre>
+
+<p>
+Here "p1", "p2" and "p3" are the parameters associated with event "e1".
+Above data structure served as well, but then the need arose that we need to know the
+type of each parameter, i.e. whether a parameters like "p1" or "p2" is string, numeric
+or boolean.
+</p>
+
+<p>
+The way our UI code was written, it would have been locally optimal for us to modify
+the above data structure as following: 
+</p>
+<pre>
+{
+   "e1": [{"p1": "t1"}, {"p2": "t2"}, {"p3": "t3"}],
+   "e2": [{"p4": "t4"}, {"p5": "t5"}, {"p6": "t6"}]
+}
+</pre>
+
+<p>
+This preserves the fact the the values in the dictionary continue to be an array and
+the UI code which was looping over an array would continue to do so, and minor 
+modifications to the code would achieve the desired functionality.
+</p>
+
+<p>
+However, to a new reader of the code, this structure will not make sense. 
+Why does each element in the array is a dictionary with just one element?
+</p>
+
+<p>
+A better structure, which involves a bit more work, but is more understandable to
+a developer, is the following:
+</p>
+<pre>
+{
+   "e1": {
+      "p1": "t1", "p2": "t2", "p3": "t3"
+   },
+   "e2": {
+      "p4": "t4", "p5": "t5", "p6": "t6"
+   }
+}
+</pre>
+
 <h3>Keep architecture up to date</h3>
-<p>How we switched to kafka based email system </p>
+<p>Apart from the code and data structure, your architecture too needs to evolve
+continuously. Here are some examples of how you do that.
+</p>
+
+<p>
+Plenty of components in our system used to send email to relevant developers, managers
+or users. Perhaps a customer of ours requested for some report and a mail needed to go to him,
+or perhaps there was a critical error in one of our systems and a mail needed to be sent
+to the relevant developers.
+</p>
+
+<p>
+The code to compose and send the mail got repeated across many places. As a result if the
+credentials when we decided
+to standardize the entire process.
+</p>
 
 </body>
 </html>
