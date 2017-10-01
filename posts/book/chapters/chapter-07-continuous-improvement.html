@@ -351,6 +351,44 @@ Much later we decided to bite the bullet and brought in the original two functio
 "functionalites" column and the code was uniform after a long time.
 </p>
 
+<b>Don't go overboard either</b>
+<p>
+While it is possible that as you add functionality after functionality without worrying about
+code quality, the code atrophies into an non-understandable mess, it is also possible to overdo
+the clean-code mentality, where you are so fixated on the purity of code that your business
+suffers.
+</p>
+
+<p>
+Remember that the your client or users use your product for its functionality and not its code
+quality. Time invested in elgant design or refactoring does not directly contribute to
+functionality and thus needs to be justified by making the case that over long run they
+contribute to faster rolling out of features or reduced bugs.
+</p>
+
+<p>
+How do you judge if you are not erring too much on one or the other side of the divide? How
+can you find if you are not being too purist and not being totally reckless either?
+</p>
+
+<p>
+While it is a judgement call with no right answer, the way I see it is that the code should
+have a certain "un-neatness" to be fixed at some future point of time. There should be
+some points about the code that make you uncomfortable. You should have a list of clean up
+tasks which you would like to do at some point of time. You keep adding to this list
+as you implement features, and periodically knock of items off the list. The size of the
+list should be maintained at a reasonable level.
+</p>
+
+<p>
+Similarly, while a high rate of arrival of bugs means you are not investing enough
+in writing the code and testing it thoroughly, a complete absence of bugs is not be celebrated
+either. What it likely means is that your code is probably too robust and well tested.
+Perhaps you can sacrifice some robustness for faster development. Note that above advice
+is not applicable to mission critical software like medical software, self driving cars
+or rockets.
+</p>
+
 <p>
 Let's consider another example.
 </p>
