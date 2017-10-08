@@ -2,6 +2,7 @@
 - The yin and yang of software development                           [DONE]
 - Write 10 sample programs for Human                                 [DONE]
 - System calls behind popular operations                             [DONE]
+- Name fail: how a misnaming a class led to failure                  [DONE]
 - Meta classes in Python
 - Code comments in markdown
 - Writing is bottleneck. Can there be a speech to text code editor?
@@ -15,6 +16,6 @@
 - Segmentation logic
 - Rename all files in a directory, plus rename the content over all the files. [Some shell commands]
 - Queuing theory in web server capacity planning
-- The world is a slaughterhouse, and we do not know it.
+- The world is a slaughterhouse, and we do not know it
 - Why I love MongoDB, despite all the naysayers
-- Name fail: how a misnaming a class led to failure
+- 2 months/3 months without news consumption
