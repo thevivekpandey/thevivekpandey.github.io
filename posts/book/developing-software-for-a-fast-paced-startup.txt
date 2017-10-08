@@ -233,3 +233,5 @@ Chapters:
 proposals@oreilly.com
 http://www.aristeia.com/authorAdvice.html
 Code review
+- What is the best case scenario? You learnt it the hard way after spending lot of effort in energy optimization.
+  E.g. to get a lower bound for segmentation I do wc -l
