@@ -188,7 +188,7 @@ Idea behind RMS prop is that learning should proceed at similar rates for variou
 
 <h3>Learning rate decay</h3>
 <p>
-As you tend to minimal, you should learn at smaller rate.
+As you tend to minima, you should learn at smaller rate.
 </p>
 <p>
 $\alpha = \frac{1}{1 + decay rate * epoch num} \alpha_0$
@@ -205,7 +205,7 @@ Not very important.
 used to think of the situation like this.</p>
 
 <img src="./local-optima.png" />
-<p> Actually, in a high dimensional space, most optimal are saddle points, so you will not get stuck: </p>
+<p> Actually, in a high dimensional space, most optima are saddle points, so you will not get stuck: </p>
 
 <img src="./saddle-points.png" />
 
@@ -266,7 +266,7 @@ You search in the zone where you are finding lower cost values
 </p>
 <p>
 If the range to search is very large, logarithmic sampling is better
-than linear scale. Eg. is alpha can be between 0.0001 and 1 and you
+than linear scale. Eg. if alpha can be between 0.0001 and 1 and you
 have to choose 5 values, you should choose 0.0001, 0.001, 0.01, 0.1, 1
 </p>
 
@@ -303,7 +303,7 @@ Why batch normalization works
 
 <p>
 What $\mu$, $\sigma$ do we use for testing?. You keep an exponentially weight average of these quantities
-for mini batches while training.
+for mini batches while training and use that for dev/test.
 </p>
 
 <h3>Multi class classification</h3>
