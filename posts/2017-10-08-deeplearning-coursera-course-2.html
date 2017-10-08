@@ -1,0 +1,314 @@
+<html>
+<head>
+  <title> Practical Aspects of Deep Learning</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <!-- Global Site Tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1450977-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)};
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-1450977-3');
+  </script>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML"></script>
+
+</head>
+<body>
+<h1>Practical Aspects of Deep Learning</h1>
+<small>Course 2 of Andrew Ng's Deep Learning Series</small>
+<h2>1. Setting up your Machine Learning Application</h2>
+<h3>Train/Dev/Test sets</h3>
+<p>Dev and Test sets must come from same distribution</p>
+<p>Since Dev and Test sets just need to be large enough to ensure statistical accuracy, 
+and we apply deep learning to problems where there is lot of data, a split like 98%,
+1%, 1% between training, dev and test set is usually good.</p>
+<p>Test set can be sometimes omitted too. It is meant to get an unbiased estimate
+of algorithms performance in the real world</p>
+
+<h3>Bias and Variance</h3>
+<img src="./bias-and-variance.png" />
+<p>
+Bias is underfitting to training data. So, accuracy in training data will be small if
+your algorithm has high bias.
+</p>
+<p>
+Variance is overfitting to training data. So, in case of high variance, accuracy in
+dev set will be much worse compared to that in training data.
+</p>
+<p>
+For reference, Bayes' error is the absolute best an algorithm can do. It is close
+to human level performance for perception related tasks, because humans are very 
+good at perception related tasks. For other tasks it is just a theory and hard
+to determine. We say that bias is high if training error is more than Bayes' error.
+</p>
+<p>
+When developing a learning algorithm, first you should get low bias, then aim
+for low variance.
+</p>
+<p>
+For handling bias, techniques are bigger network or different architecture. For handling
+high variance, techniques are more data, or regularization, or different neural net architecture.
+</p>
+
+<h3>Regularization</h3>
+<p>
+Incentivize your model to have smaller weights. Reduces overfitting to training data.
+</p>
+<p>
+Cost function before and after is:
+</p>
+<img src="./cost-function-with-regularization.png" />
+
+<p>
+Cross entropy term is called L2 norm. This process is also called L2-regularization.
+</p>
+
+<p>
+Another intuition is that if you are using tanh activation function, and since $tanh$
+is linear around $x = 0$, with L2 regularization, model will be very close to linear,
+and thus, simpler.
+</p>
+
+<h3>Dropout Regularization</h3>
+<p>
+Randomly shutodown neurons in each iteration through each training eample.
+</p>
+
+<p>
+For each layer, decide the probability with which neurons of that layer will survive.
+In each iteration through a training example, shutdown the neurons on a per layer basis 
+according to this probability.  If probability of neuron surviving is $keep\_prob$, you 
+divide activations by $keep\_prob$ so that value of $z$ for next layer is not impacted much.
+</p>
+<p>
+This technique is called inverted dropout.
+</p>
+
+<p>
+At dev/test time, we do not dropout.
+</p>
+
+<p>
+Why does dropout regularization work?
+<ol>
+<li>
+Every iteration, you are working on a smaller network. So that should have regularizing effect.
+</li>
+<li>
+While training, you can't rely on some particular feature, because that feature can randomly 
+go away. So, weights will spread out. When weights are spread out, L2-norm reduces.
+</li>
+</ol>
+</p>
+
+<p>
+Actually dropout can be shown to be a form of L2-regularization where there are different
+weights given to different neurons.
+</p>
+
+<p>
+Used a lot in computer vision, because you almost never have enough data.
+</p>
+<p>
+Cost function is no longer deterministic, so hard to debug. You may wish to turn off
+dropout first, complete implementation, and then turn on dropout.
+</p>
+
+<h3>Other Regularization Techniques</h3>
+<p>
+Data augmentation: e.g., flip the image and add to traininge example, take random crops
+or rotate the image. They do not add as much info as brand new images.
+</p>
+
+<p>
+Early stopping. Plot training set error as well as dev set error. Training set error
+will keep going down, but dev set error will start rising. You stop there.
+</p>
+<img src="./early-stopping.png" width="700px"/>
+
+<p>
+Bad thing about this is that reducing bias and reducing variance have got intermingled.
+</p>
+
+<h3>Setting up your optimization problem</h3>
+<p>Normalize inputs with mean 0 and variance 1</p>
+<p>With deep neural networks, gradients may explode or vanish. More careful weight
+initialization can help. You init weight matrix of each layer $W$ such that its variance is $1/n$
+where is $n$ is number of input features. You say $w^{[l]} = np.random.randn(shape) * np.sqrt(\frac{1}{n})$.
+It is called Xavier initialization. Sometimes $\sqrt{\frac{2}{n^{[l-1]} + n^{[l]}}}$ is also used.
+<p>Gradient checking. You can check if your gradient computation is correct by using following
+alternative approximation</p>
+<img src="./gradient-checking.png" />
+</p>
+<h2>2. Optimization Algorithms</h2>
+
+<h3>Mini batch gradient descent</h3>
+<p>
+Update gradients after each mini-batch, a batch of size 64 or 128 or 256. When mini batch
+is of size 1, process is called stochastic gradient descent. with a reasonable mini batch
+size, you get benefit of vectorization as well as converge faster.
+</p>
+
+<img src="./stochastic-vs-normal.png" width="600px"/>
+<img src="./stochastic-vs-minibatch.png" width="600px" />
+<p>
+When using mini batch gradient descent, the cost may not go down per iteration.
+</p>
+<img src="./mini-batch-cost.png" width="600px" />
+
+<h3>Gradient descent with momentum </h3>
+<p>Exponentially weighted average is like this:</p>
+<img src="./exponentially-weighted-average.png" />
+
+<p>
+But this works bad for initial few examples. You can do better if you divide by $1 - \beta^{t}$
+</p>
+<p>
+Knowing above, you can adjust $dW$ as per exponential smoothing, like this:
+</p>
+<img src="./gradient-descent-with-momentum.png" />
+
+
+<h3>RMS Prop</h3>
+
+<img src="./rms-prop.png" />
+<p>
+Idea behind RMS prop is that learning should proceed at similar rates for various weights.
+</p>
+
+<h3>Adam algorithm</h3>
+<p>Combines momentum with rms prop:</p>
+<img src="./adam-algorithm.png" />
+
+<h3>Learning rate decay</h3>
+<p>
+As you tend to minimal, you should learn at smaller rate.
+</p>
+<p>
+$\alpha = \frac{1}{1 + decay rate * epoch num} \alpha_0$
+</p>
+
+<p>
+There are several other formulae that you can use for decay.</p>
+<p>
+Not very important.
+</p>
+
+<h3>The problem of local optima</h3>
+<p>Earlier people used to be afraid that algo may get stuck in local optima. They
+used to think of the situation like this.</p>
+
+<img src="./local-optima.png" />
+<p> Actually, in a high dimensional space, most optimal are saddle points, so you will not get stuck: </p>
+
+<img src="./saddle-points.png" />
+
+<p>
+Local optima are not a problem, but plateaus are problem. Gradient may become very close to 0. So, learning
+can become very slow. This is where momentum, rms prop or adam can help you.
+</p>
+
+<h2>3. Hyperparameter Tuning</h2>
+<h3>Hyperparameters</h3>
+<p>
+Learning rate is most important
+</p>
+
+<p>Next:
+<ul>
+<li>momentum term: 0.9 is good </li>
+<li>mini batch size</li>
+<li>number of hidden units</li>
+</ul>
+</p>
+
+<p> After that:
+<ul>
+<li>number of layers</li>
+<li>learning rate decay</li>
+</ul>
+</p>
+
+<p>
+If you use adam algorithm, default parametersof adam algorithm are good enough
+</p>
+
+
+<p>
+How do you explore hyper parameter space?
+</p>
+
+<p>
+If there were few parameters, you could explore points in grid like so.
+</p>
+<img src="./few-hyperparameters.png" />
+
+<p>
+But with many parameters, choose points at random, this way you get many 
+values of all the parameters.
+</p>
+<img src="./more-hyperparameters.png" />
+
+<p>
+Coarse to fine:
+You search in the zone where you are finding lower cost values
+</p>
+<img src="./coarse-to-fine.png" width="500px"/>
+
+<p>
+<h3>Choosing right scale</h3>
+</p>
+<p>
+If the range to search is very large, logarithmic sampling is better
+than linear scale. Eg. is alpha can be between 0.0001 and 1 and you
+have to choose 5 values, you should choose 0.0001, 0.001, 0.01, 0.1, 1
+</p>
+
+<p>
+If the range is small but increasingly close to a number, logarithmic
+scale is used in a different way. Eg if can be between 
+0.9 and 1 you should 0.9, 0.99, 0.999, 0.9999 etc.
+</p>
+
+<h3>Pandas vs Caviar</h3>
+<p>
+Pandas: babysit one model, change the parameters periodically and experiment.
+This is done if you have less computation resources.
+</p>
+
+<p>
+Caviar: Train many models in parallel. Take the best.
+</p>
+
+<h3>Batch normalization</h3>
+<p>
+Normalizing inputs can speed up learning.
+You normalize z across training examples so that in a deep neural net, the weights of layers are learnt
+faster.
+</p>
+<img src="./batch-norm-while-training.png" />
+<p>
+Why batch normalization works
+<ol>
+<li>Just like input normalization helps in faster learning so does hidden layer output normalization.</li>
+<li>Ouput of deeply hidden layers becomes robust to changes in inputs.</li>
+</ol>
+</p>
+
+<p>
+What $\mu$, $\sigma$ do we use for testing?. You keep an exponentially weight average of these quantities
+for mini batches while training.
+</p>
+
+<h3>Multi class classification</h3>
+<p>
+Use softmax in last layer. Softmax generalizes logistic regression to multiple classes.
+</p>
+</body>
+</html>
