@@ -19,3 +19,4 @@
 - The world is a slaughterhouse, and we do not know it
 - Why I love MongoDB, despite all the naysayers
 - 2 months/3 months without news consumption
+- No "if" in neural networks!
