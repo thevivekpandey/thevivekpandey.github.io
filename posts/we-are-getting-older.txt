@@ -1,0 +1,32 @@
+Happy Diwali to everyone.
+
+Gentlemen, I wanted to bring your attention to a burning problem. I am sure
+you would have noticed it, but perhaps decided to ignore it. The problem is:
+we are getting old.
+
+We are all in 35-40 year range now. I had never thought I will grow this old.
+Growing old was for parents.
+
+I have noticed one interesting fact: every year I grow older by 1 year. 
+If a(t) is my age with time, then da / dt = 1. I am sure someone may be able 
+to prove this empirical fact.
+
+This Diwali festival is coming so frequently that I have lost count of how
+many Diwali's I have seen. From childhood I am seeing Diwali's. I think it
+occurs once every year, but I may be wrong. I estimate I would have seen
+50-60 Diwalis till now. Given that my age is in 35-40 years, that makes
+it ~1.5 Diwalis every year. So, I am missing something in my calculation.
+
+I am worried that if I don't do anything about my age function a(t) and
+da / dt continues to be 1, there is not a whole lot of time left before
+I reach 70-80 years of age. Then comes death. I don't even want to talk 
+about that. We need to do something. Anyone got any ideas?
+Out of box thinker Bailoo? DML Shaunak? Mathematician Amitp? Professor
+Ragesh? Wise Sushank? Researcher Bakshi? Berkeley guy Pulkit? EE Engineer
+Singhal? Oilman Gash? Cricker Santosh? Chapoo Kachru? Oldie Daddu?
+
+Oldie Daddu! Oh yes, Daddu got old long ago. Do you have any ideas Daddu?
+I would like da / dt to be negative ideally, but I am so desparate
+currently that anything less than 1 will do.
+
+We are a smart bunch of people. We can solve it. Any ideas?
