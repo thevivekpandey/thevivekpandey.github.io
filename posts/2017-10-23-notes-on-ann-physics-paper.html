@@ -1,0 +1,107 @@
+<html>
+<head>
+  <title> Study notes: Why does deep and cheap learning work so well?</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <!-- Global Site Tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1450977-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)};
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-1450977-3');
+  </script>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML"></script>
+
+</head>
+<body>
+<h1>Study notes: Why does deep and cheap learning work so well?</h1>
+<p>
+I read <a href="https://arxiv.org/pdf/1608.08225.pdf" target="_blank">this paper</a> a few days ago. Though I could not understand the paper 
+for most part because of my limited Maths and Physics background, what I gathered was that
+<ol>
+<li>The paper contains some interesting ideas. </li>
+<li>Beyond the interesting ideas, the paper is hand waving. </li>
+</ol>
+</p>
+
+<p>
+In the rest of this article, I describe the ideas which I found intersting and could understand. At places I add my own interpretation, which,
+inadvertantly may be different from what the authors intended.
+
+</p>
+
+<h2>The Question</h2>
+<p>
+<a href="https://en.wikipedia.org/wiki/Universal_approximation_theorem" target="_blank">Universal Approximation Theorem</a> says that 
+almost any function can be approximated by a neural network. However, it does not talk about complexity or learnability
+of such networks. Then why is it that layered neural networks can compute the functions that matter to us (for computer vision,
+speech recognition etc use cases), and why is that the parameters of the network can be learnt too rather cheaply. This explains
+the title of the paper: "Why does deep and cheap learning work so well?"
+</p>
+
+<h3>Appreciating the Question</h3>
+<p>
+Consider the task of classifying whether the image is of a cat or not. Let's say the image is a 1000 x 1000 pixel in size.
+Each pixel can have 256 values (say it is a gray scale image). The neural net that you compute will finally correspond to one of the
+$256^{1000,000}$ possible functions. Of these functions, a vanishingly small subet of functions are good approximations for
+cat vs non cat classfier functions. Then how is that a neural net is able to pick up one of the good approximating functions?
+</p>
+
+<h2>The Answer</h2>
+<p>
+There are two reasons why the above is possible:
+</p>
+
+<h3>1(a). Laws of nature are simple</h3>
+The laws of nature are simple. They do not involve large exponents. Consider for example some popular laws:
+<ul>
+<li> Force between two point particles of masses $m_1$ and $m_2$ separated by distance $r$ is $Gm_1m_2 / r^2$</li>
+<li>$E = mc^2$</li>
+<li>Maxwell's equations:
+\begin{equation}
+\nabla \cdot \vec{E} = \frac{\rho}{\epsilon_0}\\
+\end{equation}
+\begin{eqnarray}
+\nabla \cdot \vec{B} &=& 0 \nonumber \\
+\nabla \times \vec{E} &=& - \frac{\partial B}{\partial t} \nonumber \\
+\nabla \times \vec{B} &=& \mu_{0}\vec{J} +
+\mu_{0}\epsilon_{0}\frac{\partial E}{\partial t}
+\end{eqnarray}
+</li>
+</ul>
+<p>
+Simple laws of nature imply that the functions which map images to classifications are also simple
+and computable cheaply by NN. The paper talks something about low degree Hamiltonians, but I do not know what
+Hamiltonians are.
+</p>
+
+<h3>1(b). Nature exhibits locality</h3>
+<p>
+Things only affect what is in their vicinity. So, when you make a physical model, most of the interaction terms become zero.
+</p>
+
+<h3>1(c). Symmetry</h3>
+<p>
+A rotated cat is a cat, a translated cat is a cat. A rotated non cat is a non cat, a translated non cat is a non cat. This
+reduces parameter count and hence computation cost.
+</p>
+
+<h3>2. Processes of nature are hierarchical</h3>
+<p>
+Physical world is organized hierarchically: atoms, molecules, cells, organisms, planets, solar system, galaxies. Layers of
+ANN are able to reverse the generative hierarchical process. Getting an ANN to approximate an arbitrary function would
+be hard, but a function which is decomposing the generative process to hierarchy of simpler steps cna be done.
+</p>
+
+<h2>Conclusion</h2>
+<p>
+It is the Physics of the world that leads to ANNs being successful at classification tasks.
+</p>
+</body>
+</html>
