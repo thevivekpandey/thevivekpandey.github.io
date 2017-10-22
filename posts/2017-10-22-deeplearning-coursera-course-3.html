@@ -21,40 +21,43 @@
 </head>
 <body>
 <h1>Structuring Machine Learning Projects</h1>
-<small>Course 3 of Andrew Ng's Deep Learning Series</small>
+<small>Course 3 of Andrew Ng's Deep Learning Series</small>&nbsp;
+<small><a href="2017-08-31-deeplearning-coursera-course-1.html">Course 1</a></small>
+<small><a href="2017-10-08-deeplearning-coursera-course-2.html">Course 2</a></small>
 <h2>The Main Question</h2>
 <p>
-If you have an train accuracy of 90%, and you are not happy with that. What do you do? Collect more data? Try
-other algos? Collect more diverse data?
+If you have an training accuracy of 90%, and you are not happy with that, what do you do? Collect more data? Try
+other algos? Collect more diverse data? How to decide what to do?
 </p>
 
 <h2>Chain of assumptions in ML</h2>
 <ol>
 <li>
-<b>Fit training set well on cost function </b> If this is not happening, try bigger network, or different optimization algo like Adam. You should achieve human level performanc here.
+<b>Fit training set well on cost function </b> If this is not happening, try bigger network, or different optimization algo like Adam. You should achieve human level performance here.
 
 </li>
 <li>
 <b>Fit dev set well on cost function </b> If this is not happening, it means you are overfitting training set. Try regularization, or train on a bigger training set. Or a different NN architecture.
 </li>
 
-<li><b>Fit test set well on cost function</b> If fit on test set is much worse than fit on dev set, it means you have overfit the dev set. You should get a bigger dev set. Or a different NN architecture.
+<li><b>Fit test set well on cost function</b> If fit on test set is much worse than fit on dev set, it means you have overfit the dev set. You should get a bigger dev set. Or try a different NN architecture.
 </li>
 
 <li><b>Perform well in the real world</b> If perf on dev/test set is good, but performance in real world is bad, check if cost function is really what you care about.
 </li>
 </ol>
 
-Andrew Ng does not like early stopping because it affects fit on both training and dev sets.
+Andrew Ng does not like early stopping because it affects fit on both training and dev sets, which leads to confusion.
 
 <h2>Single real number evaluation metric</h2>
+<p> Have a single real number metric to compare various algos. </p>
 <p> You may combined precision and recall (say by using harmonic mean of the two). </p>
 <p> Some metrics could be <em>satisficing</em>, e.g. running time of classification should be within a threshold. Others would be <em>optimizing</em>. </p>
 
 <h2>Train/dev/test set distributions</h2>
-<p>Dev and test set should come from same distribution and should reflect the data you want to do well on. </p>
+<p>Dev and test set should come from the same distribution and should reflect the data you want to do well on. </p>
 <p>When data was less abundant, 60/20/20 would be good training/dev/test was good split. In data abundant neural net scenario, 98/1/1 is good distribution. Test set should be just good enough to give high confidence in overall performance of system. Some people just omit test set too. </p>
-<p>Sometimes you may wish to change metric mid way. While building cat vs no cat image, may be in a "better" classfier, pornographic images are classified as cat images. So, you need to change cost function to penalizing this classification. </p>
+<p>Sometimes you may wish to change metric mid way. While building cat vs no cat image, may be in a "better" classfier, pornographic images are classified as cat images. So, you need to change cost function to penalizing this misclassification heavily. </p>
 
 <h2>Human level peformance</h2>
 <p>For perception problems, human level performance is close to bayes' error. You should try to consider the best human level performance possible. Eg. in radiology an expert radiologist could be better than average radiologist and team of experts may better than a single expert. You should consider the way which gives lowest possible error.
@@ -79,13 +82,13 @@ Also, in some speech recognition, image recognition and radilogy tasks, computer
 </p>
 <h2>Error Analysis</h2>
 <p>
-When you training error is not good enough, you manually examine mispredictions. You should examine a subset of mispredictions and examine manually the reason for errors.
-Is it that dogs are being mislabeled as cats? Or is it that lion/cheetah are mislabelled as cats? Or is it that blurry images are mislabelled as cats? If lots of dogs
-are being mislabelled as cats, make sense to put more dog images in training set.
+When training error is not good enough, you manually examine mispredictions. You should examine a subset of mispredictions and examine manually the reason for errors.
+Is it that dogs are being mislabeled as cats? Or is it that lion/cheetah are mislabelled as cats? Or is it that blurry images are mislabelled as cats? Figure out prominent reason and try to solve that. If lots of dogs
+are being mislabelled as cats, make sense to put more dog images in training set. 
 </p>
 
 <p>
-Sometimes data could have mislabelled examples. Some mislabels in training set are okay, because NN algos are robust to that. In dev/test you should first estimate how much boost you would get by correct the labels, and then correct the labels if you find that will give you a boost. If you fix dev set, fix test set too. Also, some examples that you algo got right because of misprediction. Labels should be fixed there too but it is not easy for accurate algos, as there would be large number of items to examine.
+Sometimes data could have mislabelled examples. Some mislabels in training set are okay, because NN algos are robust to that, as long as errors are random. In dev/test you should first estimate how much boost you would get by correcting the labels, and then correct the labels if you find that will give you a boost. If you fix dev set, fix test set too. You should ideally fix the examples that your algo got right because of misprediction. But it is not easy for accurate algos, as there would be large number of items to examine.
 </p>
 <h2>Build first, then iterate</h2>
 <p>
@@ -93,13 +96,13 @@ You understand data and challenges only when you iterate. Build first system qui
 </p>
 
 <h2>Mismatched training and dev/test set</h2>
-<p>DL algos are data hungry. Teams want to shove in as much as data as they can get hold of. 
-You can use data from various sources to train, but dev/test set data should only contain the examples which are representative of real world.
+<p>DL algos are data hungry. Teams want to shove in as much as data as they can get hold of. For example, you can get images from internet, or you can purchse data.
+You can use data from various sources to train, but dev/test set data should only contain the examples which are representative of your use case.
 </p>
 
 <p>
 When your training and dev set are from different distributions, training error and dev error difference may not reflect variance. It may just be that training test is easy.
-To catch this difference, you can have <em>training dev test</em> carved out of training set. Now:
+To catch this difference, you can have <em>training dev set</em> carved out of training set. Now:
 </p>
 
 <ul>
@@ -110,26 +113,30 @@ To catch this difference, you can have <em>training dev test</em> carved out of 
 <p>
 What if you have data mismatch problem? Perform manual inspection. May be lot of dev/test are noisy (in a speech recognition system). In that case you can add noise
 in training set. But be careful: if you have 10K hour worth of training data, you should add 10K hour worth of noise too. If you just repeat 1hr worth of noise, you will
-overfit. Note that to human error all noise will appear the same, but machine will overfit. Similarly for computer vision, you can synthesize images with background cars
+overfit. Note that to human ear all noise will appear the same, but machine will overfit. Similarly for computer vision, you can synthesize images with background cars
 etc.
 </p>
 
 <h2>Transfer Learning</h2>
 <p>
-Say have trained image recognition NN. We want to adapt it to radiology. What we can do is to chop off the last layer, replace it as per new task (with randomly initialized weights) and relearn the weights. This works because lot of low level learning like detecting edges and shapes can be transferred.
+Say you have trained image recognition NN. We want to adapt it to radiology. What we can do is to chop off the last layer, replace it as per new task (with randomly initialized weights) and relearn the weights. This works because lot of low level learning like detecting edges and shapes can be transferred.
 </p>
 
 <p><b>When does it makes sense?</b> You transfer from task A to task B, when </p>
 <ul>
 <li> They have the same input. </li>
 <li> You have lot more data for task A than for task B</li>
-<li> Low level features from A could be help for B</li>
+<li> Low level features from task A could be help for task B</li>
 </ul>
 
 <h2>Multi task Learning</h2>
 
 <p>
-Learn multiple classifications at once. For example, you may need to detect if an image as (a) pedestrians, (b) cars,  (c) stop signs, (d) traffic lights. In this case, in final layer, you will have four neurons in final neural net. Loss function will be some of losses over variable predictions. If in some training examples, label is unavailable, you skip computing the particular component in the loss for those particular examples. It makese sense when
+Learn multiple classifications at once. For example, you may need to detect if an image has 
+(a) pedestrians, (b) cars, (c) stop signs, (d) traffic lights. In this case, in final layer, 
+you will have four neurons. Loss function will be sum of losses over different predictions. 
+If in some training examples, label is unavailable for some variables, you skip computing the 
+particular component in the loss for those particular examples. It makese sense when
 </p>
 
 <ul>
@@ -139,7 +146,7 @@ Learn multiple classifications at once. For example, you may need to detect if a
 </ul>
 
 <p>
-Multi task learning is used much less often that tranfer learning. People just train different NN.
+Multi task learning is used much less often than tranfer learning. People just train different NNs.
 </p>
 
 <h2>End to end deep learning</h2>
