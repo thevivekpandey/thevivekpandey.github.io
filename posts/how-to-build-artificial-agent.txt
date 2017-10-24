@@ -1,0 +1,9 @@
+We need to be able to communicate with the agent. Using this communication the 
+agent should be able to learn new stuff. Agent should be able to read articles
+and learn stuff.
+
+We need to endow agent with some concepts: What is the meaning of "meaning"/
+"love"/"hate"/"pride"/"praticality"? Humans are hardcoded with these concepts.
+That is why an animal or little children or people with developmental problesm 
+cannot understand these concepts. So, these concepts will need to be
+hardcoded in the agent.

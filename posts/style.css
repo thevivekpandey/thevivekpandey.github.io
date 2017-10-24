@@ -1,21 +1,18 @@
 @import 'https://fonts.googleapis.com/css?family=Roboto:300,400,500';
+@import 'https://fontlibrary.org/face/cmu-serif';
 body {
   margin: 0 auto;
   max-width: 40em;
-  font-family: "Roboto",Corbel,Avenir,"Lucida Grande","Lucida Sans",sans-serif!important;
+  /*font-family: "Roboto",Corbel,Avenir,"Lucida Grande","Lucida Sans",sans-serif!important;*/
+  font-family: 'CMUSerifRoman'
   line-height: 1.5;
   color: #3e4349;
   font-size: 17px;
   text-align: justify;
 }
 
-h2 {
-  margin-top: 1em;
-  padding-top: 1em;
-}
 
-h1,
-h2,h3,h4
+h1,h2,h3,h4
 strong {
   color: #333;
 }

@@ -20,3 +20,4 @@
 - Why I love MongoDB, despite all the naysayers
 - 2 months/3 months without news consumption
 - No "if" in neural networks!
+- Various timeseris prediction technique
