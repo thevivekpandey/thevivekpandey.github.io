@@ -49,7 +49,7 @@ the title of the paper: "Why does deep and cheap learning work so well?"
 <p>
 Consider the task of classifying whether the image is of a cat or not. Let's say the image is a 1000 x 1000 pixel in size.
 Each pixel can have 256 values (say it is a gray scale image). The neural net that you compute will finally correspond to one of the
-$256^{1000,000}$ possible functions. Of these functions, a vanishingly small subet of functions are good approximations for
+$2^{256^{1000,000}}$ possible functions. Of these functions, a vanishingly small subet of functions are good approximations for
 cat vs non cat classfier functions. Then how is that a neural net is able to pick up one of the good approximating functions?
 </p>
 
@@ -103,5 +103,8 @@ be hard, but a function which is decomposing the generative process to hierarchy
 <p>
 It is the Physics of the world that leads to ANNs being successful at classification tasks.
 </p>
+<hr>
+<small>Thanks to <a href="https://www.linkedin.com/in/soumyadeb-mitra/" target="_blank">Soumyadeb Mitra</a> for finding an error in the previous
+version of this post.</small>
 </body>
 </html>
