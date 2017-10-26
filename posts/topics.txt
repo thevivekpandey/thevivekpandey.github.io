@@ -20,8 +20,12 @@
 - Why I love MongoDB, despite all the naysayers
 - 2 months/3 months without news consumption
 - No "if" in neural networks!
-- Various timeseris prediction technique
+- Various timeseries forecasting technique
 
 - Why I love Tamilnadu
 - UP: the India within India
 - We should shift capital from Delhi to Kolkata/Chennai/Mumbai
+- You can't avoid bad code, because humans evolved like that.
+- Get millions of web page screenshots, and their HTML. Now the neural net will code up HTML for a given UI.
+- Get millions of news articles, and then generate random news article
+- How to incorporate understading in NN: can you generate jokes? What is funny?

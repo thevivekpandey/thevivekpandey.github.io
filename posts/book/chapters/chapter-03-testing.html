@@ -5,11 +5,13 @@
 </head>
 <body>
 <h1>Testing</h1>
-<p>
+<h2>The need of testing</h2>
+<p>First we will argue that testing is a way to evolve without the pain of evolution
 To understand the need for testing, first we need to understand that path to creation
 is never a straight line path.
 </p>
 
+<h3>Mistakes are a part of creation process</h3>
 <p>
 Creators iterate endlessly, learning from their previous mistakes all the time, and repeatedly
 improving their product. A great product works so flawlessly and obviously that it is easy 
@@ -41,9 +43,13 @@ about it. Thus, we need to build systems which are take into account that we wil
 mistakes.
 </p>
 
+<h3>Make mistakes while not suffering conseuquences</h3>
 <p>
-Test cases allow us to develop software so that we can make mistakes without impacting
-real world.
+Testing allow us to develop software so that we can make mistakes without impacting
+real world. This speeds up development process: we can write code without being fully
+confident that we are writing correct code, since testing allows us to find errors
+and gives us a chance to correct the code, before we ship it to our customers.
+
 </p>
 
 <h2>The testing mindset</h2>
@@ -67,8 +73,36 @@ We write testable code: in a way that later we can test is easily.
 We write test cases to test key functionalities to automate testing.
 </ol>
 <ol>
-Finally, we try to 
+We perform integration testing before we go live with our product.
+</ol>
+<ol>
+We perform testing on the live product after we have gone live.
 </ol>
 </p>
+
+<h2>Writing testable code</h2>
+<p>
+Writing code is an art. The more you get better at it, the more you are able
+to appreicate and write beautiful code. 
+</p>
+
+<p>
+One of the characterstics of a well written code is that it is <em>testable</em>.
+It is easily possible to write test cases. Note what the the testing mindset
+describes above says that you need to write code such that you can test it later.
+It implies that testing cannot be an add-on once you have finished development.
+Rather, testing needs to be "baked in" during the development process itself.
+</p>
+
+<p>
+When beginning to write the code, you must ask yourself: "How will I be able
+to test this code". The code should be written in a way that it lends itself
+to testing.
+</p>
+
+<p>
+Let's illustrate this point with the help of an example:
+</p>
+
 </body>
 </html>
