@@ -29,3 +29,8 @@
 - Get millions of web page screenshots, and their HTML. Now the neural net will code up HTML for a given UI.
 - Get millions of news articles, and then generate random news article
 - How to incorporate understading in NN: can you generate jokes? What is funny?
+- Can we avoid backprop like this: just change all weights by random amounts. Then depending on 
+  overall loss, you decide whether or not you did right. There is always some randomness to help you
+  explore. This will avoid (expensive?) backprop.
+- Deep learning does not require high precision arithmetic. Can we use this fact to make computation faster?
+  

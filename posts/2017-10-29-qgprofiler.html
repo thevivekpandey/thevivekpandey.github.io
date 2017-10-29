@@ -1,0 +1,386 @@
+<html>
+<head>
+  <title>QGProfiler: A Simple Profiler for Python Programs</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <!-- Global Site Tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1450977-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)};
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-1450977-3');
+  </script>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML"></script>
+
+</head>
+<body>
+<h1>QGProfiler: A Simple Profiler for Python Programs</h1>
+
+<p>
+A police officer sees a drunken man intently searching the ground near a lamppost 
+and asks him the goal of his quest. The inebriate replies that he is looking for his 
+car keys, and the officer helps for a few minutes without success then he asks whether 
+the man is certain that he dropped the keys near the lamppost.
+</p>
+
+<p>
+"No," is the reply, "I lost the keys somewhere across the street." "Why look here?" 
+asks the surprised and irritated officer. "The light is much better here," the intoxicated 
+man responds with aplomb. (<a href="https://quoteinvestigator.com/2013/04/11/better-light/">source</a>)
+</p>
+
+<img src="https://quoteinvestigator.com/wp-content/uploads/2013/04/muttjeff01.jpg" />
+
+<p>
+As with inebriated man, we developers are prone to optimising parts of the program 
+which are most amenable to optimisation, rather than the parts which take the largest 
+amount of time. To help us guide in optimisation efforts, we need to profile our programs.
+</p>
+
+<h2>What is profiling?</h2>
+<p>
+Profiling a program refers to keeping track of times taken by various parts of a program. 
+This helps us to find out the parts of the program that take most time. Those parts of the 
+program should be the focus of optimisation efforts.
+</p>
+
+<p>
+In all of the popular languages, there are some tools available for profiling. Most of them 
+fall in two categories:
+</p>
+
+<p>
+<ul>
+<li><b>Call graph profiling: </b>You ask compiler or interpreter to set a trace on each function 
+call, and keep track of time taken by various functions. Thus you can figure out which 
+functions take most of the execution time.</li>
+
+<li><b>Sample profiling: </b>Every few milliseconds, you interrupt the program and check which 
+function it is executing. Again, you can make inferences about which functions take most 
+of the execution time.</li>
+</ul>
+</p>
+
+<p>
+The advantage of above methods is that there is little programming effort involved. The 
+disadvantage is that either they may have a significant overhead (a one line function may 
+be called millions of times, sampling period may be too small) or they may be too coarse 
+grained to be useful.
+</p>
+
+<p>
+As a result of above limitations, profiling is usually set off during production, and 
+is enabled only in development/testing.
+</p>
+
+<p>
+However, this is not an option for us, since production environment is very dynamic and 
+unpredictable and it is not feasible for us to replicate it in dev/test settings. For us, 
+performance optimisation is a first class activity, and we don’t mind instrumenting our 
+code to facilitate accurate profiling.
+</p>
+
+<h2>Introducing QGProfiler</h2>
+<p>
+We realised that we needed a low overhead instrumentation framework, where we could 
+manually specify the interesting portions of our program. There was no open source 
+work which we found useful, and thus we have made a profiling framework which we call 
+QGProfiler.
+</p>
+
+<p>
+We have released its source code at <a href="https://github.com/quantumgraph/qgprofiler">https://github.com/quantumgraph/qgprofiler</a>.
+</p>
+
+<p>
+QGProfiler works as following. You instantiate an object of QGProfiler, giving it a 
+name, say "my-cool-program".
+</p>
+
+<pre>
+qgprofiler = QGProfiler("my-cool-program", "/some/path/filename.json")
+</pre>
+
+<p>
+As the program enters an interesting phase, you do a push:
+</p>
+
+<pre>
+qgprofiler.push("some phase")
+</pre>
+
+<p>
+When the interesting phase is over, you do a pop:
+</p>
+
+<pre>
+qgprofiler.pop()
+</pre>
+
+<p>
+Pushes and pops can be nested inside each other. QGProfiler keeps track of time taken 
+by each node (determined by a push and pop). In the end, you call
+</p>
+
+<pre>
+qgprofiler.generate_file()
+</pre>
+
+<p>
+This call generates a file with the name specified in the constructor. If you call push() 
+with same argument several times while being at particular point in the tree, the times will 
+be added up, and one node will be generated with an overall count and total time taken for 
+the stage.
+</p>
+
+<h2>Installing QGProfiler</h2>
+<p>
+Using pip:
+</p>
+
+<pre>
+$ pip install qgprofiler
+</pre>
+
+<p>
+Using setuptools:
+</p>
+
+<pre>
+$ git clone https://github.com/quantumgraph/qgprofiler
+$ cd qgprofiler
+$ python setup.py install
+</pre>
+
+<h2>Using QGProfiler</h2>
+<p>
+Say you have a program:
+</p>
+
+<pre>
+def f1():
+   # some computation
+
+def f2():
+   # some computation
+
+def f():
+   data = f1()
+   # do some manipulation on data. This is a heavy task
+   # do some more manipulation. This should be light
+   for i in range(100):
+      f2()
+
+def g():
+   # some short computation
+
+if __name__ == "__main__":
+   f() # I think it takes a lot of time
+   g() # This should not take a lot of time
+</pre>
+
+<p>
+Now, you would like to know how much time various parts of this program take. You instrument your code like this:
+</p>
+
+<pre>
+from QGProfiler import qgprofiler
+
+def f1():
+    # some computation
+
+def f2(qgp):
+    qgp.push('f2')
+    # some computation
+    qgp.pop()
+
+def f(qgp):
+    qgp.push('f1')
+    data = f1() 
+    qgp.push('heavy manipulation')
+    # do some manipulation on data. This is a heavy task
+    qgp.pop()
+    # do some more manipulation. This should be light
+    for i in range(100):
+        f2(qgp)
+    qgp.pop()
+
+def g():
+    # some short computation
+
+if __name__ == "__main__":
+    filename = &lt;a unique filename&gt;json
+    qgp = QGProfiler('number-cruncher', filename)
+    qgp.push('overall')
+    qgp.push('f')
+    f(qgp) # I think it takes a lot of time
+    qgp.pop()
+    g() # This should not take a lot of time
+    qgp.pop()
+    qgp.generate_file()
+</pre>
+
+<p>
+At the end of this program, a file with the name specified by you will be 
+generated, which contains content like the following:
+</p>
+
+<pre>
+{
+  "count": 1,
+  "name": "number-cruncher",
+  "value": 23.12,
+  "children": [
+    {
+      "count": 1,
+      "name": "overall",
+      "value": 23.11,
+      "children": [        
+        {
+          "count": 1,
+          "name": "f",
+          "value": 16.33,
+          "children": [
+            {
+              "count": 1,
+              "name": "f1",
+              "value": 14.14,
+              "children": [
+                {
+
+                  "count": 1,
+                  "name": "heavy manipulation",
+                  "value": 12.21,
+                  "children": []
+                },
+                {
+                  "count": 100,
+                  "name": "f2",
+                  "value": 1.20,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+</pre>
+
+<p>
+Above json, throws following light on the program behavior:
+</p>
+
+<ul>
+<li>
+While 'overall' stage takes 23.11s, its only child 'f' takes only 16.33s. It means 
+that our hypothesis, that the function g() does not take a lot of time is incorrect. 
+We should put push()/pop() around g() too to track its time.
+</li>
+
+<li>
+For f() most of the time goes in 'heavy manipulation', and f2(), although run 100 times, 
+takes a small amount of time. Thus, our optimization efforts should be to reduce 
+'heavy manipulation.
+</li>
+</ul>
+
+<p>
+Combining various output files
+</p>
+
+<p>
+Let's say your program runs many times, and you generate one json file for each run of the 
+program. Alternatively, your program may be forever running server, and you output one json 
+file every hour.
+</p>
+
+<p>
+You would like to see aggregated performance across various json files. For this, we provide a 
+module called QGProfileAggregator. You use it like this:
+</p>
+
+<pre>
+from qgprofiler import QGProfileAggregator
+qg_aggregator = QGProfileAggregator('*.json', 'output.json')
+qg_aggregator.generate_file()
+</pre>
+
+<p>
+You do it like this:
+</p>
+
+<pre>
+qg_aggregator = QGProfileAggregator('*.json', 'output.html')
+qg_aggregator.generate_file()
+</pre>
+
+<p>
+The flame graph consists of an interactive chart using which you can explore how much time various 
+parts of your program take. This is what a sample flame graph for one of our programs looks like: 
+(click image for larger version)
+</p>
+
+<a href="https://qgraph.io/wp-content/uploads/2017/01/Screen-Shot-2017-01-26-at-7.13.37-PM.png"><img width="800" src="https://qgraph.io/wp-content/uploads/2017/01/Screen-Shot-2017-01-26-at-7.13.37-PM.png"/></a>
+
+<p>
+You can find a sample interactive flame graph here: 
+<a href="https://app.qgraph.io/static/blog/flame-graph.html">https://app.qgraph.io/static/blog/flame-graph.html</a>
+</p>
+
+<h2>Usefulness</h2>
+
+<p>
+QGProfiler, and in particular its flame graph output has already helped us significantly to 
+zoom in on areas of improvement. Compared to ad hoc approaches that we used earlier, this is 
+like an X-ray, pointing us incisively to the parts of the program most deserving of 
+optimisation efforts.
+</p>
+
+<h2> Upcoming improvements</h2>
+<p>
+There are several improvements planned:
+</p>
+
+<ul>
+<li>
+Firstly, as QGProfiler is being used more and more extensively, there is a possibility that 
+overheads of QGProfiler start becoming a significant fraction of running time. We will have 
+QGProfiler output its own overhead (to the extent it is possible). If this overhead is large, 
+we would need to eliminate some instrumentation to reduce the overhead.
+</li>
+
+<li>
+We plan to provide facility where the programmer can attach some meta data to nodes while pushing 
+them. The aggregator can then aggregate them (by using sum(), avg(), min() or max() functions) to  
+find the metrics for parent nodes. For instance, one could attach peak memory utilisation at 
+various nodes and float them up using max() function. Or else, one could attach number of db calls 
+made, and float them up using sum() function.
+</li>
+
+<li>
+Finally, we plan to write an agent for collecting the logs produced by QGProfiler, which would 
+transfer it to a central server. A simple UI would access that central server and one would be 
+able to view performance profiles for various components.
+</li>
+</ul>
+
+<h2>Try it out!</h2>
+<p>
+QGProfiler is deceptively simple to use, but extremely powerful. If you are thinking of making 
+code changes to your python program to make it faster, try it out and you won’t be disappointed. 
+Let us know how it goes. You can find the source code and further instructions at 
+<a href="https://github.com/quantumgraph/qgprofiler">https://github.com/quantumgraph/qgprofiler</a>. 
+<a href="https://www.linkedin.com/in/prudhvi-raj-boddeda-80682b44/">Prudhvi Raj</a>, the creator and maintainer of the program, is waiting for your feedback!
+</p>
+
+</body>
+</html>
