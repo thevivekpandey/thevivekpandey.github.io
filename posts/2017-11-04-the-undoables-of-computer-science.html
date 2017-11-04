@@ -1,0 +1,164 @@
+<html>
+<head>
+  <title>The Undoables of Computer Science</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <!-- Global Site Tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1450977-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)};
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-1450977-3');
+  </script>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML"></script>
+
+</head>
+<body>
+<h1>The Undoables of Computer Science</h1>
+<h2>Doables and undoables</h2>
+<p>
+As you work in a field for long time, you develop a sense of what is doable and
+what is not. You try to work on the problems which are doable, and avoid working
+on the problems which are undoable. The categories are not black and white, and
+interesting problems are those which are hard but doable.
+</p>
+
+<p>
+As I waded through my undergraduate and graudate courses in Computer Science, I
+formed an opinion about various fields. Some fields tackled doable problems
+while some others tackled undoables problems. The latter ones were to be avoided.
+There were other fields which tackled non problems. One could study them for fun.
+</p>
+
+<p>
+Artificial Intellience was the flashiest of the fields, but it over promised
+and under delivered. I always thought Machine Learning is more sober name
+for the field, if at all it wanted itself to be separated from Algorithms.
+Deep Blue defeating Garry Kasparov was thought to be a high point in AI, but
+if you scratch the surface there was nothing that justified the name
+"Artifical Intelligence". Lot of opening theory is fed into the computer,
+end games can be looked up, and there is lot of hand tuning. Other things
+that we learnt in AI courses were VC dimension, regression trees, naive bayesian classifier,
+SVM and ANN. Recognizing handwritten digits was where the AI gave up, though
+I am sure there would be research papers that showed much more.
+</p>
+
+<p>
+Then, starting 2012, AI started solving problems I had hitherto considered 
+unsolvable. If, in 2010, you asked me write a program that could detect
+cats from dogs, I would have give up immediately. (Ok, not <em>immediately
+</em> perhaps!). But the deep learning area of AI provided with practical
+ways to solve problems that were till now untractable. [It is another matter
+that the techniques were discovered decades earlier, and those techniques
+became applicable only lately with the advent of large training data
+and compute capacity.]
+</p>
+
+<p>
+This forced me to revise my perception of AI. The core learning was that
+the image classification function (and other similar functions) was
+learnable in a way that generalized well to images beyond the training
+examples.
+</p>
+
+<p>
+So, which other fields are tackling undoable problems, or non problems? Here
+is a list. I would be great if a few of these items make it out of the list
+in my lifetime.
+</p>
+
+<h3>1. Quantum Computing</h3>
+<p>
+Quantum Computing has been perenially promising that once Quantum Computers
+are developed, they will be a million times faster than the existing computers.
+During the past 30 years that the Quantum Computing has been promising us
+a million times faster computers, traditional computers themselves have
+become a million times faster. Meanwhile, Quantum Computers keep celebrating
+<a href="https://en.wikipedia.org/wiki/Shor%27s_algorithm">Shor's algorithm</a>
+and are happy to report that quantum computers have <a href="https://arxiv.org/pdf/quant-ph/0112176.pdf">factorized 15 as 5 * 3 (2001)</a>,
+and that they have <a href="https://arxiv.org/abs/1111.3726">factorized 143 as 13 * 11 (2011)</a>.  
+</p>
+
+<p>
+Will Quantum Computing ever be widely available?
+</p>
+
+<h3>2. Automatic Parallelization of Programs</h3>
+<p>
+With multi core, super scalar processors available, won't it be great if there
+were a system that can convert your program, written with single stream of
+exeuction in mind, and parallelize it to run across cores?
+</p>
+
+<p>
+Turns out that this is a problem which is hard, but not for the lack of trying.
+See for examples, <a href="https://s3.amazonaws.com/academia.edu.documents/42604178/Design_Issues_in_Parallel_Array_Language20160212-21014-s1vwod.pdf?AWSAccessKeyId=AKIAIWOWYYGZ2Y53UL3A&Expires=1509785871&Signature=bwThtKY4ib5vK4n%2BNPkXecshQto%3D&response-content-disposition=inline%3B%20filename%3DDesign_Issues_in_Parallel_Array_Language.pdf">this</a>, 
+or <a href="http://www.research.ibm.com/people/p/praun/ppopp06.pdf">this</a>.
+</p>
+
+<p>
+In the absence of automatic parallelization, there have been two approaches to execute programs
+in parallel (a) Programmer writes his programs in a "parallel augmentation" of his favorite language. 
+Most popular augmentation available is 
+<a href="https://en.wikipedia.org/wiki/Message_Passing_Interface">Message Passing Interface</a>. Thus,
+the programmer is responsible to define the parallelism in his algorithm. (b) Programmer writes
+his program in a framework like Hadoop MapReduce. If he does so, he can write parallel algorithms
+for a large class of problems very easily, but not all problems (e.g. graph algorithms) lend
+themselves to map reduce.
+</p>
+
+<p>
+So, while practically we have made progress in running our programs across compute threads,
+the holy grail of automatic program parallelization has eluded us.
+</p>
+
+<h3>3. Automatic Theorem Proving</h3>
+<p>
+At the base of Maths are axioms. Any theorem can be derived from those axioms using the rules
+of derivation. For exmaple, at the base of Euclidean Geometry are <a href="https://en.wikipedia.org/wiki/Euclidean_geometry#Axioms">
+five axioms</a>, and the basis of number theory are <a href="https://en.wikipedia.org/wiki/Peano_axioms">Peano Axioms</a>.
+</p>
+
+<p>
+So, can we write programs to automate theorem proving? Turns out that we do not yet know of
+ways that enable a computer program to wade through theorems, applying logic to go from
+one theorem to another, and arrive at a given theorem. What is more, even writing an
+automated proof <em>checker</em> is hard, though is used in some domains like integrated
+circuit design.
+</p>
+
+<h3>4. Genetic Algorithms</h3>
+<p>
+Genetic algorithms look plausible to begin with: just as in nature where offsprings
+combine genes from their parents, and have some mutations of their own, let us
+try to find the maxima/minima for a function by starting with a few random 
+points, and then creating offsprings repeatedly. Just as in nature, we kill
+the unfit data points that we generate, thus operting with some fixed size
+population from generation to generation.
+</p>
+
+<p>
+The problem is: nature is not particularly efficient at generating optimal
+species. Infact, nature is not even required to generate species that fit the
+environment: species go extinct all the time.
+</p>
+
+<p>
+Thus, drawing inspiration from nature in this case is a bad idea. That however
+is not the opinion shared by conferences like <a href="http://www.cec2017.org/">this</a>.
+</p>
+
+<p>
+Note that drawing inspiration from nature is not always a bad idea: animals
+are very good at vision, and thus drawing inspiration from them to develop
+algorithms for computer vision is a good idea.
+</p>
+
+</body>
+</html>

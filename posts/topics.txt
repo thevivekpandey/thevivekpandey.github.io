@@ -33,4 +33,18 @@
   overall loss, you decide whether or not you did right. There is always some randomness to help you
   explore. This will avoid (expensive?) backprop.
 - Deep learning does not require high precision arithmetic. Can we use this fact to make computation faster?
-  
+- Generate images of famous personalities doing funky stuff. Challenge people to spot auto generated images.
+  Then create a video of famous personality speaking something funky. Say Donald Trump endorsing Vivek Pandey.
+- What is a perfect human being? (To whom neural net says prob = 1.0)
+- People say deep nets do not get stuck in local mimima. Is there any paper to support that?
+- Can a parabola or inverted parabola be better choice for activation function?
+- Improve video quality using DNN
+- Doable vs undoable
+  (a) ANN: Machine learning in particular. They give grand name to algorithms.
+  (b) Automatic parallelization of programs
+  (c) Genetic algorithms for optimization
+  (d) Automatic theorem provers
+  (e) Functional programming is slow because of immutability
+  (f) Quantum Computing only shows that 5 * 3 = 15, and Shor's algorithm about factorization
+  (g) Lambda calculus, church turing thesis: all theory, no use.
+- A comparison of 3 ANN courses: coursera, fastai and stanford
