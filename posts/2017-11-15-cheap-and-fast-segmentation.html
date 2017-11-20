@@ -1,0 +1,283 @@
+<html>
+<head>
+  <title>Fast and Cheap User Segmentation: Our Journy so far</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <!-- Global Site Tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1450977-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)};
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-1450977-3');
+  </script>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML"></script>
+
+</head>
+<body>
+<h1>Fast and Cheap User Segmentation: Our Journey so far</h1>
+<h2>Summary</h2>
+<p>
+User segmentation i.e. finding the set of users satisfying a set of conditions,
+is an important problem in marketing automation software. At QGraph, we need to 
+segment the users in complex ways in order to send targetted push notifications.
+This article describes the evolution of our software to support fast segmentation
+with small hardware requirement.
+</p>
+
+<h2>Problem Statement</h2>
+<p>
+Various of QGraph's SDKs (iOS, Android and web SDKs) send data to QGraph servers
+as the user interacts with the (iOS, android or web) app.
+
+This data is two types:
+<ol>
+<li><b>Profile data:</b> This data is related to the attributes of a user, e.g.
+her name, gender and city. This data changes slowly if ever. </li>
+<li><b>Event data:</b> This is related to the activities that the user performs
+in the app. For instance, the user may view a product, or add a product to the
+shopping cart. An activity is immutable, since it is not possible
+to undo an activity. An event can have <em>parameters</em>: for instance
+if the event is "viewed a product", then the relevant parameters would be
+the identifier of the product, name of the product, category of the product,
+price of the product and so on.
+</li>
+</ol>
+</p>
+
+<p>
+Given this data, we need to design a system that can evaluate queries using
+profile and event data. Following are some representative queries.
+<ul>
+<li>
+Find the users who reside in Bengaluru, and have viewed a product whose
+category is "running shoes" in last 7 days.
+</li>
+
+<li>
+Find the users whose country is India, but whose city is not one of "Delhi",
+"Mumbai", "Kolkata", "Chennai", "Bangalore" or "Hyderabad", and who have
+purchased an item in last 180 days, but did not open the app in last 30 days.
+</li>
+</ul>
+</p>
+
+<p>
+We need to design a system to fulfil above queries "fast": query times of
+a few seconds is very good, tens of seconds is acceptable, and beyond hundred
+seconds is poor. We also want to minimize the costs as long as most of the
+queries are satisifed in resonable time.
+</p>
+
+<h2>Our philosophy</h2>
+<p>
+In all software development, and specifically in segmentation software development,
+we are driven by our core development philosophy:
+</p>
+<ol>
+<li>
+Acceptable solution today is preferable to perfect solution tomorrow.
+</li>
+<li>
+Do not try to predict the future. Solve the problems of today, and keep room for 2x-3x increase
+of workload.
+</li>
+
+<li>
+Be ready to discard existing code and write new one when the problem becomes clearer
+as you gain experience in production environment.
+</li>
+</ol>
+
+<h2>Step I: code it up and put it in production</h2>
+<p>
+We decided to use MongoDB as the database. The reason was that we needed to structure
+semi structured data, so we used wanted to use a NoSQL database, and MongoDB was
+the post popular NoSQL database. We have not repented our decision so far.
+</p>
+
+<h3>Data Storage Format</h3>
+<p>
+For each client of ours, we maintaing a separate database. Within that database there
+are two tables <em>profiles</em> and <em>events</em>. This is what the an entry in
+<em>profiles</em> table looks like:
+<pre>
+{
+   userId: 123,
+   city: "Bengaluru",
+   country: "India",
+   gender: "male",
+}
+</pre>
+
+And this is another sample profile table entry:
+<pre>
+{
+   userId: 456,
+   city: "Kolkata",
+   country: "India",
+   gender: "female"
+}
+</pre>
+</p>
+
+<p>
+And here is what an event entry looks like:
+
+<pre>
+{
+    userId: 123,
+    eventName: "product_viewed",
+    parameters: {
+        product_name: "Super Mumbo Jumbo Shoes",
+        product_brand: "Adidas",
+        product_price: 4999
+    }
+}
+</pre>
+</p>
+<h3>Segment Conditions</h3>
+<p>
+We store user inputted segmentation conditions as as json. Segment conditions consist
+of a set of conditions, which we store in a list in the json. 
+<ul>
+<li>For each condition we need to store <em>parameter</em>, <em>operator</em> and
+<em>value</em>. For instance a sample condition is that the <em>city</em>(parameter)
+<em>equals</em>(operator) <em>Bengaluru</em>(value), or that the <em>price</em>(parameter) of the product
+viewed should be <em>greater than</em>(operator) <em>1000</em>(value). </li>
+
+<li>
+For event related conditions, we need to have an event name. For instance a condition
+is that the user should have done an event with event name <em>product_viewed</em> such
+that the name of the product contains jeans.
+</li>
+
+<li>
+A condition can be an include condition or an exclude condition. An include condition is,
+for example, that a user should have viewed a product in last 30 days. On the other hand,
+an exclude condition is that the user should <em>not</em> have viewed a product in last
+30 days.
+</li>
+
+<li>
+Each event conditon has a duration attached with it. For instance, in the previous
+conditions, the duration is 30 days.
+</li>
+</ul>
+</p>
+
+<p>
+Keeping above points in mind, here is a sample conditions list
+<pre>
+[
+    {
+        type: "profile",
+        parameters: "gender",
+        operator: "equals",
+        value: "female"
+        is_exclude: 0
+    },
+    {
+        type: "profile",
+        parameters: "age",
+        operator: "&lt;",
+        value: 16
+        is_exclude: 1
+    },
+    {
+        type: "event",
+        eventName: "product_viewed",
+        parameters: "name",
+        operator: "conains",
+        value: "jeans"
+        is_exclude: 0
+        duration: "7 days"
+    },
+    {
+        type: "event",
+        eventName: "product_purchased"
+        parameters: "name",
+        operator: "contains",
+        value: "jeans"
+        duration: "30 days"
+        is_exclude: 1
+    }
+]
+</pre>
+</p>
+
+<p>
+Above list of conditions specifies the female users whose age is not less than 16 
+and who have viewed a product with name containing jeans in last 7 days but have
+not purchased a product with name containing jeans in last 30 days.
+</p>
+
+<h3>Basic Solution</h3>
+<p>
+Given above background a basic solution is straighforward:
+<ol>
+<li>
+For each profile condtion, you can have a query. In the above example, you have following
+two queries:
+    <ol>
+    <li> <pre>db.profiles.find({gender: "female"}); </pre></li>
+    <li> <pre>db.profiles.find({$not: {age: {$lt: 16}}}); </pre></li>
+    </ol>
+</li>
+<li>
+For include event conditions, you can again fire a single query. For the third contions
+in above example, we have the query
+   <pre>
+   db.events.find({eventName: 'product_viewed', 
+                   _id: {$gt: &lt;timestamp for the time 7 days ago&gt;}, 
+                  'parameters.name': {$regex: /jeans/}});
+   </pre>
+</li>
+
+<li>
+For exclude event conditons, we need to know all the users, and then exclude the users
+who have done the concerned activity. Thus, queries that we need to fire are
+    <ol>
+    <li> <pre>db.profiles.find(); </pre></li>
+    <li> <pre>db.events.find({eventName: 'product_purchased', 
+                _id: {$gt: &lt;timestamp for the time 30 days ago&gt;}, 
+                'parameters.name': {$regex: /jeans/}});</pre></li>
+    </ol>
+    <p>
+       First query gives us the set of all the users, while second query gives us the set of users
+       who have purchased a jeans in last 30 days. Subtracting the second set from the first gives
+       us the users who have not purchased jeans in last 30 days.
+    </p>
+</li>
+
+<li>
+<p>
+Finally, take an intersection of the sets of the users found in above 3 steps to calculate the
+set of users of the specified segment.
+</p>
+</li>
+</ol>
+</p>
+
+<h2>Step II: Using indexes judicously</h2>
+<p>
+As soon as we got a few clients using our product, we realized that people were using segmentation
+for two distinct purposes:
+<ol>
+<li>The first purpose was as we had intended: to segment interesing set of users to send notifications
+to.</li>
+<li>The second purpose was that our clients used segmentation to send notifications to some test users.
+</li>
+</ol>
+</p>
+
+<p>
+The difference between above to sets of queries 
+</p>
+</body>
+</html>

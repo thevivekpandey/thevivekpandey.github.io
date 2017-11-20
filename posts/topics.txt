@@ -26,20 +26,7 @@
 - UP: the India within India
 - We should shift capital from Delhi to Kolkata/Chennai/Mumbai
 - You can't avoid bad code, because humans evolved like that.
-- Get millions of web page screenshots, and their HTML. Now the neural net will code up HTML for a given UI.
-- Get millions of news articles, and then generate random news article
-- How to incorporate understading in NN: can you generate jokes? What is funny?
-- Can we avoid backprop like this: just change all weights by random amounts. Then depending on 
-  overall loss, you decide whether or not you did right. There is always some randomness to help you
-  explore. This will avoid (expensive?) backprop.
-- Deep learning does not require high precision arithmetic. Can we use this fact to make computation faster?
-- Generate images of famous personalities doing funky stuff. Challenge people to spot auto generated images.
-  Then create a video of famous personality speaking something funky. Say Donald Trump endorsing Vivek Pandey.
-- What is a perfect human being? (To whom neural net says prob = 1.0)
-- People say deep nets do not get stuck in local mimima. Is there any paper to support that?
-- Can a parabola or inverted parabola be better choice for activation function?
-- Improve video quality using DNN
-- Doable vs undoable
+- Doable vs undoable [DONE]
   (a) ANN: Machine learning in particular. They give grand name to algorithms.
   (b) Automatic parallelization of programs
   (c) Genetic algorithms for optimization
@@ -48,3 +35,33 @@
   (f) Quantum Computing only shows that 5 * 3 = 15, and Shor's algorithm about factorization
   (g) Lambda calculus, church turing thesis: all theory, no use.
 - A comparison of 3 ANN courses: coursera, fastai and stanford
+- Friends make each other crash
+- Always ask the question: Why?
+- Why there is more depth in deeper convolutional layers, and why the size of input decreases.
+
+DEEP LEARNING PROJECTS
+======================
+- Improve video quality using DNN
+- Can a parabola or inverted parabola be better choice for activation function?
+- What is a perfect human being? (To whom neural net says prob = 1.0)
+- Generate videos of famous personalities doing funky stuff. Challenge people to spot auto generated images.
+  Then create a video of famous personality speaking something funky. Say Donald Trump endorsing Vivek Pandey.
+  More pertinently, Andrew Ng endorsing Vivek Pandey
+- Deep learning does not require high precision arithmetic. Can we use this fact to make computation faster?
+- People say deep nets do not get stuck in local mimima. Is there any paper to support that?
+- Can we avoid backprop like this: just change all weights by random amounts. Then depending on 
+  overall loss, you decide whether or not you did right. There is always some randomness to help you
+  explore. This will avoid (expensive?) backprop.
+- Get millions of news articles, and then generate random news article
+- Get millions of web page screenshots, and their HTML. Now the neural net will code up HTML for a given UI.
+- How to incorporate understading in NN: can you generate jokes? What is funny?
+- Face recognition can be done much better than what is described in Andrew NG's lecture by incorporating gender, age and ethnicity information.
+- YOLO could be improved by drawing not just a square bounding box, but rather a polygon or bezier curve around the detected object.
+- A new network topology: have neurons like on the 2D surface of a 3D sphere, on the 3D volume of 3D sphere, or in 3D volume of 4D sphere, or 4D volume of 4D sphere, and so on.
+- Hindi voice to text
+- Counting the number of leaves in a tree
+- Can you teach NN to sort by giving examples?
+- Watch a youtube video and tell a story about what happened [Geoffrey Hinton says it will be done in next 5 years]
+- Geoffrey Hinton: So far, I have got both Garry Marcus and Hector Levesque to agree that they will be impressed if neural nets can correctly answer questions about "Winograd" sentences such as "The city councilmen refused to give the demonstrators a licence because they feared violence." Who feared the violence?
+- Deep learning for anomaly detection in time series
+
