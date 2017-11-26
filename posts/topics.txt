@@ -21,6 +21,7 @@
 - 2 months/3 months without news consumption
 - No "if" in neural networks!
 - Various timeseries forecasting technique
+- The glorious "xargs" command including -n1 option
 
 - Why I love Tamilnadu
 - UP: the India within India
@@ -38,6 +39,11 @@
 - Friends make each other crash
 - Always ask the question: Why?
 - Why there is more depth in deeper convolutional layers, and why the size of input decreases.
+- Panchmukhi Hanumanji
+- Prisoners of Prisoner's dilemman
+   o We do not car pool, not even when uber gives it easily
+   o Auto guys alway haggle
+   o Traffic jams get made this way
 
 DEEP LEARNING PROJECTS
 ======================
