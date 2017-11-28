@@ -1,0 +1,199 @@
+<html>
+<head>
+  <title>Prisoners of Prisoner's Dilemma</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <!-- Global Site Tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1450977-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)};
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-1450977-3');
+  </script>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML"></script>
+
+</head>
+<body>
+<h1>Prisoners of Prisoner's Dilemma</h1>
+<p>
+Prisoner's dilemma is the Achilles heel of intelligence. It
+leads to intelligent agents act in a way that is suboptimal for each agent. To avoid
+suboptimal (sometimes disastrous) outcomes, the agents need to have a coordination authority,
+which is resource consuming at best and tyrannical at worst.
+</p>
+
+<p>
+We are all prisoners of prisoner's dilemma.
+</p>
+
+<h2>Primer on Prisoner's Dilemma</h2>
+<p>
+Two persons, A and B, commit a crime together. They are kept in solitary confinement,
+and are not allowed to communicate to each other.
+</p>
+
+<p>
+A is asked whether or not B has committed the crime, and vice versa. Thus, both A and B
+have an option to betray the other (by claiming that the other person has committed the crime),
+or to be loyal to the other (by claiming that the other person has not committed the crime).
+Following rules are set for deciding punishment to them:
+<ol>
+<li> If both A and B are loyal to each other, they both get 1 year of jail. </li>
+<li> If both A and B betray each other, they both get 5 years in jail. </li>
+<li> If A betrays but B is loyal, A is set free and B gets 7 years in jail.</li>
+<li> If B betrays but A is loyal, B is set free and A gets 7 years in jail.</li>
+</p>
+</ol>
+
+<div style="margin: 0 auto">
+<img src="http://www.geeksforgeeks.org/wp-content/uploads/prisoner-dilemma.jpg"/>
+<p>
+(Photo credit: geeksforgeeks.com)
+</p>
+</div>
+
+<p>
+Note that A and B are assumed to be selfish agents: they only try to maximize their individual payoffs.
+</p>
+
+<p>
+Given above payoff conditions, and assuming that there are no further implications of decisions taken
+by A or B, it is rational for A and B to betray each other. Why? Consider from the point of view of A:
+A cannot control B's actions. B will either be loyal or not, and A's actions do not affect that.
+<ul>
+<li>If B is loyal: If A is loyal, A will get 1 year of jail; if A betrays, A will be free. So,
+it is better for A to betray.</li>
+<li>If B betrays: If A is loyal, A will get 7 years of jail; if A betrays, A will get 5 years of jail.
+So, it is better for A to betray.</li>
+</ul>
+</p>
+
+<p>
+Thus, it makes sense for A to betray. By same logic, it makes sense for B to betray. Thus, both
+A and B will betray each other, and thus end up serving 5 years in jail. Overall this is a suboptimal
+outcome for both of them, since by being loyal, they could have served only 1 year in jail.
+</p>
+
+<p>
+In other words, in some situations, <b>non collaborative behavior leads to inferior outcomes for
+each participant, but each participant is invcentized to pursue that inferior outcome.</b>
+</p>
+
+<h2>Examples of Prisoner's dilemma in real life</h2>
+<p>
+Prisoner's dilemma show itself in various situations, leading to smart people being weighed
+down by their smartness.
+</p>
+
+<h3>Traffic jams on Indian roads</h3>
+<p>
+Following is a typical scene played out daily across the Indian roads:
+</p>
+<img src="http://www.hindustantimes.com/Images/popup/2014/3/traffic2.jpg"/>
+(Photo credit: Hindustan Times)
+
+<p>
+Why does this happen? In the absence of traffic signal or signal policeman, each participant's
+movement is to minimize his or her own travel time. Assuming everyone else's behavior as independent of your actions,
+it is optimal to "betray" in the sense of pushing through your vehicle at every possibility
+and move forward. This leads to poor outcomes for everybody.
+</p>
+
+<h3>Should I carpool or not</h3>
+<p>
+I user Uber everyday to commute to office and I face a decision everyday: should I carpool or not?
+My objective is to minimize travel time, thus I end up not pooling.
+</p>
+
+<img src="http://www.rudebaguette.com/assets//uber_uberpool_beta_launch_graphics_r9-blog.jpg" width="400px"/>
+<p>
+If all the Uber users were forced to use pool, there would be lesser traffic on the roads, reducing
+my travel time to values lower that what it is now, despite the overhead associated with picking up
+and dropping off the co-passenger. But given that behavior of others is fixed for me, the optimal
+strategy for me is to not pool.
+</p>
+
+<h3>Arm's race</h3>
+<p>
+Given two enemy countries, since they cannot control each other's behavior, it is optimal for each of them
+to spend resources in building up arms. Thus, they cannot achieve the configuration where they
+both are unarmed despite that being beneficial to both of them.
+</p>
+
+<h2>Is there a way out of Prisoner's dilemma?</h2>
+<p>
+The way to avoid prisoner's dilemma is to have superior authority with a stick: the government in most cases.
+</p>
+
+<p>
+Thus the government may put traffic lights and if you disobey that, you will be fined. Government may also
+force me to carpool: Delhi's 
+<a href="http://indiatoday.intoday.in/story/delhi-odd-even-vehicle-rule-arvind-kejriwal-aap-government-air-pollution/1/541371.html" target="_blank">odd even rule</a>
+was supposed to curb pollution.
+</p>
+
+<p>
+The cost of maintaining such a superior authority is high: you need to have all the government apparatus
+and policemen and judges and regulators, and need to pay for their upkeep. They may turn corrupt and 
+extract more than stipulated fee for their duties. In some corrupt countries, exceess of 10% of country's
+GDP goes to the pockets of the royal family.
+</p>
+
+<p>
+But there is no way out of it: even a very corrupt government is preferable to no government at all.
+<b>Thus, the way out of prisoner's dilemma is costly</b>, and there is no choice.
+</p>
+
+<h2>Prisoner's dilemma is not something specific to Human Nature</h2>
+<p>
+It may be tempting from above examples to think that prisoner's dilemma is the result of human being's selfish
+nature: If only we were all altruistic and thought about everyone's interest rather than just
+our own, there would be no prisoner's dilemma.
+</p>
+
+<p>
+This is not true: prisoner's dilemma is observed in other species as well. 
+Species other than humans, which have lower intelligence, are too bound by
+prisoner's dilemma in their evolution path. If members of a species initially
+play nicely with each other, sooner or later a mutation that changes the
+behaviour to betrayal will emerge. That mutation will spread since it will
+provide survival advantage to the carrying host, and the nice members of
+the species will be wiped out because of lack of resources.
+</p>
+
+<p>
+Prisoner's dilemma is inherent in the logic of our universe.
+</p>
+
+<h2>Is there an alternative intelligence that avoids Prisoner's dilemma?</h2>
+<p>
+Can there be an alien species laughing out at us as countries develop nuclear arsenals and 
+companies engage in mutually destructive competition and Indian commuters get jammed on the
+roads? 
+</p>
+
+<p>
+Can there be an alternative universe where rules of logic do not land us in the predicament
+of prisoner's dilemma? Like Euclidean geometry was found to be not the only geometry possible
+(and thus <a href="https://en.wikipedia.org/wiki/Parallel_postulate">parallel postulate</a> 
+need not be true), can there be an alternative logic where agents do not act to maximize
+their payoffs?
+</p>
+
+<p>
+I have not studied logic enough to be able to answer these questions. If you know of
+some studies related to this, let me know in the comments.
+</p>
+
+<p>
+An enjoy your stay in the prison that the world is.
+</p>
+
+</body>
+</html>
