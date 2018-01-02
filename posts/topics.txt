@@ -40,10 +40,17 @@
 - Always ask the question: Why?
 - Why there is more depth in deeper convolutional layers, and why the size of input decreases.
 - Panchmukhi Hanumanji
-- Prisoners of Prisoner's dilemman
+- Prisoners of Prisoner's dilemma [DONE]
    o We do not car pool, not even when uber gives it easily
    o Auto guys alway haggle
    o Traffic jams get made this way
+- No one tought me statistics/why is statistics tought in a boring way?
+- A new respect for hit and trial
+  o Anyway present in programming and science
+     I don't even try to write correct program. Just do something and then iterate.
+  o Deep learning is that too (what is gradient descent after all)
+  o Children make mistakes
+    Somehow we start 
 
 DEEP LEARNING PROJECTS
 ======================
