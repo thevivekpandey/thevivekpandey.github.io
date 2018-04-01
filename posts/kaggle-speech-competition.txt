@@ -1,0 +1,281 @@
+1. First I tried with (FC4-RELU) * 2 + SOFTMAX
+   3.x% accuracy. Each around takes around 10-15 minutes
+
+2. Then I recompiled tensorflow with SSE instructions.
+   Again each aroudn takes 10-15 minutes.
+
+   OK. So, first aim is to get good training accuracy.
+
+
+3. (FC4-RELU) * 3 + SOFTMAX: again no good training accuracy
+
+4. (FC16-RELU) * 3 + SOFTMAX: again no good training accuracy
+
+   I was thinking of getting CONV1D layer, or reducing training
+   set size, but then I met SDM.
+
+5. Then I met SDM. SDM said training error 3.5% means there
+   is bug in the code.
+
+   I figured there was a problem that I was using string.
+
+   I decided I need to write back the wav file from the generated
+   array so that I can be sure I am generating the array
+   correctly.
+
+   This took some effort, since int16 vs int64 arrays appear similar
+
+6. After correction:
+   (FC4-RELU) * 2 + SOFTMAX
+   3.x% accuracy. Each round is 15s now, with int16 rather than string.
+
+7. (FC16-RELU) * 3 + SOFTMAX
+   Same 3.x% accuracy
+
+8. Now I bet that since the values are int16, that is causing problems.
+   Let me get values between -1 and 1
+
+   Accuracy finally goes up!
+   It keeps going up. Is it overfitting? Where should we stop?
+
+Epoch 1/80 58252/58252 [==============================] - 513s - loss: 3.3860 - acc: 0.0420      
+Epoch 2/80 58252/58252 [==============================] - 643s - loss: 3.3349 - acc: 0.0602     
+Epoch 3/80 58252/58252 [==============================] - 508s - loss: 3.2152 - acc: 0.0862     
+Epoch 4/80 58252/58252 [==============================] - 526s - loss: 3.0786 - acc: 0.1072     
+Epoch 5/80 58252/58252 [==============================] - 578s - loss: 2.9754 - acc: 0.1255      
+Epoch 6/80 58252/58252 [==============================] - 477s - loss: 2.8955 - acc: 0.1395     
+Epoch 7/80 58252/58252 [==============================] - 463s - loss: 2.8326 - acc: 0.1521     
+Epoch 8/80 58252/58252 [==============================] - 463s - loss: 2.7782 - acc: 0.1657     
+Epoch 9/80 58252/58252 [==============================] - 487s - loss: 2.7273 - acc: 0.1758     
+Epoch 10/80 58252/58252 [==============================] - 463s - loss: 2.6822 - acc: 0.1887     
+Epoch 11/80 58252/58252 [==============================] - 475s - loss: 2.6410 - acc: 0.1950     
+Epoch 12/80 58252/58252 [==============================] - 475s - loss: 2.6061 - acc: 0.2043      
+Epoch 13/80 58252/58252 [==============================] - 451s - loss: 2.5669 - acc: 0.2142     
+Epoch 14/80 58252/58252 [==============================] - 443s - loss: 2.5390 - acc: 0.2221     
+Epoch 15/80 58252/58252 [==============================] - 449s - loss: 2.5116 - acc: 0.2309     
+Epoch 16/80 58252/58252 [==============================] - 456s - loss: 2.4830 - acc: 0.2369     
+Epoch 17/80 58252/58252 [==============================] - 447s - loss: 2.4576 - acc: 0.2441     
+Epoch 18/80 58252/58252 [==============================] - 470s - loss: 2.4396 - acc: 0.2487      
+Epoch 19/80 58252/58252 [==============================] - 467s - loss: 2.4114 - acc: 0.2553     
+Epoch 20/80 58252/58252 [==============================] - 443s - loss: 2.3986 - acc: 0.2627     
+Epoch 21/80 58252/58252 [==============================] - 472s - loss: 2.3684 - acc: 0.2690     
+Epoch 22/80 58252/58252 [==============================] - 443s - loss: 2.3509 - acc: 0.2720     
+Epoch 23/80 58252/58252 [==============================] - 456s - loss: 2.3367 - acc: 0.2753      
+Epoch 24/80 58252/58252 [==============================] - 450s - loss: 2.3152 - acc: 0.2841     
+Epoch 25/80 58252/58252 [==============================] - 443s - loss: 2.2977 - acc: 0.2873     
+Epoch 26/80 58252/58252 [==============================] - 431s - loss: 2.2787 - acc: 0.2917     
+Epoch 27/80 58252/58252 [==============================] - 436s - loss: 2.2658 - acc: 0.2972     
+Epoch 28/80 58252/58252 [==============================] - 442s - loss: 2.2523 - acc: 0.2998     
+Epoch 29/80 58252/58252 [==============================] - 449s - loss: 2.2356 - acc: 0.3054     
+Epoch 30/80 58252/58252 [==============================] - 434s - loss: 2.2239 - acc: 0.3078     
+Epoch 31/80 58252/58252 [==============================] - 444s - loss: 2.2148 - acc: 0.3122      
+Epoch 32/80 58252/58252 [==============================] - 446s - loss: 2.1881 - acc: 0.3183     
+Epoch 33/80 58252/58252 [==============================] - 444s - loss: 2.1821 - acc: 0.3210     
+Epoch 34/80 58252/58252 [==============================] - 442s - loss: 2.1669 - acc: 0.3220     
+Epoch 35/80 58252/58252 [==============================] - 434s - loss: 2.1534 - acc: 0.3268     
+Epoch 36/80 58252/58252 [==============================] - 448s - loss: 2.1469 - acc: 0.3283     
+Epoch 37/80 58252/58252 [==============================] - 465s - loss: 2.1303 - acc: 0.3336     
+Epoch 38/80 58252/58252 [==============================] - 441s - loss: 2.1164 - acc: 0.3361      
+
+9. So now I repeate the previous setting with validation error. I keep 10% of data as
+validation set.
+
+Epoch 1/80 58252/58252 [==============================] - 586s - loss: 3.3825 - acc: 0.0446 - val_loss: 3.3202 - val_acc: 0.0711
+Epoch 2/80 58252/58252 [==============================] - 527s - loss: 3.2945 - acc: 0.0661 - val_loss: 3.1539 - val_acc: 0.0946
+Epoch 3/80 58252/58252 [==============================] - 513s - loss: 3.1631 - acc: 0.0879 - val_loss: 3.0213 - val_acc: 0.1141
+Epoch 4/80 58252/58252 [==============================] - 518s - loss: 3.0485 - acc: 0.1069 - val_loss: 2.9178 - val_acc: 0.1286
+Epoch 5/80 58252/58252 [==============================] - 512s - loss: 2.9631 - acc: 0.1208 - val_loss: 2.8363 - val_acc: 0.1468
+Epoch 6/80 58252/58252 [==============================] - 514s - loss: 2.8935 - acc: 0.1319 - val_loss: 2.7721 - val_acc: 0.1583
+Epoch 7/80 58252/58252 [==============================] - 513s - loss: 2.8376 - acc: 0.1440 - val_loss: 2.7097 - val_acc: 0.1728
+Epoch 8/80 58252/58252 [==============================] - 515s - loss: 2.7869 - acc: 0.1553 - val_loss: 2.6631 - val_acc: 0.1852
+Epoch 9/80 58252/58252 [==============================] - 518s - loss: 2.7382 - acc: 0.1638 - val_loss: 2.6308 - val_acc: 0.1893
+Epoch 10/80 58252/58252 [==============================] - 506s - loss: 2.6998 - acc: 0.1726 - val_loss: 2.5787 - val_acc: 0.1995
+Epoch 11/80 58252/58252 [==============================] - 546s - loss: 2.6590 - acc: 0.1826 - val_loss: 2.5439 - val_acc: 0.2056
+Epoch 12/80 58252/58252 [==============================] - 574s - loss: 2.6257 - acc: 0.1901 - val_loss: 2.5116 - val_acc: 0.2211
+Epoch 13/80 58252/58252 [==============================] - 530s - loss: 2.5939 - acc: 0.1986 - val_loss: 2.4727 - val_acc: 0.2324
+Epoch 14/80 58252/58252 [==============================] - 534s - loss: 2.5639 - acc: 0.2037 - val_loss: 2.4441 - val_acc: 0.2353
+Epoch 15/80 58252/58252 [==============================] - 533s - loss: 2.5376 - acc: 0.2117 - val_loss: 2.4246 - val_acc: 0.2430
+Epoch 16/80 58252/58252 [==============================] - 511s - loss: 2.5088 - acc: 0.2190 - val_loss: 2.3946 - val_acc: 0.2485
+Epoch 17/80 58252/58252 [==============================] - 517s - loss: 2.4840 - acc: 0.2256 - val_loss: 2.3658 - val_acc: 0.2576
+Epoch 18/80 58252/58252 [==============================] - 515s - loss: 2.4603 - acc: 0.2310 - val_loss: 2.3506 - val_acc: 0.2594
+Epoch 19/80 58252/58252 [==============================] - 516s - loss: 2.4351 - acc: 0.2367 - val_loss: 2.3306 - val_acc: 0.2662
+Epoch 20/80 58252/58252 [==============================] - 520s - loss: 2.4157 - acc: 0.2435 - val_loss: 2.3012 - val_acc: 0.2763
+Epoch 21/80 58252/58252 [==============================] - 608s - loss: 2.3959 - acc: 0.2498 - val_loss: 2.2780 - val_acc: 0.2815
+Epoch 22/80 58252/58252 [==============================] - 565s - loss: 2.3765 - acc: 0.2570 - val_loss: 2.2681 - val_acc: 0.2870
+Epoch 23/80 58252/58252 [==============================] - 551s - loss: 2.3540 - acc: 0.2590 - val_loss: 2.2631 - val_acc: 0.2837
+Epoch 24/80 58252/58252 [==============================] - 548s - loss: 2.3437 - acc: 0.2670 - val_loss: 2.2307 - val_acc: 0.2925
+Epoch 25/80 58252/58252 [==============================] - 531s - loss: 2.3387 - acc: 0.2710 - val_loss: 2.2235 - val_acc: 0.2973
+Epoch 26/80 58252/58252 [==============================] - 524s - loss: 2.3035 - acc: 0.2750 - val_loss: 2.1966 - val_acc: 0.3016
+Epoch 27/80 58252/58252 [==============================] - 543s - loss: 2.2893 - acc: 0.2792 - val_loss: 2.1822 - val_acc: 0.3078
+Epoch 28/80 58252/58252 [==============================] - 530s - loss: 2.2718 - acc: 0.2854 - val_loss: 2.1615 - val_acc: 0.3174
+Epoch 29/80 58252/58252 [==============================] - 530s - loss: 2.2608 - acc: 0.2890 - val_loss: 2.1748 - val_acc: 0.3138
+Epoch 30/80 58252/58252 [==============================] - 527s - loss: 2.2430 - acc: 0.2941 - val_loss: 2.1374 - val_acc: 0.3239
+Epoch 31/80 58252/58252 [==============================] - 536s - loss: 2.2279 - acc: 0.2963 - val_loss: 2.1331 - val_acc: 0.3203
+Epoch 32/80 58252/58252 [==============================] - 621s - loss: 2.2184 - acc: 0.3004 - val_loss: 2.1089 - val_acc: 0.3338
+Epoch 33/80 58252/58252 [==============================] - 577s - loss: 2.2026 - acc: 0.3045 - val_loss: 2.0996 - val_acc: 0.3356
+Epoch 34/80 58252/58252 [==============================] - 549s - loss: 2.1959 - acc: 0.3074 - val_loss: 2.0829 - val_acc: 0.3352
+Epoch 35/80 58252/58252 [==============================] - 555s - loss: 2.1733 - acc: 0.3132 - val_loss: 2.0803 - val_acc: 0.3363
+Epoch 36/80 58252/58252 [==============================] - 596s - loss: 2.1643 - acc: 0.3136 - val_loss: 2.0868 - val_acc: 0.3411
+Epoch 37/80 58252/58252 [==============================] - 541s - loss: 2.1546 - acc: 0.3191 - val_loss: 2.0625 - val_acc: 0.3450
+Epoch 38/80 58252/58252 [==============================] - 522s - loss: 2.1456 - acc: 0.3225 - val_loss: 2.0353 - val_acc: 0.3510
+Epoch 39/80 58252/58252 [==============================] - 519s - loss: 2.1330 - acc: 0.3256 - val_loss: 2.0320 - val_acc: 0.3567
+Epoch 40/80 58252/58252 [==============================] - 554s - loss: 2.1218 - acc: 0.3293 - val_loss: 2.0111 - val_acc: 0.3625
+Epoch 41/80 58252/58252 [==============================] - 518s - loss: 2.1071 - acc: 0.3316 - val_loss: 2.0080 - val_acc: 0.3647
+Epoch 42/80 58252/58252 [==============================] - 526s - loss: 2.0967 - acc: 0.3340 - val_loss: 2.0094 - val_acc: 0.3680
+Epoch 43/80 58252/58252 [==============================] - 528s - loss: 2.0912 - acc: 0.3368 - val_loss: 2.0065 - val_acc: 0.3623
+Epoch 44/80 58252/58252 [==============================] - 527s - loss: 2.0864 - acc: 0.3389 - val_loss: 1.9873 - val_acc: 0.3661
+Epoch 45/80 58252/58252 [==============================] - 549s - loss: 2.0750 - acc: 0.3425 - val_loss: 1.9794 - val_acc: 0.3709
+Epoch 46/80 58252/58252 [==============================] - 527s - loss: 2.0606 - acc: 0.3458 - val_loss: 1.9767 - val_acc: 0.3790
+Epoch 47/80 58252/58252 [==============================] - 525s - loss: 2.0543 - acc: 0.3472 - val_loss: 1.9454 - val_acc: 0.3802
+Epoch 48/80 58252/58252 [==============================] - 516s - loss: 2.0455 - acc: 0.3506 - val_loss: 1.9600 - val_acc: 0.3742
+
+Great, so now we are getting some reasonable accuracy both on training and test set!
+
+10. I ran above algo for 10 cycles: got ~20% accuracy on both train and test set. 
+    However, on LB, I only got 7%. So, now I decided to train as per test specification: except for 10 categories, everything
+    will be unknown.
+
+11. Nov 29, Trained that. Got ~65% accuracy in 10 cycles on training set (no validation set).
+    LB gave 10%. 10% is disappointing, but highest till now. Let's train more tonight. We will
+    use more neurons, keep a validation set and keep saving models periodically.
+
+12. Nov 30. Trained (FC64 + RELU) * 2 for 20 cycles. Got ~70% accuracy on training set
+   (no validation set). LB continues at 10%. 
+
+13. Dec 1. Trained (FC128 + RELU) * 3 for 110 cycles. Got ~80% accuray on training set. LB got only 9%.
+
+14. Dec 1. Trained (FC128 + RELU) * 3 with dropout = 0.1 for 110 cycles. Got 68.89% accuracy on traing set,
+    but locally it gives me only 60%. So, something is amiss.
+    Corrected the problem.
+
+15. Dec 1. Trained (FC128 + RELU) * 3 no dropout for 170 cycles. Got 92% accuracy on train, but 10%
+    on leaderboard.
+
+16. Dec 2-5: Tried so many things: dropout regularization, L2 regularization, more layers, more neurons per layer,
+    have fewer unknown data in training. LB score is always between 9 and 10%. Without regularization, dev
+    set accuracy drops as training proceeds. With regularization, could stop that, training set accuracy
+    does not go beyond 15-20%. In all cases LB score maxes out at 10%.
+
+Now let's have a look at their solution.
+
+17. Tried https://www.kaggle.com/voglinio/keras-directory-iterator-lb-0-72 and
+got LB score of 0.71. Amazing!! Need to learn from that.
+
+- Try ReduceLROnPlateau
+- Using librosa, directly import the image as floating points, rather than having
+  to divided manually
+- Use convolution layer
+
+18. Dec 7: Tried Conv1D: 5 filters. followed by dense layer of size 512. Dropout of 0.2.
+    Got 15% accuracy in 1 cycle!
+    Got 23% accuracy in 6 cycles!
+    
+19. Let's submit all possible options:
+    unknown: 9%
+    silence: 9%
+    right:   7%
+    stop:    8%
+    go:      8%
+    yes:     8%
+    no:      7%
+    on:      8%
+    up:      8%
+    left:    8%
+    off:     7%
+    down:    6%
+    Also found at: https://www.kaggle.com/ironbar/frequency-of-the-labels-in-the-public-test-set
+
+20. Dec 8. With 8 filters. Train accuray: 63%. Test accuracy: 38%. Gives 27% on LB.
+
+- Try several convolution options together: Did not help
+- Train with all unknown data, one by one [DONE]. Went from 62 to 65
+- Include silence in training [DONE] Went from 65 to 68
+- Augment data using background noise
+- Have keras callbacks so that you can log epoch by epoch progress, perhaps terminate 
+  maximally before 1 hour interval is reached. [DONE]
+- Conv with 2 dense layers (we have used only 1 till now): Does not help [DONE]
+- Use shuffle with keras fit parameter: Does not help [DONE]
+- Take only abs value of signal [DONE]
+- What is finite impulse response
+- Check if training data is in correct proportion
+- One model for silence, another for non silence [DONE]
+- Correct training data
+- Install tensorflow on google compute machine [DONE]
+- Try batch normalization [DOES NOT WORK]
+- Ask question about public vs private leaderboard. [DONE]
+- Check if 0.71 fft based submission as also high unknowns [DONE]
+- Remove the proportion thinggy: private distrib is different from public distrib
+- Reduce learning rate in advanced stages [DONE]
+- Generate data for keras using generator [DONE]
+- Get a pretrained model. Have it generate an output. Compare it with yours.
+  If both models agree on a test case, you are likely correct on that test case. 
+  Hand label those test cases where you disagree. Then iterate on your model.
+- You can scale input such that max value is 1. That will normalize the volue
+  of the samples.
+- In large networks, you are unable to get good accuracy. But you have almost
+  infinite data. So, there must be problem with learning. How to train a
+  large network?
+- Tried selu [DID NOT WORK]
+- Try using leaky relu [Minor improvement validation accuracy. Could be noise]
+- You have put proportions of samples as per public LB. Get rid of that: all
+  non silence samples would be equally likely.
+- Create confusion matrix and then work off that matrix [DONE]
+- Can FFT or something find the area of interest, so that we can then
+  expand the relevant area to 16000 samples, and then neural network 
+  could give better performance?
+- Check all wrongly classified labels on training set. Maybe you should not
+  be using them to train. [DONE]
+- Check using md5 if some train files are repeated. You should not train on
+  repeat files otherwise training will get corrupted.
+- Sound effects using librosa
+- Adjust volume
+- Should we give more weightage to mispredicted examples? (Last resort, when
+  other avenues to increase accuracy have been exhausted)
+- Shift the audio by uptil +-100 samples [DONE. Did not help]
+- Supplement background noise with white noise/red noise etc. Generate new silence
+  every time [DONE. Did not help]
+- You see where new model is different from old one, and check if it is
+  now making correct prediction or incorrect.
+- In each layer, use various kernel sizes and then concatenate them
+- In MFCC, is there a need for convolution? Convolution aim is to downsample.
+  Here already there are low dimension points. So, just connect to dense layer?
+- In 1d conv also, have equal proportion of all categories [DONE: accuracy increased]
+- Separate model for silence even for mel
+- Need to do much better job in silence
+- Rather than ensemble: concatenate two flatten layers (one from 1d conv, other
+from mel) and then connect them to FC layers.
+- stft idea by kaggle kernel 0.71LB is another thing to try
+- You are doing so much augmentation. After all the augmentations, are
+  you generating some reasonable audios?
+- Adjust such that max value in the sample is +1 or -1. [DONE]
+- Should I give sr=16000 to librosa?
+
+21. Dec 8. With model11, got 35% on LB.
+
+22. Dec 9. With model12, got 40% on LB.
+
+23. Tried conv1d with 3, 5 and 7 filter sizes together. With 3 filters of each size, there
+    were ok results, but with 5 filters of each size, results were bad. surprising.
+
+24. Tried a second FC with 512 nodes. Same result after 6 cycles: train: 74%, test: 52%
+
+25. Dec 11. took the modulus of values and normalized that input. Hurts performance.
+
+26. Then simply took mean. Benefits performance slightly. Maybe.
+
+27. Model 14 leads to LB score of 0.46 in just 2 epochs.
+
+29. Dec 23: Finally could achieve all cuda/tensorflow stuff on gpu machine.
+        A great link is: https://github.com/floydhub/dl-setup
+
+30. Deeper models gives till 81% on LB.
+
+31. Tried reducing LR with 1 epoch learning, but no improvement on test score.
+    I am not sure if reduced LR is happening.
+       Then I was able to make sure that LR is getting reduced. No improvement.
+
+32. Dec 26: On manual label of sample test cases, I got 84% accuracy.
+    On inspecting the errors, I found that half the errors are where I am mislabelling
+    known labels. This should be avoideable. Other half is where I am mislabelling
+    unknown labels. That is hard. So, now I will try to make sure that I have high
+    validation score (95%+ to begin with)

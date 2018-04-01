@@ -1,0 +1,5 @@
+Nutrients = Macronutrients + micronutrients
+Macronutrients provide energy. They are carbohydrates, proteins and fats
+Micronutrients aid in reactions etc.
+
+- 10% of daily calorie from satured fat, 20-35% from polyunsaturated or monunsatured fat
