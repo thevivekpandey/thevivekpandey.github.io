@@ -51,6 +51,12 @@
   o Deep learning is that too (what is gradient descent after all)
   o Children make mistakes
     Somehow we start 
+- Assertion as comments
+- Fitness index
+- Human population will face diasaster
+- 2 puzzles
+- Participating in data science bowl 2008
+- When innovation gets stuck: bash shell, javascript, processor.
 
 DEEP LEARNING PROJECTS
 ======================

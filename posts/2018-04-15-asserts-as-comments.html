@@ -1,0 +1,291 @@
+<html>
+<head>
+  <title> Asserts as Comments</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+  </script>
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+  <!-- Global Site Tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1450977-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)};
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-1450977-3');
+  </script>
+
+</head>
+<body>
+<h1>Asserts as Comments</h1>
+
+<h2>Readable Code</h2>
+<p>
+Writing readable code is hard in the same way as waking up early in the morning or exercising
+is hard. You know it is good for you in the long run, but not doing it does not hurt you in the
+short run, and so you find it hard to motivate yourself to do it.
+</p>
+
+<p>
+However, just like exercising, once you get in the habit of it (either by your own will power,
+or by being a part of organisation that demands it), you start treating as a game and start
+enjoying it, and become a better programmar. It does however, require some will power on
+a constant basis to sustain it.
+</p>
+
+<p>
+Over past several years building QGraph, I have worked with several engineers. 
+There are some whose code is challenging puzzle to understand. One
+has to constantly figure out the motivations for all the quirks found in the code, and work
+like a detective to unravel the crime. There are others whose code is a breeze to read, with
+well named functions, smooth flow of the code and liberal comments explaining the motivations
+of what the programmar has tried to achieve, and why he took certain approach over apparently
+superior alternative approach. Act of programming is hard and I appreciate any help I can get.
+</p>
+
+<h2>The Fallibility of Comments</h2>
+<p>
+Writing comments explaining your motivation behind choosing a certaing approach is always a good idea.
+The code specifies precisely what you are doing, however, <em>why</em> you are doing that may
+not be obvious.
+</p>
+
+<p>
+Indespenable as the comments are, they suffer from some shortcomings:
+</p>
+<ol>
+<li>
+They are written in English, and English being natural language is ambiguous. The problem is worse
+when the comments explain something very fine point. The programmar may be lazy or incompetent
+to express his thoughs in English. Here is an actual example:
+<pre class="prettyprint">
+def get_mongo_start_and_end_time(self, start_time, end_time, mongo_time_limit):
+        '''
+        this function returns mongo start and end time which returns
+        mongo time frame for which segmentation will be done from mongo
+        mongo_time_limit is datetime separates mongo time and segment service time
+        '''
+        mongo_start_time = start_time if start_time &gt; mongo_time_limit else mongo_time_limit
+        mongo_end_time = end_time if end_time &gt; mongo_time_limit else mongo_time_limit
+        return mongo_start_time, mongo_end_time
+
+</pre>
+<p>
+While the programmar is trying hard to explain in English what he is trying to do, I find
+his code does a better job explaining his intent.
+</p>
+</li>
+
+<li>
+Secondly, comments may become stale. The programmar may change the code, but forget changing
+the comment.
+</li>
+</ol>
+<p>
+That is why there is a saying:<em>"Code doesn't lie"</em>.  The idea is that while comments or
+documentation may be misleading or outright false, the executing code is the unadulterated truth.
+</p>
+<h2>Asserts: What are they? </h2>
+<p>
+Most programming languages now a days support <em>asserts</em>.
+</p>
+
+<p>
+They are a way to check for correctness of the state of the program during the run time.
+For instance, let's say we have implemented some very complicated factorization algorithm,
+like <a ref="https://en.wikipedia.org/wiki/Lenstra_elliptic-curve_factorization">Lenstra elliptic-curve factorization</a>. (I have sat in lecture
+by <a href="https://en.wikipedia.org/wiki/Hendrik_Lenstra">Hendrik Lenstra</a>, by the way):
+</p>
+
+<pre>
+def find_factors(n):
+   # Complex unreadable logic involving esoteric number theory
+   return a, b
+</pre>
+
+<p>
+If despite test cases, we are not fully certain of correctness of the algorithm, we can assert
+that its output is correct, at run time:
+</p>
+
+<pre>
+n = ...get the number to be factored...
+a, b = find_factors(n)
+assert a * b == n
+</pre>
+
+<p>
+In case the assert fails, the program will crash, and the programmar can observe the input
+values to function <em>find_factors</em> which made it crash, and make amends. Crashing
+the program early is better than continuing with the wrong factorization and outputting
+a bogus result at the end.
+</p>
+
+<p>
+Another variant of assert is used in test cases, where you input values with known correct
+output and assert that the actual output equals the known output. If the results do not match,
+you do not end the program, you just communicate this to the user.
+</p>
+<h2>Asserts as Comments</h2>
+<p>
+Apart from run time checking and test cases, as outlined above, I have found it useful to use
+<em>asserts as comments</em>. I have profitably used asserts to document the assumptions that
+are made throughout the code. This leads to following benefits:
+</p>
+<ol>
+<li>
+This makes the code more understandable. Assumptions which may be left unstated, or vaguely
+stated in comments are formally asserted. Thus the reader of the code is encouraged to think 
+about why assumptions hold, and that leads to better understanding of the code.
+</li>
+<li>
+If the code is modified in an incorrect way, then the program fails sooner rather than later.
+This leads the developer to better diagnose the problem and fix it.
+</li>
+
+<li>
+Above two points hold true even more for someone who is new on the project. Asserts serve
+as useful guide to him to understand the code, and early failure (in a development run of the
+program) points him to exact problem which needs to be fixed.
+</li>
+</ol>
+
+<p>
+Let's consider a few examples.
+</p>
+
+<h3>Specifying possible values of variables</h3>
+<pre>
+def get_db_name(self, seg_os, env):
+    assert env in ['prod', 'dev']
+    assert seg_os in ['android', 'ios', 'web']
+    if seg_os == 'ios':
+        db_name = self.app_id + '_ios' if env == 'prod' else self.app_id + '_dev_ios'
+    elif seg_os == 'android':
+        db_name = self.app_id
+    else:
+        db_name = self.app_id + '_' + seg_os
+    return db_name
+</pre>
+<p>
+In reading the above snippet, if the reader is not familar with the codebase and the conventions, 
+he might struggle to understand what <em>seg_os</em> or <em>env</em> mean? The two asserts
+make it instantly clear as to what the possible values of the variables are.
+</p>
+<h3>Specifying relationship between variables</h3>
+<p>
+Consider the following code:
+</p>
+<pre>
+def get_users_in_time_range(condition, start_time, end_time):
+   assert start_time &lt; end_time
+   # More logic
+</pre>
+<p>
+Using the variable names as hint, the reader of the code can guess that <em>start_time</em> should be smaller than
+<em>end_time</em>, but can the two be equal? An assert makes it clear that the function expects
+<em>start_time</em> to be strictly smaller than <em>end_time</em>.
+</p>
+
+<h3>Clarifying quirky assumptions</h3>
+<p>
+Code evolves as requirements change. We keep modifying code as more demands are placed on the software, and at 
+times when we look at the overall code, we find ourselves to have done things differently from the way we would
+have done had we known the requirements in advance. (This holds true for living beings too: organisms evolve
+in response to changing environments, and their current form is not reflective of the just current environement,
+but also of past environments)
+</p>
+
+<p>
+This sometimes leads to the code making quirky assumptions. These assumptions should be ideally gotten rid of.
+However, such clean up may sometimes fall behind in priority. Have a look at following example.
+</p>
+<pre>
+def compute_users(conditions):
+    assert len(conditions) == 1
+    condition = conditions[0]
+    # Work on condition
+</pre>
+<p>
+Without having a clarifying assert, the reader would be left thinking: why are we operating on only the first
+element of <em>conditions</em>? What happens to other conditions? After reading the assert, he will be clear
+that the array has only one element after all, for reasons unknown to him. He may wonder why is this single
+element being wrapped in an array (that is because of legacy reasons), but at least this particular function
+will be clear to him.
+</p>
+
+<h3>Making the code locally understandable</h3>
+<p>
+If you can understand a function without knowing the context in which it is used, that is a plus. Asserts
+can sometimes enable that. Consider the following code.
+</p>
+<pre>
+def work_1():
+    # do something
+
+def work_2():
+    # do something
+
+def work_3():
+    # do something
+
+def check_1():
+    return is_cond1()
+
+def check_2():
+    assert is_cond1()
+    return is_cond2() and is_cond3()
+
+def do_something():
+    if not check_1():
+        work_1()
+    elif check_2():
+        work_2()
+    else:
+        work_3()
+</pre>
+<p>
+In above example, suppose that evaluating condition2 make sense only if condition1 is true,
+and evaluationg condition3 makes sense only if condition2 is true.
+</p>
+
+<p>
+Now, consider the context in which <em>check_2()</em> is called. From <em>do_something()</em> it is clear
+that <em>check_2()</em> will be called only if cond1 is true, (Otherwise the program would not come
+to elif clause). Thus, we should not check for cond1 in <em>check_2()</em>. However, if we only check
+for cond2 and cond3, the reader who is only reading <em>check_2()</em> will be left wondering whether
+or not cond1 is true. He knows that checking for cond2 makes sense only if cond1 is true. Thus he may
+wonder if writer of <em>check_2()</em> is even aware that checking cond2 makes sense only if cond1 is true.
+</p>
+
+<p>
+Adding an assert here helps clarify the situation. Now the reader of <em>check_2()</em> can be convinced
+that <em>check_2()</em> is correct, without needing to know the context in which it is called.
+</p>
+
+<h2>Can Asserts hurt?</h2>
+<p>
+Arguments against asserts are few. Here are two pitfalls to avoid.
+</p>
+<ol>
+<li>
+Don't use it in high performance code where every cycle counts. Note that such code is rarer than you think.
+We do not have any such component in QGraph. Kernel code would be an example of high performance code. In such
+cases you should still have asserts for development mode and turn them off in production. We used to follow
+that in VMware.
+</li>
+
+<li>
+Secondly, if you assert too many times, like calling it in a very low level function which is executed
+gazillions of times, or you put assert in a loop with gazillions of iterations, you are overusing asserts.
+</li>
+</ol>
+
+
+<p>That's it! As in life, so in programming, we should stand by truth, we should ASSERT truth! I hope
+you have fun doing it.</p>
+</body>
+</html>
