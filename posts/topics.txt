@@ -57,6 +57,7 @@
 - 2 puzzles
 - Participating in data science bowl 2008
 - When innovation gets stuck: bash shell, javascript, processor.
+- On the suitability of revenge
 
 DEEP LEARNING PROJECTS
 ======================
