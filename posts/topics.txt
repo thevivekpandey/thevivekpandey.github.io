@@ -51,10 +51,10 @@
   o Deep learning is that too (what is gradient descent after all)
   o Children make mistakes
     Somehow we start 
-- Assertion as comments
+- Assertion as comments [DONE]
 - Fitness index
 - Human population will face diasaster
-- 2 puzzles
+- 2 puzzles [DONE]
 - Participating in data science bowl 2008
 - When innovation gets stuck: bash shell, javascript, processor.
 - On the suitability of revenge
