@@ -85,3 +85,5 @@ DEEP LEARNING PROJECTS
 - Geoffrey Hinton: So far, I have got both Garry Marcus and Hector Levesque to agree that they will be impressed if neural nets can correctly answer questions about "Winograd" sentences such as "The city councilmen refused to give the demonstrators a licence because they feared violence." Who feared the violence?
 - Deep learning for anomaly detection in time series
 
+--------
+- Traditional chinese in taiwan
