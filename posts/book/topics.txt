@@ -1,0 +1,13 @@
+- You cannot have high performance and simple code
+
+- Ask for forgiveness, not permission.
+Some data is not being used, feature not being used. Blocking it will help infra laod. Can I
+do it? If you ask for permission, other party will say "no" because there is a small chance
+that feature will be used, and infra load is not their problem anyway. So, you should not
+ask for permission, and just do it. In rare case that the feature is needed, you ask for
+forgiveness, and no one minds some outages on less used features.
+
+- Politics
+I want to get done A, but is hard to justfiy. So, I just tell everybody that solving
+A will solve some other problem, that there are better means to solve other problems. Then
+A is solved.
