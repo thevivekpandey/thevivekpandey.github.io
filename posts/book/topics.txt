@@ -1,13 +1,29 @@
 - You cannot have high performance and simple code
 
 - Ask for forgiveness, not permission.
-Some data is not being used, feature not being used. Blocking it will help infra laod. Can I
+Some data is not being used, feature not being used. Blocking it will help infra load. Can I
 do it? If you ask for permission, other party will say "no" because there is a small chance
 that feature will be used, and infra load is not their problem anyway. So, you should not
 ask for permission, and just do it. In rare case that the feature is needed, you ask for
 forgiveness, and no one minds some outages on less used features.
 
 - Politics
-I want to get done A, but is hard to justfiy. So, I just tell everybody that solving
+I want to get done A, but is hard to justify. So, I just tell everybody that solving
 A will solve some other problem, that there are better means to solve other problems. Then
 A is solved.
+
+In CH's team, everyone escalates. Leads to overall inefficiency.
+
+Never presume what the problem is. Often you know system's problems and when a new issue
+from client comes, you presume that must be the problem. Often, that is not the case.
+
+Meeting proceed as per least knowledigble person who is important. Few smart + knowldgible people
+can quickly decide and move forward.
+------------
+How to onboard new engineers
+
+------------
+Familiarity breeds contempt.
+Initially employees are in awe. But slowly they settle in and then some of them start 
+disobeying or arguing too much. At some point their utility declines because of this.
+Some of them also slack off. So, maybe a regular churn is a good thing.
