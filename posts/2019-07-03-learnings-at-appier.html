@@ -1,0 +1,194 @@
+<html>
+<head>
+  <title>My Learnings at Appier</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+  </script>
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+  <!-- Global Site Tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1450977-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)};
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-1450977-3');
+  </script>
+
+</head>
+<body>
+<h1>My Learnings at Appier</h1>
+
+<h2>Background</h2>
+<p>
+I <a href="https://www.techinasia.com/appier-qgraph-aiqua">sold</a> my company, <a href="https://www.crunchbase.com/organization/quantumgraph">QGraph</a> to <a href="https://www.appier.com/">Appier</a> around an year ago. We rebranded the product as AIQUA and it is now sold to enterprises for $$$. It has been a successful acquistion and I have been working at Appier in product development for past 1 year.
+</p>
+
+<p>
+Being the founder-CTO of the company, I had built the team and technology of the company from the start. 
+Overall, around 15 engineers worked on the product. The product embodies the choices that we made along the way.
+</p>
+
+<h3>A unique vantage point</h3>
+<p>
+Appier had its own way of working; when team Appier and team QGraph worked together, many of the aspects of
+Appier's way of working were incorporated in QGraph. I had a unique vantage point of observing the way we used
+to do things earlier and how they were done post acquisition.
+</p>
+
+<p>
+Some of the changes were such that I would have incorporated them had I known about them earlier. Another set of changes were
+those that failed to impress me. About yet another set I am undecided. Thinking about these changes helps me take
+the best of the experience at Appier and apply those learning later.
+</p>
+
+<h2>The impressives</h2>
+These are some items which impressed me. I would implement them in the next system that I build.
+<h3>Prometheus and Grafana for monitoring</h3>
+<p>
+As soon as we got our first client at QGraph, we started investing in monitoring of our infrastrcture, and we continued to improve monitoring all through our 3+ years of journey. We relied on a veriety of components, some pre-built and some written by us:
+
+<ul>
+<li>Sensu: We used <a href="https://sensu.io/">sensu</a> for disk utilisation alarms.</li> 
+<li>Kafka manager: We used <a href="https://github.com/yahoo/kafka-manager">kafka manager</a> to monitor lags in kafka</li>
+<li>Mongo: We used  <a href="https://cloud.mongodb.com">mongodb atlas</a> for monitoring mongo metrics</li>
+<li>Mysql: We built our own dashboard to monitor import mysql metrics</li>
+<li>AWS Cloud watch: We used aws cloud watch to monitor CPU utilisation, ELB latencies, ELB 5xx and SQS consumer delays</li>
+</ul>
+Apart from the above system level monitors, we had several application level monitors which we are not discussing here.
+</p>
+
+<p>
+At Appier, they used prometheus and grafana for monitoring, and that is a decidedly superior way compared to the zoo of monitors
+that we had. Right now, I believe prometheus-grafana combined with AWS Cloud Watch is the way to go for system monitoring.
+</p>
+
+<h3>Slack</h3>
+<p>
+I had heard of Slack while in QGraph, and tried it once. However, I gave up on it too soon. At Appier, we use Slack for internal
+communication and it was a clear improvement over google hangout which we used at QGraph.
+</p>
+
+<h3>Opsgenie</h3>
+<p>
+At Appier we integrated opsgenie with our systems. Before that we used to rely on emails to generate alerts and thus someone
+needed to check email often to catch any problems.
+</p>
+<p>
+Systems like opsgenie have their own problems, like getting too many alerts, which do not exist in email world, because email overload is less
+of an overload compared to sms or phone call overload. However, on the balance, opsgenie has a utility when used well.
+</p>
+
+<h3>Use of tags in git</h3>
+<p>
+At QGraph, our production code ran from the latest commit in the master branch. On the rare occasions if we needed to roll back a change, we
+found the last good commit (using git log) and then checked out that commit. Finding last good commit was slightly painful.
+</p>
+
+<p>
+At Appier, when we deploy a commit, we tag it with a version number. We keep track of what functionalities are pushed in each version. Thus,
+if we need to rollback, we need checkout a particular commit. This approach requires slightly more work on each deployment, but eliminates
+the adhoc ness during the times of trouble.
+</p>
+
+<h3>Documentation in Atlassian Confluence</h3>
+<p>
+At Appier we use Atlassian Confluence to store documentation. This is superior to google docs which we used to have at QGraph. The reasons are:
+(i) All the docs are available at a central place (ii) They are visibile to everyone, unlike google docs which need to explicitly shared.
+</p>
+
+<h2>Thanks, but no thanks</h2>
+Following are some items that failed to impress me.
+<h3>Cassandra</h3>
+<p>
+At QGraph, we used MongoDB as the data store. As our business grew, database repeatedly became bottlneck, and we were always able to solve the problems by
+optimising our queries, using software optimisations that took load away from mongo and using larger configuration machines for mongo. MongoDB performance always degraded gracefully in a predictable manner which allowed us to improve our systems without incurring client visible degradations.
+</p>
+
+<p>
+At Appier, we brought in Cassandra in some use cases, and I have been less than satisifed. Following are some of the pain points.
+<ul>
+<li> With some 20M rows on a table, <em>select count(*) where field = value</em> does not work. It first warns me that I should not do that, and if I proceed ahead anyway, all cassandra machines go to 100% CPU util. What is more there is no way to cancel the query either. The only way appears to be restart the cassandra servers one by one. Many times, to check if we have done some insertions correctly, I needed this query. </li>
+<li>When writing at high rate to cassandra, both writes and reads start failing.</li>
+</ul>
+</p>
+<p>
+It is possible that we might not be using Cassandra properly and there are better configurations. It is also possible that once
+we use Cassandra properly it is highly efficient. Indeed going from noSQL to SQL I would expect higher performance. However, given my team's level of knowlege of Cassandra and MongoDB, and a similar hardware, I was able to get much higher
+performance and higher reliability with MongoDB.
+</p>
+
+<h3>Scrum</h3>
+<p>
+At QGraph, we used a Trello kind of system to track who is doing what. Each person had a list of tasks, and based on mutual consensus
+he could pick up whatever was the most important task. As someone finished a task, he tested it, I tested it and then we went live.
+</p>
+
+<p>
+At Appier, they follow Scrum methodology. It was for the first time I was in a team which followed Scrum. Scrum might be suitable
+for certain kinds of products, but I don't believe it is good for a product like QGraph. Scrum relies on the ability to estimate
+how long each task would take, but in a non trivial project, real complications of the task are revealed only when one starts doing
+the task. Furthermore there are urgent tasks all the time and it is hard to plan for 2 weeks, which was the scrum cycle time in our
+case.
+</p>
+
+<p>
+There was a recognition of the problems associated with scrum, and so a separate team called "task force" was created. Task force
+members don't plan their tasks in advance or in fixed chunks of time. They don't rigorously estimate the times their tasks would
+take. They just work on the important problems of day or week.
+</p>
+
+<p>
+Overall, the lesson that I undertake is that scrum is not a good idea for a fast growing SaaS company.
+</p>
+
+<h2>The 50-50s</h2>
+There are some areas where I am unable to decide whether the new approach is superior or inferior.
+<h3>Logs in Cloudwatch</h3>
+<p>
+Several new components now put their logs in cloudwatch. The advantage of this approach is two fold. First, the logs are in
+centralized place. Secondly, non engineers can be given access to these logs without them needing to log in to production machines.
+However, the disadvantage is that now the logs cannot be analyzed with usual linux tools like grep, cut etc. Is there some way which
+gives us best of both worlds? I don't know.
+</p>
+
+<h3>CI/CD</h3>
+<p>
+At QGraph, we did not have CI or CD. Developers devloped on their laptop, tested on laptop or test accounts on production (or sometimes, client account on production!), and then logged in to production machines, pulled their code and restarted the components. At some points
+we tried to introduce CI/CD but it could never become high priority.
+</p>
+<p>
+At Appier too, we trying to have CI/CD. It is too early to say how far we will go. So I am yet to see what productivity or reliability benefits we get.
+</p>
+
+<h3>Deployment via Docker</h3>
+<p>
+At Appier, we are big on Docker and Kubernetes. All the components are being dockerized one by one. It seems like a good idea. 
+I saw its power when we were shifting a dockerised component from one machine to another. We just took the docker image and
+started it on another machine. This was an improvement from the situation where there were always missing dependencies and we needed to search google which would invariable lead to stackoverflow where the accepted answer would give us the requried pip installation, or worse, some lib*.h header.
+</p>
+
+<p>
+However, since movements of components are infrequent, I would like to see this in production for a bit longer to watch for any downsides to be convinced that this is a superior approach. In particular, I am concerned if I can read the log files of applications from outside
+the container.
+</p>
+<h3>Staging environment</h3>
+<p>
+At QGraph, we did not have a staging environment. Developers developed on their laptops, or one of the development machines. They either
+hooked up with a testing DB or with production DB, as the situation required. This approach worked well for us, but we always needed
+to take care that we do not do anything wrong with production environment. Early in our journey, we did make some mistakes, but then
+we found out best practices which were propagated amongst developers.
+</p>
+<p>
+At Appier we have a separate staging environment and so developers can peacefully test out their changes. However, there are several
+challenges with this approach. Firstly, for performance related changes, which are plenty, staging environment does not have
+representative data. Secondly, staging environment always struggles to be up to date with production, and is often broken in several ways.
+</p>
+<p>
+It might be that there is a different way to develop, which gives the advantage of staging setup, while avoiding it drawback. Perhaps, rather than trying to have a completely isolated staging environment, we can have staging environment for some of the comonents, and while developing a particular component, the developer could hook himself to prod or staging versions of various other components.
+</p>
+</body>
+</html>

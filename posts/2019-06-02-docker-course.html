@@ -1,0 +1,186 @@
+<html>
+<head>
+  <title>Docker Kubernetes course</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+  </script>
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+  <!-- Global Site Tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1450977-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)};
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-1450977-3');
+  </script>
+
+</head>
+<body>
+<h1>Docker Kubernetes Course notes</h1>
+<p>
+<pre>
+docker run hello-world
+docker run -it busybox sh
+</pre>
+</p>
+
+<p>
+Container = filesystem + default command
+</p>
+<pre>
+docker run busybox echo hi there
+</pre>
+
+<pre>
+docker ps
+docker ps --all
+docker system prune
+</pre>
+
+<pre>
+docker run = docker create + docker start
+</pre>
+
+<pre>
+bash-3.2$ docker create hello-world
+b27189a7a93bbb76e36d9ce2c75bfee5c8498c34f92ce017f7c89779bb1bbfcf
+bash-3.2$ docker start -a b27189a7a93bbb76e36d9ce2c75bfee5c8498c34f92ce017f7c89779bb1bbfcf
+
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+    (amd64)
+ 3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+ 4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+
+To try something more ambitious, you can run an Ubuntu container with:
+ $ docker run -it ubuntu bash
+
+Share images, automate workflows, and more with a free Docker ID:
+ https://hub.docker.com/
+
+For more examples and ideas, visit:
+ https://docs.docker.com/get-started/
+
+-a means: show the output on console
+</pre>
+
+<pre>
+docker logs &lt;container id&gt;
+</pre>
+<pre>
+docker stop &lt;container id&gt;
+docker kill &lt;container id&gt;
+</pre>
+
+<pre>
+docker exec -it &lt;container id &gt; redis-cli
+</pre>
+-i is for interactive (point stdin/stdout/stderr to terminal)
+<br>
+-t is for some more interactive
+</pre>
+
+<pre>
+Dockerfile
+----------
+FROM alpine
+RUN apk add --update redis
+CMD ["redis-server"]
+</pre>
+
+<pre>
+docker build -t thevivekpandey/redis:latest .
+</pre>
+
+<pre>
+docker commit -c 'CMD ["redis-server"]' &lt;container id&gt;
+</pre>
+
+Dockerfile:
+<pre>
+FROM node:alpine
+
+COPY ./ ./
+RUN npm install
+
+CMD ["npm", "start"]
+</pre>
+
+A docker-compose.yml file
+<pre>
+version: '3'
+services:
+  redis-server:
+    image: 'redis'
+  node-app:
+    build: .
+    ports:
+      - "4001:8010"
+</pre>
+
+docker-compose up
+docker-compose up --build
+docker-compose up -d for background
+docker-compose down
+
+<pre>
+Volume:
+docker run -p 3000:3000 -v /app/node_modules -v $(pwd):/app 4665d38e3ef8
+-v /app/node_modules means don't map this
+-v $(pwd):/app means mean /app in container to $(pwd)
+
+Attach to running container
+docker attach &lt;container id&gt;
+
+Working from two images:
+FROM node:alpine as builder
+WORKDIR '/app'
+COPY package.json .
+RUN npm install
+COPY . .
+RUN npm run build
+
+FROM nginx
+COPY --from=builder /app/build /usr/share/nginx/html
+</pre>
+
+<pre>
+A travis file:
+
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t thevivekpandey/docker-react -f Dockerfile.dev .
+
+script:
+  - docker run -e CI=true thevivekpandey/docker-react npm run test -- --coverage
+
+deploy:
+  provider: elasticbeanstalk
+  region: "ap-southeast-1"
+  app: docker-react
+  env: "DockerReact-env"
+  bucket_name: "elasticbeanstalk-ap-southeast-1-058891623000"
+  bucket_path: "docker-react"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: "$AWS_SECRET_KEY"
+</pre>
+
+
+
+</html>
