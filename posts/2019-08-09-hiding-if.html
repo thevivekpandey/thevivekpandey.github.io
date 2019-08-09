@@ -1,0 +1,326 @@
+<html>
+<head>
+  <title> Living with the tyranny of "If"</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+  </script>
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+  <!-- Global Site Tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1450977-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)};
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-1450977-3');
+  </script>
+
+</head>
+<body>
+<h1>Living with "If"</h1>
+
+<h2>Summary</h2>
+<p>
+The conditionality, or "if", props up in programming all the time. 
+We will see why its preponderance makes life difficult for us, how
+our efforts to get rid of it have proven futile and what is the best we can do.
+</p>
+<h2>Ifs, States, Chess and Programming </h2>
+<p>
+If you play chess, you might remember your novice days. Novices make blunders very often. Their
+queen would be under attack, and they would know it, but then they would get lost in evaluating
+alternative lines of play, and forget that their queen is under attack. Next move they would lose
+their queen and the game. As we play more, blunders become less frequent, but they never
+go to zero.
+</p>
+
+<p>
+Why is that so? Why do we miss things which we know? It is because human brain is capable of holding
+only a few possibilities at a time. (See, for example, 
+<a target="_blank" href="https://en.wikipedia.org/wiki/The_Magical_Number_Seven,_Plus_or_Minus_Two">here</a>.)
+Since the game of chess is full of possibilities, it easy to forget about some.
+</p>
+
+<p>
+Let's delve a bit on what is a "possibility". It is potential state change that you need
+to consciously take care of. As we practice something, some of the possible state changes
+can be taken care of subconsciously and do not count in a possibility.
+</p>
+
+<p>
+For instance, a newbie driver needs to worry about the positions of accelerator, brake and clutch
+apart from paying attention to positions of various vehicles on the road. However, as he matures,
+his manuovering of accelerator, brake and clutch happens subconsciously and he can pay attention
+to the big picture which involves the position of various vehicles relative to his vehcile.
+</p>
+
+<p>
+Similarly while for a novice chess player, many moves may be possibilities, an expert can focus
+only on the more promising moves, reducing the number of possibilities.
+</p>
+
+<p>
+Computers are ultimately, giant state machines. The state machine of registers and main memory
+is accessible to the programmar in the form of variables. The programmar must manipulate
+these variables to achieve his goals. Except for non trivial tasks, there are more than one 
+possibities that can arise. A large class of bugs arises because of our inability to retain the large
+number of possibilties in our head.
+</p>
+
+<p>
+Consider the following ugly code (taken from <a target="_blank" href="https://www.codeproject.com/Articles/626403/How-and-Why-to-Avoid-Excessive-Nesting">here</a>)
+<pre>
+private void DoStuff() {
+    foreach (thing in thisList) {
+        if (condition1) {
+            if (condition2) {
+                DoThis(thing);
+            } else {
+                if (condition3) {
+                    continue;
+                } else {
+                    if (condition4) {
+                        continue;
+                    } else {
+                        if (condition5) {
+                            if (condition6) {
+             ------------------&gt; <b>continue;</b>
+                            } else {
+                                if (condition7) {
+                                    continue;
+                                } else {
+                                    if (condition8) {
+                                        DoThis(thing);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            DoThis(thing);
+        }
+    }
+}
+</pre>
+<p>
+If you are writing code at the marked location, you need to remember that:
+<ul>
+<li>condition1, condition5, condition6 are true</li>
+<li>condition2, condition3, condition4 are false</li>
+</ul>
+It is very difficult to remember these many states and thus a prudent programmer tries to avoid
+such deep nesting.
+</p>
+
+<h2>You can hide an if, but you cannot wipe it out</h2>
+<p>
+We all have encountered these very useful functions:
+</p>
+$$
+   max(a, b) =
+\begin{cases}
+a,  & \text{if $a >= b$} \\
+b, & \text{otherwise}
+\end{cases}
+$$
+$$
+   min(a, b) =
+\begin{cases}
+a,  & \text{if $a <= b$} \\
+b, & \text{otherwise}
+\end{cases}
+$$
+<p>
+Note, there is an "if" in the above definitions.
+</p>
+<p>
+Such functions (i.e. non differentiable functions) troubled me a lot, because to write out their description is so unneat. Why can't $max(x,y )$ be as
+neat as, say 
+$e^x = 1 + x + x^2/2! + x^3/3! + \dots?$ 
+</p>
+<p>
+So, I was very happy when I saw following identities:
+</p>
+$$max(a, b) = \frac{|a + b| + |a - b|}{2}$$
+$$min(a, b) = \frac{|a + b| - |a - b|}{2}$$
+
+<p>
+I was amazed that using the power of Mathematics, we have eliminated that dirty looking "if". However, 
+reflecting for a moment showed that it is not the case. What is $|x|$ after all?
+</p>
+$$
+   |x| =
+\begin{cases}
+x,  & \text{if $x >= 0$} \\
+-x, & \text{otherwise}
+\end{cases}
+$$
+<p>
+Thus the "if" in original identities has not gone, it has just been hidden.
+</p>
+
+<p>
+When you start looking for it, you find If in all the places: there are ifs in hash function implementation (to avoid
+collission),
+there is an if in for loop (check edge condition in each iteration), there is an if in polymorphism, and there are ifs 
+in neural networks (in the form of activation functions).
+</p>
+
+<p>
+The <a href="https://en.wikipedia.org/wiki/Branch_(computer_science)">branch instruction</a> in assembly language is the processor level manifestation of programming level if. In a way,
+it is if which distinguishes a computer from a calculator.
+</p>
+
+
+<h2>How do deal with If</h2>
+<p>
+So, now that we know that ifs are bad and unavoidable, what do we do about it? The solution is to hide the ifs if that makes the code cleaner. Following are some ways in which we do that.
+</p>
+
+<h3>Use hashmaps</h3>
+<p>
+Let's say, you are writing a currency convertor, to convert a given amount in given currency to USD. Instead of writing:
+<pre>
+def convert(value, currency):
+    if currency == 'USD':
+        return value
+    elif currency == 'EUR':
+        return value * 0.95
+    elif currency == 'INR':
+        return value * 50
+    else:
+        raise 'Invalid currency'
+</pre>
+You can write:
+
+<pre>
+convertor = {
+    'USD': 1.0,
+    'EUR': 0.95,
+    'INR': 50.0,
+}
+def convert(value, currency):
+    try:
+        return value * convertor[currency]
+    except KeyError:
+        raise 'Invalid currency'
+</pre>
+So, all the ifs have been encapsulated in the hashmap. Note that they have not vanished, since 
+hashmaps internally use ifs: if the address computed by the hash is not available, 
+then a search for an available slot ensues, which involves ifs.
+</p>
+
+<p>
+This trick can also be used when deciding between which of several functions to call to do 
+a computation. Instead of writing:
+
+<pre>
+def compute_rate(type, p1, p2, p3):
+    assert type in [1, 2, 3]
+    if type == 1:
+        return f1(p1, p2, p3)
+    elif type == 2:
+        return f2(p1, p2, p3)
+    elif type == 3:
+        return f3(p1, p2, p3)
+        
+</pre>
+you can write the following:
+<pre>
+mapping = {1: f1, 2: f2, 3: f3}
+def compute_rate(type, p1, p2, p3):
+    return mapping[type](p1, p2, p3)
+</pre>
+</p>
+<h3>Use $min(), max(), abs()$</h3>
+<p>
+These functions hide a conditional in them which can be used to abstract away the conditional.
+</p>
+<p>
+Let's say that you write a fuction to compute percentage salary increment of employees, which
+depends on a "performance score". Percentage increment will be equal the performnace score, but
+we provide a minimum of 2% increase in salary, irrespective of performance.
+</p>
+<p>
+You could write
+<pre>
+def get_percent_increment(perf_score):
+    if perf_score < 0.02:
+        return 0.02
+    else:
+        return perf_score
+</pre>
+You should write:
+<pre>
+def get_percent_increment(perf_score):
+    return max(0.02, perf_score)
+</pre>
+</p>
+
+<h3>Use Polymorphism</h3>
+<p>
+If you are doing a lot of conditional inside your class that might be the indication that you can
+use polymorphism. So, if your code is like:
+(Taken from <a href="https://softwareengineering.stackexchange.com/questions/206816/clarification-of-avoid-if-else-advice" target="_blank">here</a>)
+<pre>
+// `animal` is either a dog or a cat.
+if (animal.IsDog) {
+    animal.EatPedigree();
+    animal.Bark();
+} else { // The animal is a cat.
+    animal.EatWhiskas();
+    animal.Meow();
+}
+</pre>
+Then you should have classes Cat and Dog drive from Animal and then the code should be like:
+<pre>
+IAnimal animal = ...;
+animal.Eat();
+animal.MakeSound();
+</pre>
+In this case, the if would be pushed to the creation of animal object.
+</p>
+
+<h4>P.S.: Does reality have conditionals?</h4>
+<p>
+None of the major laws of Physics have discontinuity. Be it gravitation law $F = Gm_1m_2 / r^2$ or Einstein's $E = mc^2$, or famous quartet of Maxwell's equations:
+
+$$
+\begin{equation}
+\nabla \cdot \vec{E} = \frac{\rho}{\epsilon_0}
+\end{equation}
+$$
+
+$$
+\begin{equation}
+\nabla \cdot \vec{B} = 0 
+\end{equation}
+$$
+
+$$
+\begin{equation}
+\nabla \times \vec{E} = - \frac{\partial B}{\partial t}
+\end{equation}
+$$
+
+$$
+\begin{equation}
+\nabla \times \vec{B} = \mu_{0}\vec{J} + \mu_{0}\epsilon_{0}\frac{\partial E}{\partial t}
+\end{equation}
+$$
+</p>
+
+<p>
+But then, 
+at micro level the world is driven by Quantum Physics. In Quantum Physics, there is discreteness. For instance, light is not emitted in a continous way, but in packets of energy measuring $E = hc/\lambda$ where $\lambda$ is the wavelength of light. Thus, it only possible to have light of energy of multiple of $hc/\lambda$. </p>
+
+<p>  Similarly, particles exists in superposition of probabilities (which is described by the <a href="https://en.wikipedia.org/wiki/Wave_function" target="_blank"> wave function</a>) but when the probability function <a target="_blank" href ="https://en.wikipedia.org/wiki/Wave_function_collapse">collapses</a>, then it takes one of the possible states, and that leads to discreteness.
+</p>
+
+</body>
+</html>
