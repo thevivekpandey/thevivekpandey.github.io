@@ -1,0 +1,53 @@
+<html>
+<head>
+  <title> Note to sorting algorithm video</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+  </script>
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+  <!-- Global Site Tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1450977-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)};
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-1450977-3');
+  </script>
+
+</head>
+<body>
+<h2>Statement: A tree with $n!$ leaves will have a depth of $\Omega(n\log{}n)$</h2>
+<h3>Proof</h3>
+A tree with height $h$ has a maximum of $2^h$ leaves. Thus
+<br>
+$n! \le 2^h$
+<br>
+which means
+<br>
+$h \gt log (n!)$
+<br>
+i.e.
+$h = \Omega(log(n!))$
+<br>
+Now, by <a href="https://en.wikipedia.org/wiki/Stirling%27s_approximation">Stirling's approximation</a>,
+<br>
+$n! ~ \sqrt{2\pi n}(\frac{n}{e})^n$
+<br>
+So, 
+<br>
+$log(n!) = \theta(\log(\sqrt{2\pi n}(\frac{n}{e})^n))$
+<br>
+$= \theta (log{\sqrt{2\pi n}} + n \log\frac{n}{e})$
+<br>
+$= \theta (log\sqrt n + n \log n)$
+<br>
+$= \theta ( n \log n)$
+<br>
+Thus, $h = \Omega(n \log n)$
+</body>
+
+</html>
