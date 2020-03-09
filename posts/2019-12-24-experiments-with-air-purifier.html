@@ -81,6 +81,8 @@ monitor. <a href="https://www.amazon.in/Kaiterra-Laser-Egg-Accuracy-Temperatur/d
 is what I purchased.
 </p>
 
+<img width=300 src = "./kaiterra-laser-egg.jpeg" />
+
 <p>
 Now there were two unknowns: My house AQI and Kateirra Laser Egg device, since I did not have
 first hand proof that the device was accurate.
@@ -88,35 +90,42 @@ first hand proof that the device was accurate.
 <p>
 I found that for most of the day, AQI was between 120 and 180. It dipped in the 80-100 range during
 the night (say 2 AM to 7 AM), and rises to 200-250 range during peak traffic times (9 AM - 11 AM and
-6 PM - 8 PM). So, the device was at least directionally accurate. Further, when there was cooking smoke
+6 PM - 8 PM). So, the device was at least directionally correct. Further, when there was cooking smoke
 in the house, readings shot to 400+, further strengthening my trust in the device.
 </p>
+<img width=300 src="./aqi-400.jpg" />
 
 <p>
-So, my AQI at my house was much worse than ~100 reported levels on AQI website. My house is next
+So, AQI at my house was much worse than ~100 reported levels on AQI website. My house is next
 to a moderately busy road, so I thought that a bit isolated home would have better AQI levels.
-A friend of mine lives in a house which is next to a road with much lesser traffice. I experimented
+A friend of mine lives in a house which is next to a road with much lesser traffic. I experimented
 in his home, but the levels were were similar to what I observed at my home. We rationalized
 this observation by noting that his home is around 1 km from a very busy road, and around 1.5km from
 another very busy road, so perhaps that is the reason of poor AQI levels.
 </p>
 
 <p>
-Now that I knew that AQI in my home is not good, can we use air purifiers to ameliorate the situation
-partially? Before we do that, let's first get into some theory.
+I once went to a resort on the outskirts of Bangalore. It is also next to a busy road. There,
+I found the AQI to be in the range 40-60 for most parts of the day. So, the conclusion is that you
+cannot escape poor air if you are in the city, but air quality is good just outside the city.
+</p>
+
+<p>
+Now that I knew that AQI in my home is not good, can we use air purifiers to ameliorate the situation? 
+Before we do that, let's first get into some theory.
 </p>
 
 <h2>PM2.5, AQI and human body defences against micro particles</h2>
 <p>
 In atmosphere, both pre industrial and post industrial, there are micro particles floating in the air.
-Some of these particles are dust and pollen grains. Since they have been present in the air essentially
-since ever, our lungs have developed the capacity to filter out such particles and so these particles
-don't reach our blood stream.
+Some of these particles are dust and pollen grains. Since they have been present in the air for hundreds
+of millions of years, our lungs have developed, via natural selection, the capacity to filter out such 
+particles and so these particles don't reach our blood stream.
 </p>
 
 <p>
-Post industrial atmosphere is characterized by burning: we burn coal to produce electricity, we burn
-fuel to drive vehicles and farmers in Haryana and Punjab burn crops to dispose them off. Burning produces
+<u>Post industrial atmosphere is characterized by burning.</u> We burn coal to produce electricity, we burn
+fuel to drive vehicles and farmers in Haryana and Punjab burn stubble to dispose them off. Burning produces
 particles whose size is much smaller than dust or pollen grains. In particular it produces PM 2.5 - 
 particulate matter of diameter less than 2.5 microns. They are so small that our lungs do not have
 capacity to filter them off. This is a phenomenon of last 100 years and our bodies have not evolved
@@ -133,12 +142,237 @@ reach your body, they reside there permanently.
 <p>
 Concentration of PM2.5 is expressed in micro grams per cubic meter of air (μg/m3). Though there
 is no safe limit of PM2.5 exposure (any exposure is bad), various countries have come up with
-"safe limits" which they strive to follow. Eg. US has yearly and daily limit of 12 μg/m3 and 35 μg/m3
-respectively. China has set the limits as 35 μg/m3 and 75 μg/m3 respectively.
+"safe limits" which they strive to follow. Here are the limits of various countries.
+</p>
+
+<table border=1>
+<tr>
+<th></th><th>WHO</th><th>USA</th> <th>EU</th> <th> China </th> <th>India</th>
+</tr>
+<tr>
+<th>Yearly Limit </th><td>10</td><td>12</td> <td>25</td> <td>35</td> <td>40</td>
+</tr>
+<tr>
+<th>Daily Limit</th><td>25</td><td>35</td> <td>-</td> <td>75</td> <td>-</td>
+</tr>
+</table>
+<p>
+Eg. US has yearly and daily limit of 12 μg/m3 and 35 μg/m3
+respectively. It means that average annual exposure should be less than 12 μg/m3,
+but on a given day, an exposure of 35 μg/m3 is acceptable.
 </p>
 
 <p>
-So, how is Bangalore air like? The air quality meter measures PM2.5 too, and 
+So, how is Bangalore air like? The air quality meter measures PM2.5 too, and here are typical
+values at my home:
 </p>
-</body>
+
+<table border = 1>
+<tr> <th>Time</th> <th>Value (μg/m3)</th> </tr>
+<tr> <td>2 AM - 7 AM</td>  <td>30</td> </tr>
+<tr> <td>7 AM - 9 AM</td>  <td>30-150</td> </tr>
+<tr> <td>9 AM - 11 AM</td> <td>150-200</td> </tr>
+<tr> <td>11 AM - 6 PM</td> <td>45-120</td> </tr>
+<tr> <td>6 PM - 8 PM</td>  <td>150-200</td> </tr>
+<tr> <td>8 PM - 2 AM</td>  <td>80</td> </tr>
+</table>
+
+<p>
+As you can see, the AQI values are always above the yearly limit set by WHO or US, and mostly
+even above the much relaxed limit set by India.
+</p>
+
+<h3> Relationship between PM2.5 and AQI </h3>
+<p>
+PM2.5 is the fundmanental truth: the density of bad particles. AQI is a human-readable 
+re-interpretation of PM2.5 base values. Thus, PM2.5 to AQI is a mathematical function.
+The way this function works is following: 
+<ul>
+<li>AQI levels for certain PM2.5 values (called breakpoints) are fixed (by health authorities) </li>
+<li>For any AQI level which is not one of the breakpoints, find the breakpoint $b_1$ just below it
+and breakpoint $b_2$ just above it and do a linear interpolation of the AQI for the PM2.5 values
+for $b_1$ and $b_2$.</li>
+</ul>
+
+The definition of breakpoint can be different by the health authorities of different countries. 
+Following "breakpoints" are defined by US authorities, which are stricter than what is defined
+by Chinese health authorities.
+</p>
+
+<table border=1>
+<tr><th>PM2.5 Level</th><th> AQI</th> </tr>
+<tr><td>0          </td><td> 0</td> </tr>
+<tr><td>12         </td><td> 50</td> </tr>
+<tr><td>35         </td><td> 100</td> </tr>
+<tr><td>55         </td><td> 150</td> </tr>
+<tr><td>150        </td><td> 200</td> </tr>
+<tr><td>250        </td><td> 300</td> </tr>
+<tr><td>350        </td><td> 400</td> </tr>
+<tr><td>500        </td><td> 500</td> </tr>
+</table>
+
+<p>
+Let's calculate AQI for PM2.5 level 75. Just before 75, we have 55, whose AQI is 150, and
+just above 75 we have 150, whose AQI is 200.
+Thus, AQI for PM2.5 level of 75 is $150 + \frac{200 - 150}{150 - 55}(75 - 55)$ = 160
+</p>
+
+<p>
+Now that we have mapped PM2.5 levels to AQI, AQI ranges are characterized thus:
+
+<table border=1>
+<tr><th>AQI range</th> <th>Air quality description</th></tr>
+<tr><td>0-50</td><td>Good</td></tr>
+<tr><td>50-100</td><td>Moderate</td></tr>
+<tr><td>100-150</td><td>Unhealthy for sensitive groups</td></tr>
+<tr><td>150-200</td><td>Unhealthy</td></tr>
+<tr><td>200-300</td><td>Very unhealthy</td></tr>
+<tr><td>300-500</td><td>Hazardous</td></tr>
+</table>
+</p>
+
+<p>
+With this knowledge, we can summarize my observations about air quality at my as following:
+</p>
+
+<table border = 1>
+<tr> <th>Time</th> <th>PM2.5(μg/m3)</th>    <td>AQI</td><td>Descriptive <br>quality</td></tr>
+<tr> <td>2 AM - 7 AM</td>  <td>27-32</td>   <td>80-100</td><td>moderate-unhealthy</td></tr>
+<tr> <td>7 AM - 9 AM</td>  <td>30-150</td>  <td>100-200</td><td>unhealthy</td></tr>
+<tr> <td>9 AM - 11 AM</td> <td>150-200</td> <td>200-250</td><td>very unhealthy</td></tr>
+<tr> <td>11 AM - 6 PM</td> <td>45-120</td>  <td>120-180</td><td>unhealthy for sensitive people</td></tr>
+<tr> <td>6 PM - 8 PM</td>  <td>150-200</td> <td>200-250</td><td>very unhealthy</td></tr>
+<tr> <td>8 PM - 2 AM</td>  <td>100</td> <td>170</td><td>unhealthy</td></tr>
+</table>
+
+<h2> Trying to solve the problem privately</h2>
+<p>
+Now that we know that the air in Bangalore is consistently in "Unhealthy" and "Very unhealthy" levels,
+can we do something about it? Air quality is not a priority for government, even in Delhi, then what
+to say of Bangalore. So, we can we do something at private level?
+</p>
+
+<h3>Air Purifiers</h3>
+<p>
+One after the other, I purchased two air purifiers:
+<ul>
+<li> There is <a target="_blank" href="https://www.amazon.in/Coway-Sleek-Pro-AP-1009-Purifier/dp/B07JZ94F9C/ref=sr_1_1_sspa?crid=1WLMGIRE7JDR6&keywords=coway+sleek+pro+ap-1009+air+purifier&qid=1583750686&sprefix=coway%2Caps%2C316&sr=8-1-spons&psc=1&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEzTjlWREJaVEIwMjg3JmVuY3J5cHRlZElkPUEwMTAxNjY0MjJGWE0xRkdQSVJMQyZlbmNyeXB0ZWRBZElkPUEwNTA2NDM5M0wzSE9aQjRUUVA3OCZ3aWRnZXROYW1lPXNwX2F0ZiZhY3Rpb249Y2xpY2tSZWRpcmVjdCZkb05vdExvZ0NsaWNrPXRydWU=">one</a> by coway which is a vanilla purifier, good for a small room.</li>
+
+<li>And <a target="_blank" href="https://www.amazon.in/Dyson-Tower-WiFi-Enabled-Purifier-Silver/dp/B078RBFG6G/ref=sr_1_6?keywords=dyson&qid=1583751781&sr=8-6">another</a> by dyson, which is more featureful (remote, mobile app, multiple measurements) and good for a large room. </li>
+</ul>
+</p>
+
+<p>
+I have been satisifed with the air purifiers, in that they have worked as advertised. When used, they can drive down the AQI of the room below 50. Chhaya
+felt that she was having better sleep when air purifier was working, which might be attributable to better air, but could also be attributable to placebo effect, or a gentle breezy sound being made by the purifier.
+</p>
+
+<p>
+When I cleaned the filters of air purifiers in around 2 months, they were completely covered with a thick layer of dust.
+</p>
+
+<img width=300 src="./aqi-filter-1.jpg"/>
+<img width=300 src="./aqi-filter-2.jpg"/>
+
+<h3>Overall usefulness of air purifiers</h3>
+<p>
+So, it is indeed useful to have an air purifier in enclosed spaces like home, office, gym or hospital
+</p>
+<p>
+Let's do a bit of calculation on how much impact do air purifiers have on you, if you are in Bangalore. We will
+make following assumptions:
+</p>
+
+<ul>
+<li>During 2 AM to 7 AM, I can drive down the PM2.5 value to 20, since I am at my home.</li>
+<li>During 7 AM to 9 AM, I experience ambient PM2.5 since I need to travel to office, or in general go outdoor </li> 
+<li>During 9 AM to 6 PM, I can driven down PM2.5 value to 30, assuming there is decent purifier in office. It is not as low as in home, since one needs to go out intermittently</li>
+<li>During 6 PM to 8 PM, I experience ambient PM2.5 since I need to travel back to home, or in general, go outdoor</li>
+<li>During 8 PM to 2 AM, I can driven down the PM2.5 value to 40, since generally I am at home.
+</ul>
+<table border = 1>
+<tr> <th>Time</th> <th>Mean PM2.5 (μg/m3)<br>without purifier</th> <th>Mean PM2.5 (μg/m3)<br>with purifier</tr>
+<tr> <td>2 AM - 7 AM</td>  <td>30</td>     <td>  20  </td></tr>
+<tr> <td>7 AM - 9 AM</td>  <td>90</td>     <td>  90  </td></tr>
+<tr> <td>9 AM - 11 AM</td> <td>180</td>    <td>  30  </td></tr>
+<tr> <td>11 AM - 6 PM</td> <td>70</td>     <td>  30  </td></tr>
+<tr> <td>6 PM - 8 PM</td>  <td>180</td>    <td>  180 </td></tr>
+<tr> <td>8 PM - 2 AM</td>  <td>100</td>    <td>  40  </td></tr>
+</table>
+
+<p>
+Now, given all these, let's compute average (weighted) PM2.5 incidence before and after air purifier.
+</p>
+<u>Before air purifier</u>
+<br>
+Average = $\frac{5}{24} * 30 + \frac{2}{24} * 90 + \frac{2}{24} * 180 + \frac{7}{24} * 70 + \frac{2}{24} * 180 + \frac{6}{24} * 100 = 90$.
+<br>
+<u>After air purifier</u>
+<br>
+Average = $\frac{5}{24} * 20 + \frac{2}{24} * 90 + \frac{2}{24} * 30 + \frac{7}{24} * 30 + \frac{2}{24} * 180 + \frac{6}{24} * 40 = 48$.
+
+<p>
+Above calculation suggests that you can drive down PM2.5 incidence from 90 to 50 by using purifier comprehensively. However, this is 
+misleading. The reason is that when you are in good air (thanks to air purifier), then you are either sleeping or sitting, which requires
+lesser energy and thus breathing lesser amount of air. When you are in bad air, then you are outside the home or office, and more likely to be walking
+or running and thus breathing in more air.
+</p>
+
+<p>
+To take into account this effect, I saw some relevant data <a href="https://ww3.arb.ca.gov/research/resnotes/notes/94-11.htm">here</a>. Roughly, if you are sitting or standing, you breath around 10 liter of air per minute. If you walking briskly, you consume 30 liters per minute and if you are running, you consume 50 liters per minute.
+</p>
+
+<p>
+I will assume that I am medium active (i.e. 30 l per minute air consumption) for 2 hours a day. Let's say that this 2 hour interval is 7 AM to 9 AM. Since during this time, I am breathing at thrice the rate I will give a weightage of 3 to this interval, as opposed to 1 for other intervals. So, we will assume that there are 28 hours in a day and this particular interaval lasts for 6 hours. (rather than 2). We redo our calcuations:
+</p>
+
+<u>Before air purifier</u>
+<br>
+Average = $\frac{5}{28} * 30 + \frac{6}{28} * 90 + \frac{2}{28} * 180 + \frac{7}{28} * 70 + \frac{2}{28} * 180 + \frac{6}{28} * 100 = 90$.
+<br>
+<u>After air purifier</u>
+<br>
+Average = $\frac{5}{28} * 20 + \frac{6}{28} * 90 + \frac{2}{28} * 30 + \frac{7}{28} * 30 + \frac{2}{28} * 180 + \frac{6}{28} * 40 = 63$.
+
+<p>
+So we see that improved estimate for impact of using air purifier is 90 =&gt; 60. This assumes a rigorous use of the purifier at home and at office. I conclude that it is indeed helpful to use a purifier if you live in a city like Bangalore, though your condition will not be equivalent to a cleaner city, like SFO or Taipei which are at PM2.5 level of ~30 without an effort.
+</p>
+<h3>Do plants help?</h3>
+<p>
+<p>
+Plants do not help in remove particulate matter. Parts do help in removing some other pollutants, like NO<sub>2</sub>, but not in
+removing PM2.5 which is the subject of this article.
+</p>
+</p>
+<h2>How are other countries doing</h2>
+<p>
+Finally, we ask the question: what have other countries done in this regard? A general reading in this regard suggests that
+several big cities across the world have experienced air quality problems, but they have been able to overcome them by doing
+several things (a) Better emission control standards, new vehicle quota with preference to fuel effiicient cars (b) Lesser coal 
+burning. (c) More green space
+</p>
+<p>
+Air in USA has been consistently getting cleaner over time:
+</p>
+<img width = 500 src="https://upload.wikimedia.org/wikipedia/commons/f/fc/ParticulateTrendUS.png"/>
+<p>
+(Source: https://en.wikipedia.org/wiki/Particulates)
+</p>
+<p>
+Beijing use to compete with Delhi a few years earlier in being the most polluted city but after their governemnt got in action,
+air in Beijing is much better.
+</p>
+<p>
+I believe that whenever our government gets into action, the air quality will improve significantly in a few years. But in our democracy,
+people value freedom more than health. So in order for government to enact harsh measures, first the health needs to decline
+significantly.
+</p>
+
+<h2>Conclusions</h2>
+<ul>
+<li>Air quality in Bangalore is poor. PM2.5 is ~90, as opposed to ~20 in good cities. Delhi is worse.</li>
+<li>Air purifiers provide limited help. They can get down PM2.5 to ~60 with rigorous use.</li>
+<li>Multiple other cities have successfully improved air quality. We can do it too.</li>
+</ul>
 </html>
+</body>
