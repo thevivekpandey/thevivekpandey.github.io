@@ -1,0 +1,116 @@
+<html>
+<head>
+  <title>The Story of QGraph</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+  </script>
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+  <!-- Global Site Tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1450977-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)};
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-1450977-3');
+  </script>
+
+</head>
+<body>
+<h1>The Story of QGraph</h1>
+<p>
+This article summarises the journy of QGraph, the company I co-founded with <a href="https://www.linkedin.com/in/sachinkbansal/">Sachin Bansal</a>,
+and finally sold to <a href="https://www.appier.com">Appier</a>.
+</p>
+
+<p>
+Reasons for writing this article are two fold. Firstly, it serves as a "note to self". I have seen that unless you write down something, you
+tend to forget even the most important points of your work as years and decades roll by. It has happened to me more than once that I started
+to describe to someone a project that I did at VMware (~2005-2008) or Vizury (~2011-2014), and I got stuck in the middle. I was aghast at the
+inability to recall some basic points of the project to which I gave my full attention for months or years at some point of time. My memories
+of QGraph have already started fading, and I would like to write them to be able to refer them in future.
+</p>
+
+<p>
+Secondly, it may serve as a lesson for aspiring entrpreneurs. We did several smart things and severl dumb things and one can learn from both
+of them. We often read stories of big successes, startups which raise hundres of millions of dollars. Those are few in number. Much more
+frequent are companies whose outcomes are much more modest, but their stories are more relevant to most startups.
+</p>
+
+<p>
+Before we proceed, some caveats are in order. One, while I have tried to be candid and present a true account, I have deliberatly omitted
+some details. These details are mostly such that they throw some persons in bad light. I have changed the names of all the persons except
+mine and Sachin's. Those who worked with us will immediately recognise mapping from invented names to actual people.
+</p>
+
+<p>
+There is another caveat: this is loooong article. I have got side tracked at several places. I hope you still like it.
+</p>
+
+<h2>Prologue</h2>
+<p>
+During 2014, I was working at Vizury. There was always an itch in the mind that at some point I should try start something on my own.
+Why? I am unable to pinpoint at the reason. It is a combination of several factors. Most companies that we work for in tech 
+industry were all started not too long ago by people who were not out-of-the-world, I could also test out the water and see I can create something.
+The downside is limited, since if things don't work out, one can always go back to some other company, and the experience having run a startup
+should be useful. The upside can be quite large if one is lucky. There is one theory that you should minimise regret. If you don't do a startup
+you might feel regretful later on for not having tried. If you try and fail you will know that you are not competent, and will learn something
+in process.
+</p>
+<p>
+There was another, a bit philosophical reason why I wanted to do a startup. When I work in any decent sized company, I am separated from the
+end customer. I work on abstract software engineering problems. I can see that the problem that I working on does help the customer, but I am
+not directly selling a product that I made. Like a roadside chatwala who makes something and sell it, I wanted to make some softwere and sell it.
+Such a way of working: making something and selling it has its disadvangates. You need to work across functions: creation of the product,
+sales of the product, marketing of the product, hiring the team, getting the investors and so on. So, your skill set becomes more generalized
+rather than specialized. That leads to diseconomies of scale compared to a big company where everyone works in a niche area. But then,
+big companies have their own set of disadvantages. At any rate, this "make something and sell it" had a feeling of purity to it.
+</p>
+
+<p>
+I will explain that a bit. There are many situations in world where we want to measure a metric M,
+but since there is no way to measure the metric M, we measure some easily measurable proxy metric P instead. Now, people start gaming the system
+and start chasing P rather than M. It is the job of the desginers of the system to ensure that higher P should mean better competency in M. 
+Let's see some examples.
+</p>
+
+<p>
+Goal of engineering education is to produce best possible engineers. That is M. To do that we set up examinations and the marks that you 
+get in examinations are made important by the system, by ensuring that you can better jobs, or better chance for higher education if you 
+have better grades. Marks are proxy metric P. Now 
+students are incentivised to study for grades rather for knowledge. They may resort to activities like cheating, or looking at past year papers
+which improve their grades with little effort, though they don't increase their knowledge. Institutes work on ensuring that M and P are mostly
+aligned, i.e. people who score highly on P should be high on M too.
+</p>
+
+<p>
+Similar is the case with companies, particularly large companies. Executives may resort to measures which increase stock price of the company
+in the short run while decreasing the value of the company in the long run. The performance rating system of the employees might be such that 
+employees who are doing more impactful work for the company may get lower raises or bonus or promotions compared to those whose work is more 
+visible.
+</p>
+
+<p>
+So, in an educational institute, a student can complain "Ah, I am fed up with our education system, it does not value true learning", or an 
+employee in a company can complain "People don't understand the good work that I am doing". However, when you are running a company, you
+cannot complain. Customer are buying competitor's product despite yours being superior? It's your problem that you are unable to convey the
+superiority of your product. No investor wants to invest? You need to create the compelling story. There is no external system whose
+inefficiency can be blamed for your failure. You need to internalize all the externalities, because, well, no one compelled you to go on
+the journey anyway, and you can always get out of it if you don't like it. So, running a small company is a pure activity: there are no
+proxy metrics to optimize.
+</p>
+
+<h3>Pull and the Push</h3>
+<p>
+Since late 2011, I was working at Vizury. It was a small startup, having ~20 employees and ~7 engineers at the time I joined. Working
+at a startup is instructive because you get to understand the company holisitcally. Prior to Vizury I was at VMware where I worked on 
+hypervisors, and while I knew our technology quite well, I had little knowledge of how VMware was used. For instance, I would not have
+been able to tell what fraction of revenue came from ESX servers and Workstation (the two dominant product lines). I did not know,
+nor did I ever wonder, how VMware became so successful in such a niche area.
+
+</p>
+</body>
+</html>
