@@ -1,0 +1,138 @@
+<html>
+<head>
+  <title>Quickly Checkable Proofs</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+  </script>
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+  <!-- Global Site Tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1450977-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)};
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-1450977-3');
+  </script>
+
+</head>
+<body>
+<h1>Quickly Checkable Proofs</h1>
+<p>
+As I transitioned from school to academia to industry, there is one idea that has occurred repeatedly. This around the verification of a solution to the problem. In this article I explore this idea.</p>
+
+<h2>A lesson from Speed Mathematics</h2>
+<p>
+When I was growing up, I happened to get hold of a book called <a target="_blank" href="https://www.amazon.in/Trachtenberg-Speed-System-Basic-Mathematics/dp/0285629166">The Trachtenberg Speed System of Basic Mathematics</a>. The book was written by one Jakow Tractenberg who wrote this book while incarcerated in a Nazi concentration camp. It contains tricks to perform speedy computations for special cases like multiplying two numbers which are close to a power of ten, like 98x97, or multiplying a number by 11 etc. Later on I also got to study a book on Vedic Mathematics which was also similar in spirit.
+</p>
+
+<p>
+While the book taught several tricks there was a peripheral lesson that proved to be more useful for me. At one point, the author said that <a href="https://archive.org/stream/TheTrachtenbergSpeedSystemOfBasicMathematics_201803/The%20Trachtenberg%20Speed%20System%20of%20Basic%20Mathematics_djvu.txt" target="_blank">"a problem is not really finished until we have proved that we have the right answer"</a>. The author's point was that once we solve a problem we should double check via some tricks that we have not committed a calculation mistake.
+</p>
+
+<p>
+The neat trick that the author described was double checking multiplication by divisibility by 9 test. It hinges on two
+properties of numbers:
+<ol>
+<li>The remainder of a number when divided by 9 is same as the remainder of the sum of its digits divided by 9. Thus, 749 % 9 = (7 + 4 + 9) % 9 = 20 % 9 = 2. Thus finding remainders by 9 can be easily done.</li>
+<li>
+If a * b = c then (a % 9 * b % 9) % 9 = c % 9. E.g. 65 * 23 = 1495. Then from LHS we have (65 % 9 * 23 % 9) % 9 = (11 % 9 * 5 % 9) % 9 = (2 % 9 * 5 % 9) % 9 = (2 * 5) % 9 = 1. And from RHS we have 1495 % 9 = (1 + 4 + 9 + 5) % 9 = 19 % 9 = (1 + 9) % 9 = 10 % 9 = 1. Thus both LHS and RHS give same remainder when divided by 9.</li>
+</ol>
+Above two points provide us a quick way to check if a multiplication we have performed is correct or not. Note that this method does not provide a 100% guarantee: If a % 9 * b % 9 = c % 9, then there is no gaurantee that a * b = c. However, when doing multiplication by hand, it is highly likely that there would be off by one error, and that will be caught by this method.
+</p>
+
+<p>
+I fruitfully employed this method to double check my computations in my academic career.
+</p>
+
+<h2>Quick checking in algorithms</h2>
+<p>
+Then during my undergraduate studies in Computer Science, same idea sprung up again in various contexts.
+</p>
+
+<p>
+Given a large number, e.g. 1752315833709922122701709407, it is difficult to determine if it is a prime number
+or a composite number. But here is a proof that it is composite: 1752315833709922122701709407 = 13472900573921 * 130062255272767. The proof is easily verifiable since multiplication is easy. The fact that factorizing a product of two large prime numbers is a hard problem but multiplying two large prime numbers is easy, is the basis of public key crypotgraphy.
+</p>
+
+<p>
+Similarly, while devising an efficient algorithm to sort a list of numbers is moderately difficult, 
+checking if a given list of numbers is sorted is straightforward.
+</p>
+
+<h2>Comutational Complexity Theory</h2>
+<p>
+As I advanced in my studies, the ideas exploring the relationship between solving a problem and checking if a given
+solution to a problem is correct kept recurring in many ways.
+</p>
+
+<p>
+For instance, one way to interpret complexity class <a href="https://en.wikipedia.org/wiki/NP_(complexity)#Verifier-based_definition">NP</a> is that it is the set of those yes/no problems for which if the answer is "yes", then there exists a "short" (i.e. polynomially verifiable) proof that the answer is indeed yes. For instance, consider the problem "Does a given graph G has a hamiltonian cycle?". This problem is in NP, because if G has a hamiltonian cycle, you can prove that G has a hamiltonian cycle by simply providing the hamiltonian cycle. Whether the purported hamiltonian cycle indeed cycles over all nodes of graph G is verifiable in polynomial time.
+</p>
+
+<p>
+The idea of "proof" of the correctness of a solution recurs in complexity theory. For instance, there is a complexity class <a href="https://en.wikipedia.org/wiki/IP_(complexity)">IP</a> which is the set of problem which are solvable by an <a href="https://en.wikipedia.org/wiki/Interactive_proof_system">"Interactive Proof System"</a>. And there is a surprising result that <a href="https://dl.acm.org/doi/10.1145/146585.146609">IP = PSPACE</a> which connects a complexity class defined by interactive proof systems(IP) with a the class of problems which are solvable in polynomial space (PSPACE)
+</p>
+
+<p>
+Finally, there was this <a href="https://en.wikipedia.org/wiki/PCP_theorem">PCP (probabilistically checkable proofs) theorem</a> which states that every NP problem has a "probablistically checkable proof". I never understood this result, but I could see that theoretical computer scientists were very delighted by this.
+</p>
+
+<h2>Monitoring Production Systems</h2>
+<p>
+As I moved away from academia to industry, and started developing production systems, the theme of quickly checkable proofs
+recurred in a very different way.
+</p>
+
+<p>
+In any technology company which is beyond a minimum scale, there are upwords of dozens or hundres of components (hundreds of thousands, if you are Google) and more components. There are microservices, ETL jobs, cron jobs etc. The developers should be aware whether or not their components are running well. Over time, the way I have developed to monitor the disparate systems is to have each system output some essential metrics and then monitor those metrics on a daily basis. Here are a few examples:
+<ol>
+<li>For instance, at QGraph, there was a service that computed the size of a given segment. The service would be invoked as a result of user request, and would be invoked ~100 times a day. I outputted segment description and time taken for segment computation in a file (there was a per day file) and scanned through the file on a daily basis, usually multiple times a day.</li>
+
+<li>For web server, we would monitor the number of requests and average response times on a daily basis.</li>
+</ol>
+As a result, if something goes wrong you come to know of it with a maximum of 1 day delay, or sooner if you check the dashboard more frequently. While 1 day delay appears to be a lot of
+time, in practice, the problems that you uncover by this method are mild enough that discovering them with 1 day delay does
+not cause a lot of harm, but not discovering them would cause a lot of harm.
+</p>
+
+<p>
+I distinctly remember how I started this practice. In 2012 I inherited a real time bidding server. There was once a problem in some of the bidding servers, which went unnoticed for several days, only to be caught when business people noticed something was amiss. It was an embarassing error for me, though the buisness impact was small. Never again, I decided and then I systematically build various dashboards which updated themselves every 15 minutes. Over the years, these dashboard helped us get a good visibility
+into the functioning of systems.
+</p>
+
+A few more notes related to this approach are pertinent.
+<h3>Alarm is a different concept</h3>
+<p>
+Sometimes, when suggested with the idea of creating dashboard, there is an idea given of setting up alarms. 
+Alarms indeed have their place to get notified quickly when soemthing goes wrong drastically. However, 
+creating a dashboard and observing it periodically helps you understand the system. It helps you develop 
+understanding around questions like 
+<ol>
+<li>How do the number of requests or response times vary over weekends?</li>
+<li>How do they vary over the day?</li>
+<li>Over several months, what is the trend of response times?</li>
+<li>When outage X happend in an unrelated system, this system started receiving requests at 3x the rate. Why? Is there some reason why it is 3x and not 2.5x or 3.5x?</li>
+</ol>
+If we rely solely on alarms, then we miss the opportunity to get to intimately know the systems over an extended period.
+And intimate understanding of the metrics of the systems helps us know in advance when scalability bottlenecks will arise, and
+to be able to guess the root cause of a problem when something goes amiss.
+</p>
+
+<h3>We don't try to catch all errors</h3>
+<p>
+In the dashboards that we build, we don't try to be exhaustive. We just try to ensure that the dashboard
+provides us a way to confirm that the service is <em>probably</em> working. As we observe the dashboard
+on the daily basis, we feel the need to incorporate more metrics and so we do that step by step.
+</p>
+
+<h2>In closing</h2>
+<p>
+So, this theme of quickly checkable proofs, with the proof being not perfect but good in practice, happens all the way from basic arithemtic to production systems. It is perhaps
+more elementary than that: to check if the rice is cooked, you just check a few grains of rice! Happy system building!
+</p>
+</body>
+</html>
