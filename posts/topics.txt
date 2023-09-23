@@ -84,6 +84,7 @@ DEEP LEARNING PROJECTS
 - Watch a youtube video and tell a story about what happened [Geoffrey Hinton says it will be done in next 5 years]
 - Geoffrey Hinton: So far, I have got both Garry Marcus and Hector Levesque to agree that they will be impressed if neural nets can correctly answer questions about "Winograd" sentences such as "The city councilmen refused to give the demonstrators a licence because they feared violence." Who feared the violence?
 - Deep learning for anomaly detection in time series
+- Business people vs Tech people
 --------
 - Traditional chinese in taiwan [DONE]
 - Experiences in Taiwan
@@ -99,3 +100,4 @@ Book idea
 Papaji had FEV1 test and got to know that at 83% he had mild COPD.
 
 Short term mind set: a good mindset because you are saying I do not pretend to know a lot.
+
