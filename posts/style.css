@@ -4,7 +4,8 @@ body {
   margin-top: 10px;
   max-width: 40em;
   /*font-family: "Roboto",Corbel,Avenir,"Lucida Grande","Lucida Sans",sans-serif!important;*/
-  font-family: 'Inconsolata', Courier;
+  /*font-family: 'Inconsolata', Courier;*/
+  font-family: "Roboto", sans-serif;
   line-height: 25px;
   color: #222;
   font-size: 18px;
