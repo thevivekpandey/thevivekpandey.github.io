@@ -1,0 +1,333 @@
+<html>
+<head>
+  <title>Solving problems "Inside Out"</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+  </script>
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+  <!-- Global Site Tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1450977-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)};
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-1450977-3');
+  </script>
+</head>
+
+<body>
+<h1>Solving problems "Inside Out"</h1>
+
+<p>
+Lately, while solving a few programming problems I have noticed that the pattern of thinking "inside out" can be
+useful.
+</p>
+
+<h2>Default thinking: "Outside In"</h2>
+<p>
+Usually we think "Outside In", and that is the right way to solve problems most of the time. In outside-in approach we first 
+take decision on most significant questions and then the lesser significant questions. For instance, if you have to
+go from one city to another, here is a pseudo code for that:
+
+
+<pre>
+function travel(source_city, destination_city) {
+   mode_of_travel = find_mode_of_travel(source_city, destination_city);
+   if (mode_of_travel == "air") {
+      book_air_ticket(source_city, destination_city);
+      do_web_checkin();
+      call_cab_to_airport();
+      get_boarding_pass();
+      check_in_luggage();
+      clear_security();
+      eat_pricey_stuff_at_airport();
+      plane = board_the_plane();
+      plane.wait_while_in_air();
+      alight_from_plane();
+   } else if (mode_of_travel == "train") {
+      book_train_ticket();
+      call_cab_to_railway_station();
+      eat_affordable_stuff_at_platform();
+      train = board_the_train();
+      train.wait_while_train_travels();
+      alight_from_the_train();
+   } else if (mode_of_travel == "run") {
+      wear_shoes();
+      run();
+   }
+}
+</pre>
+</p>
+
+<p>
+The above makes sense: we think about more signficant variables first (i.e. what is the mode of travel) and then we think
+about less significant variables (details of travel in that mode of travel). 
+</p>
+
+<h2>When "Inside out" is the right way to think</h2>
+<p>
+When we are doing programming then many times
+we need to invert our way of thinking, and think "inside out". Here are some examples where outside in fails and inside out succeeds.
+</p>
+
+<h2>Example 1: Finding the next date</h2>
+<p>
+Inspiration for this problem is <a href="https://projecteuler.net/problem=19">Project Euler Problem 19</a>.
+Suppose today's date is "July 6, 2024", then what is tomorrow's date? It is "July 7, 2024". We want to write a function
+that takes in today's date and outputs tomorrow's date. We need to take care of which months have 28 vs 29 vs 30 vs 31
+days. We will assume we have a function that tells if the year is leap.
+One may be tempted to write the following "outside in"
+code.
+</p>
+
+<pre>
+function find_next_day(day, month, year) {
+   /* First we will solve for leap year. */
+   if is_year_leap(year) {
+      /* There is one kind of treatment if month is Jan, Mar, May, July, Aug, Oct */
+      if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10) {
+         if (day &lt; 31) {
+            return (day + 1, month, year);
+         } else {
+            return (1, month + 1, year);
+         }
+      }
+      /* Dec may roll over to next year so treatment is a bit different. */
+      if (month == 12) {
+         if (day &lt; 31) {
+            return (day + 1, month, year);
+         } else {
+            return (1, 1, year + 1);
+         }
+      }
+      /* Feb has 29 days in leap year. */
+      if (month == 2) {
+         if (day &lt; 29) {
+            return (day + 1, month, year);
+         } else {
+            return (1, month + 1, year);
+         }
+      }
+      /* Finally, we work out 30 day months */
+      if (month == 4 || month == 6 || month == 9 || month == 11) {
+         if (day &lt; 30) {
+            return (day + 1, month, year);
+         } else {
+            return (1, month + 1, year);
+         }
+      }
+   } else {
+      /* There is one kind of treatment if month is Jan, Mar, May, July, Aug, Oct */
+      if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10) {
+         if (day &lt; 31) {
+            return (day + 1, month, year);
+         } else {
+            return (1, month + 1, year);
+         }
+      }
+      /* Dec may roll over to next year so treatment is a bit different. */
+      if (month == 12) {
+         if (day &lt; 31) {
+            return (day + 1, month, year);
+         } else {
+            return (1, 1, year + 1);
+         }
+      }
+      /* Feb has 28 days in non leap year. */
+      if (month == 2) {
+         if (day &lt; 28) {
+            return (day + 1, month, year);
+         } else {
+            return (1, month + 1, year);
+         }
+      }
+      /* Finally, we work out 30 day months */
+      if (month == 4 || month == 6 || month == 9 || month == 11) {
+         if (day &lt; 30) {
+            return (day + 1, month, year);
+         } else {
+            return (1, month + 1, year);
+         }
+      }
+   }
+}
+</pre>
+
+<p>
+This code is extra ordinarily long because of "outside in" thinking. We have outermost conditional on year, since year is most siginficant.
+Then we have the conditional month, and inner most conditionals are on days. The code is far more compact, if we invert this thinking
+to "inside out" - ie. solve for day first, and the year last, like the following:
+</p>
+
+<pre>
+function find_next_day(day, month, year) {
+   /* If day is 27 or less, never mind what is the month or whether the year is leap. */
+   if (day &lt;= 27) {
+      return (day + 1, month, year)
+   }
+
+   /* Other days need a bit different treatment. */
+   if (day == 28) {
+      if (month != 2) {
+         return (day + 1, month, year)
+      }
+      else if (is_leap_year(year)) {
+         return (day + 1, month, year)
+      }
+      else {
+         return (1, month + 1, year)
+      }
+   }
+   if (day == 29) {
+      if (month == 2)
+         return (1, month + 1, year)
+      else:
+         return (day + 1, month, year)
+   }
+   if (day == 30) {
+      if (month == 4 || month == 6 || month == 9 || month == 11) {
+         return (1, month + 1, year)
+      }
+      else {
+         return (day + 1, month, year)
+      }
+   }
+   if (day == 31) {
+      if month == 12:
+         return (1, 1, year + 1)
+      else:
+         return (1, month + 1, year)
+   }
+}
+</pre>
+<p>
+This approach is far more cleaner than the first approach. By going inside out, we avoided repetition of the logic that was happening in different parts of the branches when we are going outside in.
+</p>
+<h2>Example 2: Finding sum of sum of divisors</h2>
+<p>
+This is inspired from <a href="https://projecteuler.net/problem=21">Project Euler Problem 21</a>.
+We want to write a program, which, given an integer $n$, finds $F(n) = \sum\limits_{i=1}^{n}S(i)$ where $S(m) = \sum\limits_{i \% m = 0 }i$. i.e. $S(m)$ is the sum of divisors of $m$.
+</p>
+<p>
+$$S(1) = 1$$
+$$S(2) = 1 + 2 = 3 $$
+$$S(3) = 1 + 3 = 4 $$
+$$S(4) = 1 + 2 + 4 = 7 $$
+$$S(5) = 1 + 5 = 6 $$
+$$S(6) = 1 + 2 + 3 + 6 = 12$$
+
+So $$F(6) = S(1) + S(2) + \dots S(6)$$
+$$= 1 + 3 + 4 + 7 + 6 + 12 = 33$$
+</p>
+<p>
+Here is a straightforward code, coded in "outside in" way.
+</p>
+
+<pre>
+int find_sum_sum_divisors(int n) {
+   int sum = 0;
+   for (int i = 1; i &lt; n; i++) {
+      for (int j = 1; j &lt; i; j++) {
+         if (j % i == 0) {
+            sum += j
+         }
+      }
+   }
+   return sum;
+}
+</pre>
+
+<p>
+For each $i$, we compute $S(i)$ and $sum$ maintains the running sum of S's.
+</p>
+<p>
+While there can be several optimisations in this approach, e.g. you can stop inner loop at $i/2$, or else perhaps some more optimisations based on number theory, (which may not be clear to an average programmar) but above is the simplest code. It is easy to see the the if condition is evaluated $n(n-1)/2$ times. Here is another way to achieve the same goal:
+</p>
+
+<pre>
+int find_sum_sum_divisors(int n) {
+   int sum = 0;
+   for (int i = 1; i &lt; n; i++) {
+      int j = i;
+      while (j &lt;= i) {
+         sum += i;
+         j += i;
+      }
+   }
+}
+</pre>
+
+<p>
+In this approach we invert our computations. We first iterate through which all number does 1 divide. For each such incidnence we add 1 to $sum$. Then we iterate through what all numbers 2 divides. For each such incidences we add 2 to $sum$. We continue to this. So, number of iterations is, roughly $n + n/2 + n/3 + \dots = O(n \log n)$. The way of looking at the problem leads to a better solution. Efficiency comes from the fact that when we start from the divisor, it is to spot the numbers that the divisor divides (i.e. dividendt). But start from dividend, divisors are hard to spot.
+</p>
+
+<h2>Example 3: Implementing state machines</h2>
+This example is taken from this <a target="_blank" href="https://www.chiark.greenend.org.uk/~sgtatham/quasiblog/coroutines-philosophy/">informative article</a> on coroutines. Read the section "Versus explcit state machines". Let's say your program reads byte after byte. Sometimes, depending on the actual values of the byte, you can process the bytes when you have read 1, 2 or more bytes. So, you will have to maintaing a state machine and that becomes clunky (never mind the details):
+
+<pre>
+function process_next_byte(byte) {
+    if (state == TOP_LEVEL) {
+        if (byte != ESCAPE_BYTE) {
+            // emit the byte literally and stay in the same state
+            output(byte);
+        } else {
+            // go into a state where we expect to see a run length next
+            state = EXPECT_RUN_LENGTH;
+        }
+    } else if (state == EXPECT_RUN_LENGTH) {
+        // store the length
+        run_length = byte;
+        // go into a state where we expect the byte to be repeatedly output
+        state = EXPECT_OUTPUT;
+    } else if (state == EXPECT_OUTPUT) {
+        // output this byte the right number of times
+        for i in (1,...,run_length)
+            output(byte);
+        // and go back to the top-level state for the next input byte
+        state = TOP_LEVEL;
+    }
+}
+</pre>
+
+<p>
+If your language provides coroutes, you can turn the logic inside out. Rather than reading a byte and then deciding how to process it, you read bytes at suitable places in your processing:
+</p>
+<pre>
+function run_length_decompress(stream) {
+    while (byte = stream.getbyte()) {
+        if (byte != ESCAPE_BYTE) {
+            output(byte);
+        } else {
+            run_length = stream.getbyte();
+            byte_to_repeat = stream.getbyte();
+            for i in (1,...,run_length)
+                output(byte_to_repeat);
+        }
+    }
+}
+</pre>
+
+<h2>Example 4: My favorite - Horner's method of polynomial evaluation</h2>
+<p>
+This is something which stuck with me forever as soon as I read about it in the Cormen's algorithm book. Suppose given the value of $x$ and the values of coefficients $a_0, a_1, \dots, a_n$, you want to compute the value of the polynomial
+
+$P(x) = a_nx^n  + a_{n-1}x^{n-1} + \dots + a_1x + a_0$. A usual approach would be to compute various powers of $x$ (total $n - 1$ multiplications) and then multiply powers of $x$ with the respective coefficients (another $n - 1$ multiplications). So, this approach uses $2(n-1)$ multiplications. This comes from our outisde in approach. We want to compute $a_nx^n$ first, then $a_{n-1}x^{n-1}$, and so on.
+</p>
+<p>However, you can turn the computation inisde out:
+
+$P(x) = a_0 + x(a_1 + x(a_2 + (\dots x(a^{n-1} + a^n)))\dots)$
+</p>
+<p>
+Now, you can compute the polynomial inside out, and evaluate the polynomial using $n-1$ multiplications only!
+</p>
+
+<h2>Conclusion</h2>
+<p>
+I believe that journey to solve a problem is much a journy to understand the problem as it is to solve it. Being able to look the problem in the right way provides us with the ability to solve the problem in an elegant and efficient way. Thinking "inside out" can sometimes lead to a better understanding of the problem structure.
+</p>
+</body>
+</html>
