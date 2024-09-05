@@ -31,69 +31,31 @@
 
 <img width="300px" src="some-image.jpeg"/>
 <p>
-We form mental models of various phenomenon that are happening around us. These mental models help us arrive at heuristics to quickly evaluate situations. The heuristics mostly work, except when they don't. And when they don't it is prudent to look deeper and change the heuristic and update one's mental model.
+We, as in the people working in technology, emphasize on automation and scalability. Indeed, one of the gains of modern
+computing is that it automates a lot of otherwise mundane tasks - starting from replacing human 
+<a href="https://en.wikipedia.org/wiki/Computer_(occupation)">computers</a> (from whom the word "computer" originates in 
+the first place) 
+with modern computers, and continuing on with automation of bill payments, ticket booking, ordering merchandise, 
+and now continuing on to driving cars and proving mathematical theorems. And as computing industry works to automate
+the tasks it needs to solve scalability problems - the load on computers may reach unsustainable levels, and we need
+to worry about ensuring the software and hardware are up to the task of handling the load that they are presented with.
+This in turn spurs innovation, both in hardware and software to keep up with the scale of the load that is presented to
+the modern computers.
 </p>
 
 <p>
-The areas for which we form these heuristics vary widely: evaluating whether a work item is worth pursuing, or an article is worth reading, or as in this case, whether some analysis is correct or not. In this case, it took me a bit of time to first accept that my heuristic was wrong, and then even larger time to update my heuristic. This relates to approximating numerical calculations when some deviations are small.
+Since the automation is main raison d'être for computing, many times, software engineers sometimes take automation and 
+scalability as axiomatically good things. They overemphasize automation and 
+scalability. They tend to automate things before they should be automated, and obsess about some solutions being non-scalable
+at the stage where scalability should not be a concern. In this article I present a case for doing more grunt work than
+we may deem healthy.
 </p>
 
 <p>
-First we need to understand a bit of background. At <a href = "https://www.getsimpl.com">Simpl</a>, we have "TPV" (Total Payment Volume), which is the money transacted through Simpl, and "delinquent TPV" ie. the TPV for which we could not make recovery. Delinquent TPV divided by TPV is "delinquency rate".
-</p>
-
-<p>
-A few weeks ago, <a href="https://www.linkedin.com/in/ashishjain19/" target="_blank">Ashish Jain</a> told me the results of an experiment which involved a purportedly improved version of a model. They were something like the following (numbers are not factual)
-</p>
-
-<table border="1px">
-<tr><td></td>                                            <td>Current Model</td><td>Proposed Model</td></tr>
-<tr><td>TPV</td>                                         <td>100</td><td>99.75</td></tr>
-<tr><td>Delinquent TPV</td>                              <td>2.1</td><td>2.08</td></tr>
-<tr><td>Delinquency rate<br>(=Delinquent TPV / TPV) </td><td>2.1000%</td><td>2.0852%</td></tr>
-</table>
-
-Thus, dip in delinquency = 2.1000% - 2.0852% = 0.0148%. Thus, his proposal was a good proposal since it reduces delinquency by 0.0148% or 1.48 basis points.
-
-<p>
-Looking at the results, I immediately concluded that there is some calculation error, since 
-
-$$\frac{2.1}{100} - \frac{2.08}{99.75} \approx \frac{2.1 - 2.08}{100} = \frac{0.02}{100} = 0.0002 = 0.02\%$$ 
-</p>
-<p>
-and 0.02 is very different from 0.0148. There had to be some error in how Ashish arrived at delinquency difference.
-</p>
-<p>
-At the time of doing this computation, I was sure that whether I take 100 or 99.75 in the denominator does not matter they are different by less than 1%. However, clearly it matters and changes the answer disproportionately. 
-</p>
-
-<p>
-After a reasonably amount of thought, I was able to understand that when numerator and denomonator both are changing by small amounts, you cannot disregard the change in denominator for approximate calculations. In particular
-</p>
-
-$$\frac{D}{T} - \frac{D-\Delta D}{T - \Delta T} $$
-$$= \frac{D}{T} - \frac{D(1-\frac{\Delta D}{D})}{T(1 - \frac{\Delta T}{T})}$$
-$$= \frac{D}{T} - \frac{D}{T} (1 - \frac{\Delta D}{D}) (1 - \frac{\Delta T}{T})^{-1}$$
-$$= \frac{D}{T} - \frac{D}{T} (1 - \frac{\Delta D}{D}) (1 + \frac{\Delta T}{T} + (\frac{\Delta T}{T})^2 + (\frac{\Delta T}{T})^3 + \dots)$$
-$$\approx \frac{D}{T} - \frac{D}{T} (1 - \frac{\Delta D}{D}) (1 + \frac{\Delta T}{T})$$
-$$= \frac{D}{T} - \frac{D}{T}(1 - \frac{\Delta D}{D} + \frac{\Delta T}{T} - \frac{\Delta D\Delta T}{DT})$$
-$$\approx \frac{D}{T} - \frac{D}{T}(1 - \frac{\Delta D}{D} + \frac{\Delta T}{T})$$
-$$= \frac{D}{T} - \frac{D}{T} + \frac{\Delta D}{T} - \frac{D\Delta T}{T^2}$$
-$$= \frac{\Delta D}{T} - \frac{D\Delta T}{T^2}$$
-
-and the second term cannot be disregarded.
-<p>
-The mistake that I did was that I thought that
-$$\frac{D}{T} - \frac{D-\Delta D}{T - \Delta T} $$
-$$\approx \frac{D}{T} - \frac{D-\Delta D}{T} $$
-$$= \frac{\Delta D}{T}$$
-</p>
-
-<p>
-which is incorrect.
-</p>
-<p>
-So, the moral is that when two variables are changing by small amounts then you need to be very careful when approximating how their function changes. And when your real world disagrees with your mental model, you adjust your mental model!
+Consider the following scenarios:
+<ol>
+<li>Suppose we want to track average response time</li>
+</ol>
 </p>
 </body>
 </html>
