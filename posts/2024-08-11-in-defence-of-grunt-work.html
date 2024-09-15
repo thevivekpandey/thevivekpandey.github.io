@@ -29,7 +29,7 @@
 <body>
 <h1>In Defence of Grunt Work</h1>
 
-<img width="300px" src="some-image.jpeg"/>
+<img width="300px" src="do-grunt-work.jpeg"/>
 <p>
 We, as in the people working in technology, emphasize on automation and scalability. Indeed, one of the gains of modern
 computing is that it automates a lot of otherwise mundane tasks - starting from replacing human 
@@ -44,7 +44,8 @@ the modern computers.
 </p>
 
 <p>
-Since the automation is main raison d'être for computing, many times, software engineers sometimes take automation and 
+Since the automation is raison d'être for computing, many times, software engineers (an generally the people working in 
+software companies) sometimes take automation and 
 scalability as axiomatically good things. They overemphasize automation and 
 scalability. They tend to automate things before they should be automated, and obsess about some solutions being non-scalable
 at the stage where scalability should not be a concern. In this article I present a case for doing more grunt work than
@@ -52,10 +53,67 @@ we may deem healthy.
 </p>
 
 <p>
-Consider the following scenarios:
-<ol>
-<li>Suppose we want to track average response time</li>
-</ol>
+First, what do I mean by grunt work? We use it in sense of doing things which can be automated - like deleting
+files with some pattern in the filename one by one, rather than deleting all of them together using a regex, or checking
+again and again for errors rather than setting up an alarm for the error, or copying things from some UI to excel laboriously 
+when you could write software (with how much effort?) to do the copying. Or, on a more advanced level, reviewing resumes
+via some tool rather than manually (else resume review does not scale), or responding to customer tickets using automated
+solutions rather than manually (which also does not scale).
+</p>
+
+<p>
+On some level, the boundary between grunt work and non-grunt work (let's call it "creative work") is blurry and keeps changing.
+Creating a beautiful logo used to be a very creative activity, but now that can be done by gen AI models. Is that now a
+grunt work or creative work? Programming is considered to be a very creative activity, but as many people learn programming,
+aspects of it can be thought to be grunt work (like, at least, writing boiler plate code, routine CRUD APIs, etc).
+</p>
+
+<p>
+Perhaps then, we can distinguish between grunt work and non grunt work as - when the job is so routine and mundane that one
+is hardly going to be learn anything new by doing it then that is grunt work. At what learning rate we draw the boundary
+is our choice - one may say driving in the city is grunt work, but then you do face unexpected situations, at least in Indian
+cities, and your driving keeps on improving. 
+</p>
+
+<p>
+We will leave it at that and not attempt to further distinguish between grunt work and creative work. We will consider examples given above (copying files, etc) as the examples of grunt work.
+</p>
+
+<p>
+Suppose you want to track 
+certain metric - like average or p99 response time of a server, or number of 5xx responses by a server. Many a times, the 
+mindset is - let's put an alarm of these metrics so that when they breach a certain threshold, then we get notified and then
+we will solve the problem. This works, and indeed this is the scalable way if you have 100s or 1000s of metrics to track. However
+such an automated way precludes us building better intuition about those metrics. If we start looking at the charts of these
+metrics of a daily basis, then we build a better understanding of those metrics - how do they vary by the day of the hour, or by 
+the day of the week, or how they have been changing gradually over long periods of time, or how some of the recent changes
+in the code have made those metrics go up or down. Such a nuanced understanding of the metrics help us build better software.
+</p>
+
+<p>
+Similarly, let's say you decided to delete all the large files from some file system. It is easy to write some command like 
+<pre>
+$find /path/to/directory -type f -size +10G -print0 | xargs -0 rm -f
+</pre>
+but it is instructive to go file by file, to see what are the files whose size large. Who creates them? For what purpose? That way, one learns about the system better.
+</p>
+
+
+<p>
+Of course, one cannot have the time to do everything in a grunt way, but my point is that there is value in devoting
+some fraction of the time for grunt work. Grunt work helps one build better intuition about the systems.
+</p>
+
+<p>
+I sometimes find grunt work akin to a walk in the park. Walk in the park is not very productive - it is idle roaming. However,
+during the times of this idle roaming, you can sometime get good ideas about your work, and walk in the parks is quite easy 
+also - you are not doing anything difficult or unknown. Similarly grunt work is also very easy, and can sometime spark ideas
+about how some things can be done in a different, more innovative way. Of courese, you don't walk in the park all day, similarly
+you don't do grunt work all day.
+</p>
+
+<p>
+This whole grunt work thing is similar to Paul Graham's advice about <a href="https://paulgraham.com/ds.html">doing things that don't scale</a>. That advice is about macro things - sales, customer delight, and the like, and this is about more micro acivities.
 </p>
 </body>
 </html>
