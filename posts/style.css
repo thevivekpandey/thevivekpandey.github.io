@@ -18,8 +18,13 @@ body {
 h1,h2,h3,h4
 strong {
   color: #333;
+  font-family: athelas, georgia, serif;
 }
 
+h1 {
+   font-size: 48px;
+   line-height: 55px;
+}
 code {
   padding: 2px 4px;
   vertical-align: text-bottom;
