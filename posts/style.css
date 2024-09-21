@@ -3,6 +3,7 @@ body {
   margin: 0 auto;
   margin-top: 10px;
   max-width: 50em;
+  width: 80%;
   font-family: georgia, times, serif;
   line-height: 30px;
   color: rgb(85, 85, 85);
@@ -59,6 +60,3 @@ p {
     -webkit-margin-end: 0px;
 }
 
-div.body p, div.body dd, div.body li {
-    line-height: 1.4em;
-}
