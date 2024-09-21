@@ -3,16 +3,15 @@ body {
   margin: 0 auto;
   margin-top: 10px;
   max-width: 50em;
-  /*font-family: "Roboto",Corbel,Avenir,"Lucida Grande","Lucida Sans",sans-serif!important;*/
-  /*font-family: 'Inconsolata', Courier;*/
-  font-family: "Roboto", sans-serif;
-  line-height: 25px;
-  color: #222;
-  font-size: 16px;
+  font-family: georgia, times, serif;
+  line-height: 30px;
+  color: rgb(85, 85, 85);
+  font-size: 20px;
   text-align: justify;
   font-style: normal;
   letter-spacing: normal;
   font-weight: 300;
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 
@@ -20,11 +19,6 @@ h1,h2,h3,h4
 strong {
   color: #333;
 }
-
-/*code,
-pre {
-  background: #eee;
-}*/
 
 code {
   padding: 2px 4px;
