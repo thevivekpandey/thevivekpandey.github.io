@@ -1,0 +1,323 @@
+<html>
+<head>
+  <title>LSTM for non data scienitists</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+    displayAlign: "left"
+  });
+  </script>
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+  <!-- Global Site Tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1450977-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)};
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-1450977-3');
+  </script>
+
+    <meta property='og:title' content='LSTM for those who know Maths'/>
+    <meta property='og:image' content='some-imagejpeg'/>
+    <meta property='og:description' content='In Defence of Grunt Work'/>
+    <meta property='og:url' content='http://thevivekpandey.github.io/posts/2024-08-11-in-defence-of-grunt-work.html'/>
+
+</head>
+
+<body>
+<h1>Basics of RNN and LSTM for non data scientists</h1>
+(But you need to know Maths)
+<p>
+
+<p>
+In this article, I give a simple mathematical exposition of RNN (Recurrent Neural Network) and LSTM (Long Short Term Memory) models- if you are comfortable with matrix multiplication, you will
+understand RNN and LSTM from this article, even if you don't have prior experience in data science. While there are great resouces on this topic (e.g. <a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/">this one</a>), most articles on these topics are written
+by data scientists who assume some data science concepts or notations, which an outside struggles with. Since I learnt it as a 
+non professional data scientist, I might be able to better explain it to you if you are not a data scientist.
+</p>
+
+<p>At Simpl, we use sequence models heavily and I had a chance to sit with 
+<a href="https://www.linkedin.com/in/yash-vg/">Yash</a> and
+<a href="https://www.linkedin.com/in/nikita-gupta-496042b5/">Nikita</a>, which whose help I was able to 
+understand the models, to a level that makes me feel a bit educated.
+</p>
+<h2>Some preliminaries and notations</h2>
+<h3>1. Our anchor problem</h3>
+<p>
+While RNNs can be used to solve many problems related to sequential data, we will use the anchor problem of translating one language sentence to another. We have a lot of translations available and we want to use them to train language transaltion model.
+</p>
+
+<h3>2. Word embedding and softmax</h3>
+<p>
+Our models don't directly operate on string representations of the words of the language. 
+Rather, they operate on vector representation of those words. A "word embedding" converts 
+words to a row matrix of floating point numbers, and a "softmax" function converts a vector to a 
+word. Understanding word embedding or softmax is outside the scope of this article. Input vectors 
+for a single source language sentence would be denoted by $x_1, x_2, \dots x_t\dots $, and output 
+vectors for a single destination language sentence would be denoted by $y_1, y_2, \dots y_t, \dots$. 
+Note that each of $x_i$ and $y_i$ is a row vector.
+<p>
+
+<p>
+In the article below, assume that the each $x_t$ is a $n \times 1$ vector and each $y_t$ is an $o \times 1$ vector.
+<p>
+
+<h3>3. Sigmoid function</h3>
+There is a function called sigmoid function, denoted by $\sigma$ which converts a real number to a number between 0 and 1:
+
+$$\sigma(x) = \dfrac{1}{1+e^{-x}}$$
+
+This is what the sigmoid function looks like
+<br>
+<img src="sigmoid.png" width="300px"/>
+<br>
+We also define this function over matrices by applying sigmod to each element. So,
+$$\sigma\left(
+\begin{bmatrix}
+5 & 6\\
+7 & 8\\
+9 & 10\\
+11 & 12
+\end{bmatrix}
+\right) = 
+\begin{bmatrix}
+\sigma(5) & \sigma(6)\\
+\sigma(7) & \sigma(8)\\
+\sigma(9) & \sigma(10)\\
+\sigma(11) & \sigma(12)
+\end{bmatrix}
+$$
+<h3>4. Hyperbolic tangent function</h3>
+$$\tanh(x) = \dfrac{e^x - e^{-x}}{e^x + e^{-x}}$$
+This is the graph of $\tanh(x)$
+<br>
+<img src="tanh.png" width="300px"/>
+<br>
+
+Hyperbolic tangent function is also defined over a matrix - we apply it to each element. Thus:
+
+$$\tanh\left(
+\begin{bmatrix}
+5 & 6\\
+7 & 8\\
+9 & 10\\
+11 & 12
+\end{bmatrix}
+\right) = 
+\begin{bmatrix}
+\tanh(5) & \tanh(6)\\
+\tanh(7) & \tanh(8)\\
+\tanh(9) & \tanh(10)\\
+\tanh(11) & \tanh(12)
+\end{bmatrix}
+$$
+<h3>5. User of $\sigma(x)$ and $\tanh(x)$ in deep learning</h3>
+<p>
+This is the way I look at it:
+<br>
+In any deep learning model, input $x$ (think of $x$ like a column vector) 
+could have been transfered to output $y$ by successive matrix multiplications: 
+</p>
+$x \rightarrow A_1x \rightarrow A_2(A_1x) \rightarrow A_3(A_2(A_1)x) \rightarrow \dots \rightarrow y$
+<p>
+Here $A_1, A_2, A_3, \dots$ are the matrices that your model learns - their values are set as a part of training. But 
+since $A_3(A_2(A_1))x = (A_3 \times A_2 \times A_1)x$, there is no additional expressive power because
+of so many matrices - they can all be compressed into just one matrix $B = A_3 \times A_2 \times A_1$.
+</p>
+
+<p>
+When you introduce non linearity - 
+</p>
+$x \rightarrow \sigma(A_1x) \rightarrow \sigma(A_2 \sigma(A_1(x))) \rightarrow \sigma(A_3\sigma(A_2 \sigma(A_1x))) \rightarrow$
+<p>
+then the model becomes more expressive since we cannot collapse all these operations to single operation. This non linearity allows a preferential flow of some values compared to to other to the next step, and that is what gives neural network its power.
+</p>
+
+<h3>6. dot(.) and odot($\odot$) notation</h3>
+<p>
+In this article, dot(.) denotes matrix multiplication:
+
+$$
+\begin{bmatrix}
+1 & 2\\
+3 & 4\\
+\end{bmatrix}
+.
+\begin{bmatrix}
+5 & 6\\
+7 & 8\\
+\end{bmatrix}
+=
+\begin{bmatrix}
+19 & 22\\
+43 & 50\\
+\end{bmatrix}
+$$
+</p>
+
+<p>
+odot($\odot$) denotes element wise multiplication of matrix elements:
+$$
+\begin{bmatrix}
+1 & 2\\
+3 & 4\\
+\end{bmatrix}
+\odot
+\begin{bmatrix}
+5 & 6\\
+7 & 8\\
+\end{bmatrix}
+=
+\begin{bmatrix}
+5 & 12\\
+21 & 32\\
+\end{bmatrix}
+$$
+
+If you want to sound sophisticated you call element wise multiplication as
+<a href="https://en.wikipedia.org/wiki/Hadamard_product_(matrices)">Hadamard product</a>. 
+</p>
+
+<h2>RNN: Recurrent Neural Network</h2>
+<p>
+We can now understanding RNN model. Perhaps we should call it "Vanilla" RNN since even LSTM, GRU etc are also recurrent neural networks. 
+</p>
+<p>
+RNN consists of first deciding $h$ - the size of hidden state, and then finding the following five matrices:
+<ul>
+<li>$W_h$, of size $h \times h$</li>
+<li>$W_x$, of size $h \times n$</li>
+<li>$b_h$, of size $h \times 1$</li>
+<li>$W_y$, of size $o \times h$</li>
+<li>$b_y$, of size $o \times 1$</li>
+</ul>
+</p>
+
+<p>
+Once we have the above three matrices, output $y_t$ is founding using following equations:
+
+$$h_t = \tanh(W_hh_{t-1} + W_xx_t + b_h)$$
+$$y_t = W_yh_t + b_y$$
+</p>
+<p>
+The five matrices need to be found such that on training examples, $y_t$s outputted by the model closely matches with the $y_t$'s of the training data. How it is found - using a technique called backpropagation - is important for practitioners but not important for basic understanding of the model.
+</p>
+
+<h2>Limitations of RNN</h2>
+<p>
+There are two main limitations of RNN.
+</p>
+
+<p>
+<em>One</em> is the "vanishing/exploding gradient problem". Textbook explanation of this problem presents
+it as a training problem - as if the standard method of training neural networks - backpropagation, has 
+problems training RNNs. However, I view it as something inherent in RNNs. If you are trying to solve
+$x^{100} = 100$ then even if you make a small error in the value $x$, you will be way off in your solution.
+For instance, $(1.01 * x)^{100}$ = $2.7x^{100}$. Thus, a 1% perturbation in the value of $x$
+leads to 270% change in the value of $x^{100}$. And so such a model will be susceptible to butterfly effect
+and the like. And this is what is happening in $h_t = \tanh(W_hh_{t-1} + W_xx_t + b_h)$, where $h_t$ is the only
+variable capturing everything about the sequence.
+</p>
+
+<p>
+<em>Secondly</em>, RNNs struggle to capture long term dependencies in a sentence. (E.g. Ram was going on a trek when <em>he</em> got a phone call, while Priyanka was going a trek when <em>she </em> got a phone call). $h_t$ is the only vector
+doing everything and it can do only so much.
+</p>
+<h2>LSTM: Hyperparameters, Inputs, Outputs, internal states and learnt parameters</h2>
+<p>
+LSTMs (Long Short Term Model) solve the problem of caputing long term dependencies. To understand it, 
+first, let us understand following five types of entities.
+</p>
+<ol>
+<li><em>Hyperparameters:</em> Following are the hyperparameters specific to this model:
+<ul>
+  <li>$n$: This is the length of vectors input $x_t$'s which are mentioned below.</li>
+  <li>$h$: This is the length of hidden state $h_t$'s which are mentioned below.</li>
+</ul>
+There are other hyperparameters, but the above ones are minimum set we need for a basic yet thorough exposition of LSTMs.
+</li>
+<li><em>Inputs</em>: We already talked about it. They are a sequence of vectors. We denote them by $x_0, x_1, x_2, \dots$ in this article. Their 
+sizes are $n \times 1$. Intuitively, in a machine translation task, they would be input tokens (representation
+of input sentence).</li>
+<li><em>Outputs</em>: They are also a sequence of vectors. We denote them by $o_1, o_2, \dots$ in this article. Their
+size is $h \times 1$. Note that "real outputs", $y_t$'s will be a function of $o_t$s. $o_t$ is the output of core LSTM unit.
+</li>
+<li><em>Internal states</em>: There are five intermediate variables: $f_t, i_t, \tilde{c_t}, c_t, h_t$ for $t = 1, 2, \dots$. 
+All have dimension $h \times 1$.
+</ul>
+</li>
+
+<li><em>Learnt parameters</em>: There are three sets of learnt parameters. First set is $W_f, W_i, W_C, W_o$, second set is $U_f$, $U_i$, $U_C$, $U_o$ and third 
+set is $b_f, b_i, b_C, b_o$. These matrices are the ones which are learnt by the algorithm. In other words, these are matrices whose values the learning phase needs to set such that on training examples, predicted $y_t$'s are close to actual outputs.
+
+Let's check dimensions of these matrices:
+<ul>
+<li>$W_f, W_i, W_C, W_o$ each has dimension $h \times n$</li> 
+<li>$U_f, U_i, U_C, U_o$ each has dimension $h \times h$</li>
+<li>$b_f, b_i, b_C, b_o$ each has dimension $h \times 1$</li>
+</ul>
+</li>
+
+</ol>
+<h2>Specification of the model</h2>
+<p> Now, we can see how LSTM works.
+LSTM is a function (in mathematical sense) that takes as sequence of input vectors $x_0, x_1, x_2, \dots$ and converts it to sequence of output vectors $o_1, o_2, \dots$.<br>
+
+<br>
+$$o_t=LSTM(x_{t-1})$$
+$o_t$ can then be converted to $y_t$ via a "dense" layer. That is the easy part and we will not talk about that.
+</p>
+
+<p>
+So, to understand LSTM, we need to describe what the function $LSTM$ look like. It is a not too complicated:
+<ol>
+<li>Set each element of $h_0$ to some random value between 0 and 1.</li>
+<li>
+$$f_t = \sigma(W_f.x_t + U_f.h_{t-1} + b_f)$$
+$$i_t = \sigma(W_i.x_t + U_i.h_{t-1} + b_i)$$
+$$\tilde{C_t} = \tanh(W_C.x_t + U_C.h_{t-1} + b_C)$$
+$$C_t = f_t \odot C_{t - 1} + i_t \odot \tilde{C_t}$$
+$$o_t = \sigma(W_o.x_t + U_f.h_{t-1} + b_o)$$
+$$h_t = o_t \odot \tanh(C_t)$$
+</li>
+</ol>
+</p>
+<p>
+There we have it. The "only" thing that one needs to do then is to set $W$'s, $U$'s, and $b$'s such
+that $o_t$'s closely resemeble the output in training data.
+</p>
+
+<h2>Developing intuition</h2>
+<p>
+Once we know the mathematical formulation, let's try to build intuition around what the model is trying to do. 
+</p>
+
+<p>
+We start from $c_t$, which is a vector capturing overall (including long term) state of what all has been seen so far. How is $c_t$ updated? 
+</p>
+<p>We update $c_t$ as 
+$C_t = f_t \odot C_{t - 1} + i_t \odot \tilde{C_t}$.
+
+$\tilde{C_t}$ is the candidate - it is derived from previous hidden state $h_{t-1}$ and next vector in sequence, $x_t$. We multiple previous value of cell state, $C_{t-1}$ with $f_t$ and candidate value $\tilde(C_{t-1}$ with $i_t$ and add these two up to find new $c_t$.
+</p>
+
+<p>
+Note that elements of $f_t$ and $i_t$ are all between 0 and 1, and then are called "forget gate" and "input gate". $f_t$ controls how much of previous cell state $C_{t-1}$ enters the new cell state, though I would rather call it "remember gate" than "forget gate". Similarly $i_t$ controls how much
+of new candidate $\tilde(C_{t})$ enters the new cell state.
+</p>
+
+<p>
+$o_t$ is standard (like RNN) function of new input $x_t$ and previous hidden state $h_{t-1}$
+</p>
+<p>
+Finally $h_t$ is a function of what we have outputted $o_t$ and cell state $c_t$: ($h_t = o_t \odot tanh(C_t)$. I am not super clear on why this is so. Were I designing LSTM, I would have done it $h_t = \tanh(W_1.x_t + W_2.h_{t-1} + W_3.C_t)$. Why have hidden state depend on output? Anyway, specialists must be knowing better.
+</p>
+
+<h2>Conclusion</h2>
+<p>
+Alright, so this is all -- in some later article we will get to various recurrent neural architectures - various of LSTMs and GRUs and so on.
+</p>
+</body>
+</html>
