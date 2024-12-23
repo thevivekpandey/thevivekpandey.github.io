@@ -1,0 +1,572 @@
+<html>
+<head>
+  <title>Comparing Devanagari and Kannada Scripts</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+    displayAlign: "left"
+  });
+  </script>
+  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+  <!-- Global Site Tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1450977-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)};
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-1450977-3');
+  </script>
+
+    <meta property='og:title' content='LSTM for those who know Maths'/>
+    <meta property='og:image' content='some-imagejpeg'/>
+    <meta property='og:description' content='In Defence of Grunt Work'/>
+    <meta property='og:url' content='http://thevivekpandey.github.io/posts/2024-08-11-in-defence-of-grunt-work.html'/>
+
+</head>
+
+<body>
+<h1>Comparing Devanagari and Kannada Scripts</h1>
+
+<p>
+Over the past several years, I have studied Kannada script,
+and it is fascinating that Devanagari and Kannada scripts have many similarities. Language experts tell 
+us that both the scripts (in fact, most Indian scripts, including Tamil, Malayalam, Bengali etc) have 
+been derived from Brahmi script, so it is not a surprise that there are immense similarities. I hope
+this article gives you a healthy appreciation of similarities and also differences between the two scripts. You will be able to completely appreciate the
+article only if you understand both the scripts, but you can still follow along if you know only one of them.
+</p>
+
+<h2>Vowels</h2>
+<p>
+Like most Indian languages, there is the standard set of vowels - but there are some differences.
+Let's look at all the vowels in Hindi and Kannada.
+
+First six vowels are the same.
+<table>
+<tr> 
+  <td> अ / ಆ </td> <td> आ  / ಆ </td> <td> इ / ಇ  </td> 
+  <td> ई / ಈ  </td> <td> उ / ಉ  </td> <td> ऊ / ಊ  </td> 
+</tr>
+</table>
+</p>
+
+<p>
+What is noticeable is that in Hindi as well as Kannada, अ / ಆ  and आ  / ಆ  are similar to each other and उ / ಉ  and ऊ / ಊ  
+are similar to each other. However while Hindi keeps इ and ई similar to each other, Kannada decides to write ಇ and ಈ 
+very differently from each other.
+</p>
+
+<p>
+One can argue that short and long vowels being similar to each other in written form is a good idea, but Hindi does a half
+good job at it. Using the quarter circle above इ to make ई and then later using the same pattern for half र, as in कर्म leads
+to confusion.
+</p>
+
+<p>
+And then I have another gripe against how vowels are written. Since we have in Hindi -<br>
+क का कि की कु कू के कै को कौ कं कः  
+<br>
+or in Kannada - roughly analogously -<br>
+ಕ ಕಾ ಕಿ ಕೀ ಕು ಕೊ ಕೆ ಕೇ ಕೈ ಕು ಕೊ ಕೌ ಕಂ ಕಃ <br>
+
+We could just have had, in Hindi - <br>
+अ आ अि अी अु अू अे अै ओ औ अं अः <br>
+
+or in Kannada - 
+   <div style="padding: 4px; background: white; display: inline-block;">
+        <div style="font-family: 'Noto Sans Kannada', 'Tiro Kannada', system-ui; font-size: 18px; letter-spacing: 3px; white-space: nowrap;">
+            ಅ ಅಾ ಅಿ ಅೀ ಅು ಅೂ ಅೆ ಅೇ ಅೈ ಅೊ ಅೋ ಅೌ ಅಂ ಅಃ
+        </div>
+    </div>
+</p>
+
+<p>
+That would be so harmonious. But somehow we have special symbols for so many, but not all vowels.
+And Hindi and Kannada take a bit different route. In Hindi ओ ,औ are on the base of अ, but in Kannada ಒ, ಓ, ಔ  
+are on a different base.
+</p>
+
+<p>
+Let's look at the next set of vowels in the both the scripts.
+<table>
+<tr> 
+  <td> _  / ಎ / e as in m<em>e</em>t </td> 
+  <td> ए  / ಏ / a as in m<em>a</em>te </td> 
+  <td> ऐ  / ಐ / a as in m<em>a</em>t</td> 
+</tr>
+<tr>
+  <td> _  / ಒ  / roughly aw as in h<em>aw</em>k</td> 
+  <td> ओ  / ಓ  / o as in c<em>o</em>ld</td> 
+  <td> औ  / ಔ  / o as in n<em>o</em>w</td> 
+</tr>
+</table>
+</p>
+
+<p>
+Note that in vowels corresponding to ಎ and ಒ don't exist in Hindi. This leads to following related observations.
+</p>
+
+<p>
+<em>First</em> Kannada transliterations of English are more accurate than Hindi transliterations. Eg. "Jab we met" is जब वी मेट while "classmate"  is क्लासमेट. You just need to know that the two मेट have different pronunciations. In Kannada you can write ಮೆಟ್ vs ಮೇಟ್ . 
+</p>
+
+<p>
+<em>Secondly</em> Kannada has lot of words of Sanskrit origin and lot of words of Dravidian origin. 
+Since Sanskrit too does not have ಎ or ಒ sounds, Kannada words of these sounds are of dravidian origins. 
+Thus words that Hindi people would recognize - ಚೇತನ(Chetan),  ರಮೇಶ (Ramesh),  ಬಸವೇಶ್ವರ(Basaveshwar), ಮೋಹನ(Mohan), ಭೂಗೋಲ (Bhoogol) none of them have ಎ or ಒ matras. Conversely ಎ or ಒ matra words:
+
+<table>
+<tr> <td>ಎಲೆ (ele) - leaf</td> <td>ಒಂದು (ondu) - one</td> </tr>
+<tr> <td>ಎಲ್ಲಿ (elli) - where</td> <td>ಒಡೆ (ode) - break</td> </tr>
+<tr> <td>ಎರಡು (eradu) - two</td> <td>ಒಳ್ಳೆ (olle) - good</td> </tr>
+<tr> <td>ಎಷ್ಟು (eshtu) - how much</td> <td>ಒಳಗೆ (olage) - inside</td> </tr>
+<tr> <td>ಎದೆ (ede) - chest/heart</td> <td>ಒಲೆ (ole) - stove</td> </tr>
+<tr> <td>ಎಮ್ಮೆ (emme) - buffalo</td> <td>ಒಡೆಯ (odeya) - owner/master</td> </tr>
+<tr> <td>ಎತ್ತು (ettu) - lift/bull</td> <td>ಒಣ (ona) - dry</td> </tr>
+<tr> <td>ಎಚ್ಚರ (echara) - careful/alert</td> <td>ಒತ್ತು (ottu) - pressure</td> </tr>
+<tr> <td>ಎಣ್ಣೆ (enne) - oil</td> <td>ಒಡನಾಟ (odanaata) - companionship</td> </tr>
+<tr> <td>ಎಲ್ಲ (ella) - all</td> <td>ಒಂಟಿ (onti) - alone/single</td> </tr>
+<tr> <td>ಹೆಸರು (hesaru) - name</td> <td>ಕೊನೆ (kone) - end</td> </tr>
+<tr> <td>ಕೆಳಗೆ (kelage) - below/down</td> <td>ಹೊಸ (hosa) - new</td> </tr>
+<tr> <td>ನೆಲ (nela) - ground/floor</td> <td>ಮೊದಲು (modalu) - first/beginning</td> </tr>
+<tr> <td>ತೆರೆ (tere) - screen/curtain</td> <td>ಹೊಟ್ಟೆ (hotte) - stomach</td> </tr>
+<tr> <td>ಹೆಜ್ಜೆ (hejje) - footstep</td> <td>ಕೊಡು (kodu) - give</td> </tr>
+<tr> <td>ಬೆಳೆ (bele) - crop/grow</td> <td>ನೊಡು (nodu) - see/look</td> </tr>
+<tr> <td>ಮೆಣಸು (menasu) - chili</td> <td>ಹೊರಗೆ (horage) - outside</td> </tr>
+<tr> <td>ಬೆಳಗ್ಗೆ (belagge) - morning</td> <td>ತೊಳೆ (tole) - wash</td> </tr>
+<tr> <td>ಹೆಂಡತಿ (hendati) - wife</td> <td>ಕೊರಳು (koralu) - neck</td> </tr>
+<tr> <td>ಮೆದುಳು (medulu) - brain</td> <td>ಹೊಲ (hola) - field</td> </tr>
+</table>
+
+won't be recognizable by Hindi speaking people since their roots are dravidian.
+</p>
+
+<p>
+Another interesting thing is that for a lot of the dravid origin words, their translations in Tamil are very similar (Since Tamil - as far as I know - though I don't know Tamil a lot - is a more dravidian language). E.g. for above 40 words that we chose, here are Tamil translations:
+
+<table>
+<tr> <th>Kannada Word</th> <th>Kannada Pronunciation</th> <th>Tamil Translation</th> <th>Tamil Pronunciation</th> </tr>
+<tr> <td>ಎಲೆ</td> <td>ele</td> <td>இலை</td> <td>ilai</td> </tr>
+<tr> <td>ಎಲ್ಲಿ</td> <td>elli</td> <td>எங்கே</td> <td>enge</td> </tr>
+<tr> <td>ಎರಡು</td> <td>eradu</td> <td>இரண்டு</td> <td>irandu</td> </tr>
+<tr> <td>ಎಷ್ಟು</td> <td>eshtu</td> <td>எவ்வளவு</td> <td>evvalavu</td> </tr>
+<tr> <td>ಎದೆ</td> <td>ede</td> <td>மார்பு</td> <td>maarbu</td> </tr>
+<tr> <td>ಎಮ್ಮೆ</td> <td>emme</td> <td>எருமை</td> <td>erumai</td> </tr>
+<tr> <td>ಎತ್ತು</td> <td>ettu</td> <td>தூக்கு</td> <td>thookku</td> </tr>
+<tr> <td>ಎಚ್ಚರ</td> <td>echara</td> <td>எச்சரிக்கை</td> <td>echarikkai</td> </tr>
+<tr> <td>ಎಣ್ಣೆ</td> <td>enne</td> <td>எண்ணெய்</td> <td>ennei</td> </tr>
+<tr> <td>ಎಲ್ಲ</td> <td>ella</td> <td>எல்லாம்</td> <td>ellaam</td> </tr>
+<tr> <td>ಹೆಸರು</td> <td>hesaru</td> <td>பெயர்</td> <td>peyar</td> </tr>
+<tr> <td>ಕೆಳಗೆ</td> <td>kelage</td> <td>கீழே</td> <td>keezhe</td> </tr>
+<tr> <td>ನೆಲ</td> <td>nela</td> <td>தரை</td> <td>tharai</td> </tr>
+<tr> <td>ತೆರೆ</td> <td>tere</td> <td>திரை</td> <td>thirai</td> </tr>
+<tr> <td>ಹೆಜ್ಜೆ</td> <td>hejje</td> <td>காலடி</td> <td>kaadi</td> </tr>
+<tr> <td>ಬೆಳೆ</td> <td>bele</td> <td>பயிர்</td> <td>payir</td> </tr>
+<tr> <td>ಮೆಣಸು</td> <td>menasu</td> <td>மிளகாய்</td> <td>milagaai</td> </tr>
+<tr> <td>ಬೆಳಗ್ಗೆ</td> <td>belagge</td> <td>காலை</td> <td>kaalai</td> </tr>
+<tr> <td>ಹೆಂಡತಿ</td> <td>hendati</td> <td>மனைவி</td> <td>manaivi</td> </tr>
+<tr> <td>ಬೆನ್ನು</td> <td>bennu</td> <td>முதுகு</td> <td>mudhugu</td> </tr>
+<tr> <td>ಒಂದು</td> <td>ondu</td> <td>ஒன்று</td> <td>ondru</td> </tr>
+<tr> <td>ಒಡೆ</td> <td>ode</td> <td>உடை</td> <td>udai</td> </tr>
+<tr> <td>ಒಳ್ಳೆ</td> <td>olle</td> <td>நல்ல</td> <td>nalla</td> </tr>
+<tr> <td>ಒಳಗೆ</td> <td>olage</td> <td>உள்ளே</td> <td>ulle</td> </tr>
+<tr> <td>ಒಲೆ</td> <td>ole</td> <td>அடுப்பு</td> <td>aduppu</td> </tr>
+<tr> <td>ಒಡೆಯ</td> <td>odeya</td> <td>உரிமையாளர்</td> <td>urimaiyaalar</td> </tr>
+<tr> <td>ಒಣ</td> <td>ona</td> <td>உலர்</td> <td>ular</td> </tr>
+<tr> <td>ಒತ್ತು</td> <td>ottu</td> <td>அழுத்தம்</td> <td>azhuttam</td> </tr>
+<tr> <td>ಒಡನಾಟ</td> <td>odanaata</td> <td>நட்பு</td> <td>natpu</td> </tr>
+<tr> <td>ಒಂಟಿ</td> <td>onti</td> <td>தனிமை</td> <td>thanimai</td> </tr>
+<tr> <td>ಕೊನೆ</td> <td>kone</td> <td>முடிவு</td> <td>mudivu</td> </tr>
+<tr> <td>ಹೊಸ</td> <td>hosa</td> <td>புதிய</td> <td>pudhiya</td> </tr>
+<tr> <td>ಮೊದಲು</td> <td>modalu</td> <td>முதல்</td> <td>mudhal</td> </tr>
+<tr> <td>ಹೊಟ್ಟೆ</td> <td>hotte</td> <td>வயிறு</td> <td>vayiru</td> </tr>
+<tr> <td>ಕೊಡು</td> <td>kodu</td> <td>கொடு</td> <td>kodu</td> </tr>
+<tr> <td>ನೊಡು</td> <td>nodu</td> <td>பார்</td> <td>paar</td> </tr>
+<tr> <td>ಹೊರಗೆ</td> <td>horage</td> <td>வெளியே</td> <td>veliye</td> </tr>
+<tr> <td>ತೊಳೆ</td> <td>tole</td> <td>கழுவு</td> <td>kazhuvu</td> </tr>
+<tr> <td>ಕೊರಳು</td> <td>koralu</td> <td>கழுத்து</td> <td>kazhuththu</td> </tr>
+<tr> <td>ಹೊಲ</td> <td>hola</td> <td>வயல்</td> <td>vayal</td>
+</tr>
+</table>
+One can notice that there are big similarities.
+</p>
+
+<p>
+Continuing on our journey of vowel comparison between Hindi and Kannada, final sets of vowels are very similar.
+</p>
+
+<table>
+<tr> 
+  <td> अं /ಅಂ </td> 
+  <td> अः/ಅಃ </td> 
+</tr>
+</table>
+<p>
+It is easy to see similarities: अं /ಅಂ  have a single dot/circle and अः/ಅಃ have two dots/circles. 
+</p>
+
+<p>
+In summary here is the complete vowel set (I have omitted ऋ / ಋ)
+<table>
+<tr> 
+  <td> अ / ಆ </td> 
+  <td> आ  / ಆ </td> 
+  <td> इ / ಇ  </td> 
+  <td> ई / ಈ  </td> 
+  <td> उ / ಉ  </td> 
+  <td> ऊ / ಊ  </td> 
+</tr>
+<tr> 
+  <td> _  / ಎ / e as in m<em>e</em>t </td> 
+  <td> ए  / ಏ / a as in m<em>a</em>te </td> 
+  <td> ऐ  / ಐ / a as in m<em>a</em>t</td> 
+</tr>
+<tr>
+  <td> _  / ಒ  / roughly aw as in h<em>aw</em>k</td> 
+  <td> ओ  / ಓ  / o as in c<em>o</em>ld</td> 
+  <td> औ  / ಔ  / o as in n<em>o</em>w</td> 
+</tr>
+<tr>
+  <td> अं /ಅಂ </td> 
+  <td> अः/ಅಃ </td> 
+</tr>
+</table>
+</p>
+
+<h2>Consonants</h2>
+<p>
+Next, let's look at the consonants:
+</p>
+<table>
+    <tr> <td>क/ಕ</td> <td>ख/ಖ</td> <td>ग/ಗ</td> <td>घ/ಘ</td> <td>ङ/ಙ</td> </tr>
+    <tr> <td>च/ಚ</td> <td>छ/ಛ</td> <td>ज/ಜ</td> <td>झ/ಝ</td> <td>ञ/ಞ</td> </tr>
+    <tr> <td>ट/ಟ</td> <td>ठ/ಠ</td> <td>ड/ಡ</td> <td>ढ/ಢ</td> <td>ण/ಣ</td> </tr>
+    <tr> <td>त/ತ</td> <td>थ/ಥ</td> <td>द/ದ</td> <td>ध/ಧ</td> <td>न/ನ</td> </tr>
+    <tr> <td>प/ಪ</td> <td>फ/ಫ</td> <td>ब/ಬ</td> <td>भ/ಭ</td> <td>म/ಮ</td> </tr>
+    <tr> <td>य/ಯ</td> <td>र/ರ</td> <td>ल/ಲ</td> <td>व/ವ</td> <td>_/ಳ</td> </tr>
+    <tr> <td>श/ಶ</td> <td>ष/ಷ</td> <td>स/ಸ</td> <td>ह/ಹ</td> <td></td> </tr>
+    <tr> <td>क्ष/_</td> <td>त्र/_</td> <td>ज्ञ/_</td> <td></td> <td></td> </tr>
+</table>
+
+<p>
+It is easy to see that the sets of consonants in the two languages are nearly the same. What is interesting 
+is to focus on their differences.
+</p>
+<p>
+<h3>ल vs ಲ/ಳ</h3>
+There is ಳ in Kannada which is absent from Hindi. Strictly speaking it is there in Devanagari script when it is used to write Marathi - ळ . Now ळ is absent from Hindi, but present in Sanskrit very rarely. Now, since ळ is not coming from Sanskrit, we would expect it to be present in dravid origin words, and it is mostly the case.
+</p>
+
+<table>
+    <tr> <td>ಬೆಳಗು (belagu) - morning</td> <td>ಕೋಳಿ (koli) - chicken</td> </tr>
+    <tr> <td>ಹುಳ (hula) - worm</td> <td>ಬಾಳೆ (baale) - banana</td> </tr>
+    <tr> <td>ಬೇಳೆ (bele) - dal/lentils</td> <td>ಕಳೆ (kale) - weed</td> </tr>
+    <tr> <td>ಆಳು (aalu) - person/servant</td> <td>ಬಳಿ (bali) - near</td> </tr>
+    <tr> <td>ಬಾಳು (baalu) - life/to live</td> <td>ಬೆಳ್ಳಿ (belli) - silver</td> </tr>
+    <tr> <td>ಮುಳ್ಳು (mullu) - thorn</td> <td>ಬಿಳಿ (bili) - white</td> </tr>
+    <tr> <td>ಗುಳಿ (guli) - pit/hole</td> <td>ಮಳೆ (male) - rain</td> </tr>
+</table>
+However, I also found that some words where Sanskrit/Hindi use regular ल, but Kannada chooses ಳ rather than ल:
+
+<table>
+   <tr> <td>तुलसी/ತುಳಸಿ (tulasi) - holy basil</td> <td>जल/ಜಳ (jala) - water</td> </tr>
+   <tr> <td>पालक/ಪಾಳೆ (paale) - spinach</td> <td>फल/ಫಳ (phala) - fruit</td> </tr>
+   <tr> <td>कला/ಕಳೆ (kale) - art/skill</td> <td>कुल/ಕುಳ (kula) - family/clan</td> </tr>
+   <tr> <td>बल/ಬಳ (bala) - strength</td> <td>मूल/ಮೂಳ (moola) - root/origin</td> </tr>
+</table>
+
+<p>
+Since Kannada and Hindi differ on writing these words, it is interesting to see the opinion of Marathi - another
+language which has ळ.
+
+<table>
+    <tr>
+        <th>Hindi</th>
+        <th>Kannada</th>
+        <th>Marathi</th>
+    </tr>
+    <tr><td>तुलसी</td><td>ತುಳಸಿ</td><td>तुळसी</td></tr>
+    <tr><td>पालक</td><td>ಪಾಳೆ</td><td>पालक</td></tr>
+    <tr><td>कला</td><td>ಕಳೆ</td><td>कला</td></tr>
+    <tr><td>जल</td><td>ಜಳ</td><td>जल</td></tr>
+    <tr><td>फल</td><td>ಫಳ</td><td>फळ</td></tr>
+    <tr><td>कुल</td><td>ಕುಳ</td><td>कुळ</td></tr>
+    <tr><td>बल</td><td>ಬಳ</td><td>बळ</td></tr>
+    <tr><td>मूल</td><td>ಮೂಳ</td><td>मूळ</td></tr>
+</table>
+</p>
+<p>
+So, it is not the case that Marathi sides with either Hindi or Kannada - it has its own opinion which sometimes
+coincides with Hindi and sometimes with Kannada.
+</p>
+
+But mostly - Kannada and Hindi concur on the use of ल / ಳ:
+
+<table>
+   <tr> <td>लता/ಲತೆ (late) - creeper</td> <td>लक्ष्मी/ಲಕ್ಷ್ಮಿ (lakshmi) - goddess of wealth</td> </tr>
+   <tr> <td>लाभ/ಲಾಭ (laabha) - profit</td> <td>लिपि/ಲಿಪಿ (lipi) - script</td> </tr>
+   <tr> <td>लोक/ಲೋಕ (loka) - world</td> <td>लेख/ಲೇಖ (lekha) - writing</td> </tr>
+   <tr> <td>लोह/ಲೋಹ (loha) - metal</td> <td>लघु/ಲಘು (laghu) - light/small</td> </tr>
+   <tr> <td>लज्जा/ಲಜ್ಜೆ (lajje) - shame</td> <td>लिंग/ಲಿಂಗ (linga) - gender/symbol</td> </tr>
+</table>
+
+
+<h3>क्ष 	त्र	ज्ञ</h3>
+<p>
+Three compound consonants find place in Hindi script in the list of consonants. This is inexplicable. Hindi agrees (like Sanskrit/Kannada) that they are compound consonants:
+
+<table>
+<tr><td>क्ष = क् + ष</td>
+<td>त्र = त् + र</td>
+<td>ज्ञ = ज् + ञ</td>
+</tr>
+</table>
+</p>
+
+<p>
+But Hindi goes ahead and includes them as first class consonants anyway. We have lots of other compound consonants and some are written too in a way that hides their compound nature: द्य = द् + य as in विद्या or श्र as in श्रीमान् but they are not counted in consonant list.
+</p>
+
+<p>
+Kannada, on the other hand takes a principled approach:
+
+<table>
+    <tr><td>ಕ್ಷ = ಕ್ + ಷ</td>
+    <td>ತ್ರ = ತ್ + ರ</td>
+    <td>ಜ್ಞ = ಜ್ + ಞ</td>
+    </tr>
+</table>
+</p>
+
+<p>
+They exist in Kannada but are not enumerated in consonant list. Their way of writing makes clear their compound nature. I find this more clarifying than giving special shapes to क्ष  त्र ज्ञ or for that matter to  द्य or 
+श्र. Kannada retains the compound nature of compound consonants in writing:
+
+<table>
+    <tr><td>ದ್ಯ = ದ್ + ಯ</td>
+    <td>ಶ್ರ = ಶ್ + ರ</td></tr>
+</table>
+</p>
+<p>
+The result of not inventing new symbol, and retaining the compound nature of consonant explicit in writing is that 
+Hindi speaking people pronounce ज्ञ as ग्य . For them ग्य as in  भाग्य is same as ज्ञ as in ज्ञान. Kannada people perhaps because of explicit writing, have a pronunciation of ಜ್ಞ closer to Sanskrit pronunciation.
+</p>
+<h3>More on half consonants</h3>
+<p>
+Look at the following words - all containing compound consonants - 
+<table>
+    <tr> <td>पद्म/ಪದ್ಮ</td> <td>कृष्ण/ಕೃಷ್ಣ</td> <td>मुक्त/ಮುಕ್ತ</td> <td>श्री/ಶ್ರೀ</td> </tr>
+    <tr> <td>विद्या/ವಿದ್ಯಾ</td> <td>अक्षत/ಅಕ್ಷತ</td> <td>ज्ञान/ಜ್ಞಾನ</td> <td>अष्ट/ಅಷ್ಟ</td> </tr>
+    <tr> <td>ब्रह्म/ಬ್ರಹ್ಮ</td> <td>कश्यप/ಕಶ್ಯಪ</td> <td>कच्छप/ಕಚ್ಛಪ</td> <td>क्लेश/ಕ್ಲೇಶ</td> </tr>
+</table>
+</p>
+<p>
+In Kannada, the way of writing compound consonant is uniform (except for a notable exception which we consider later) - the first consonant comes first, and the 
+second consonant comes in a partial form below the first one - ದ್ಮ, ಷ್ಣ, ಕ್ತ, ಕ್ಷ, ಹ್ಮ etc. In Hindi it 
+is all over the place. In some case you write partial form of first consonant followed by the second 
+consonant - as in श्य, क्त, ष्ण. In some other cases, the two consonants are joined together -  द्म, ह्म. In 
+some cases they are a new symbol altogether - क्ष, ज्ञ , श्र .
+</p>
+
+<p>
+While Kannada is consistent in its treatment of compound consonants, I don't like the convention that the 
+letter which is spoken in partial way is written in a full way - e.g. in ದ್ಮ, ದ is spoken in partial way
+ and ಮ is spoken completely.
+</p>
+
+<h3>Half consonant followed by र/ರ</h3>
+<p>
+A very popular set of compound consonants is where the second consonant is र/ರ. Here is how they are written.
+<table>
+    <tr> <td>क्र/ಕ್ರ</td> <td>ख्र/ಖ್ರ</td> <td>ग्र/ಗ್ರ</td> <td>घ्र/ಘ್ರ</td> <td></td> </tr>
+    <tr> <td>च्र/ಚ್ರ</td> <td>छ्र/ಛ್ರ</td> <td>ज्र/ಜ್ರ</td> <td>झ्र/ಝ್ರ</td> <td></td> </tr>
+    <tr> <td>ट्र/ಟ್ರ</td> <td>ठ्र/ಠ್ರ</td> <td>ड्र/ಡ್ರ</td> <td>ढ्र/ಢ್ರ</td> <td></td> </tr>
+    <tr> <td>त्र/ತ್ರ</td> <td>थ्र/ಥ್ರ</td> <td>द्र/ದ್ರ</td> <td>ध्र/ಧ್ರ</td> <td></td> </tr>
+    <tr> <td>प्र/ಪ್ರ</td> <td>फ्र/ಫ್ರ</td> <td>ब्र/ಬ್ರ</td> <td>भ्र/ಭ್ರ</td> <td>म्र/ಮ್ರ</td> </tr>
+</table>
+Both the scripts provide a uniform treatment on this topic. Hindi
+is having a tough time finding the spot on the base consonant where to attach its diagonal slash. And
+in some cases, like ट, ठ, ड, ढ, it gives up and goes for a different symbol which is easier to attach.
+</p>
+<h3>Half र/ರ followed by a consonant</h3>
+<p>
+The notable exception where Kannada veers away from its principled writing of compound consonants
+is where the first consonant is र/ರ. There are lots of words with this compound consonant. E.g.
+
+<table>
+    <tr> <td>कर्म/ಕರ್ಮ</td> <td>मर्कट/ಮರ್ಕಟ</td> <td>पर्व/ಪರ್ವ</td> <td>सूर्य/ಸೂರ್ಯ</td> </tr> 
+    <tr> <td>अर्चन/ಅರ್ಚನ</td> <td>वर्जित/ವರ್ಜಿತ</td> <td>अर्पण/ಅರ್ಪಣ</td> <td>वर्ष/ವರ್ಷ</td> </tr>
+</table>
+</p>
+<p>
+First, let's see the tribulations that Hindi faces. Shape of र is such that it is difficult to write
+a partial form of it, like we have 
+<div><span>क</span><span class="arrow">→</span><span>क्‍</span></div>
+<div><span>म</span><span class="arrow">→</span><span>म्‍</span></div>
+<div><span>न</span><span class="arrow">→</span><span>न्‍</span></div>
+</p>
+
+<p>
+Hindi could have given up, and simply opted for र्, but that looks too unsophisticated / ugly.
+So, Hindi says that I will put a semi cirle on top of next letter - as shown in above examples.
+</p>
+
+<p>
+This is what we live with - but this is an ugly choice. Firstly, it leads to the intuition that 
+र् sounds should come after the second consonant. And so people start speaking कर्म as क्रम. Secondly,
+same semi circle is present in ई , so why should the semi circle stand for the corresponding matra?
+</p>
+
+<p>
+So Hindi goofs up, but there were no good choices available to begin with. Kannada goofs up without a reason,
+they had a good convention of compound consonant that they follow everywhere else and shape of ರ presented
+no challenges. However, they decide to have a special symbol for half ರ  (See the last symbol in ಕರ್ಮ) which they decide to put <em>after</em> 
+the second
+consonant. So now everyone needs to remember the special rule that in ಕರ್ಮ ರ sound comes before ಮ sound even
+though the ordering is opposite in writing.
+</p>
+
+<p>
+It is a testament to the common brahmi roots of both scripts that they make poor choices at the same place. 
+</p>
+
+<h3>The topic of हलन्त / ವಿರಾಮ</h3>
+<p>
+Next let's look at how the two scripts treat a partial consonant at the end of a word. Here the treatment
+is very uniform:
+
+<table>
+    <tr> <td>क्/ಕ್</td> <td>ख्/ಖ್</td> <td>ग्/ಗ್</td> <td>घ्/ಘ್</td> <td>ङ्/ಙ್</td> </tr>
+    <tr> <td>च्/ಚ್</td> <td>छ्/ಛ್</td> <td>ज्/ಜ್</td> <td>झ्/ಝ್</td> <td>ञ्/ಞ್</td> </tr>
+    <tr> <td>ट्/ಟ್</td> <td>ठ्/ಠ್</td> <td>ड्/ಡ್</td> <td>ढ्/ಢ್</td> <td>ण्/ಣ್</td> </tr>
+    <tr> <td>त्/ತ್</td> <td>थ्/ಥ್</td> <td>द्/ದ್</td> <td>ध्/ಧ್</td> <td>न्/ನ್</td> </tr>
+    <tr> <td>प्/ಪ್</td> <td>फ्/ಫ್</td> <td>ब्/ಬ್</td> <td>भ्/ಭ್</td> <td>म्/ಮ್</td> </tr>
+    <tr> <td>य्/ಯ್</td> <td>र्/ರ್</td> <td>ल्/ಲ್</td> <td>व्/ವ್</td> <td>_/ಳ್</td> </tr>
+    <tr> <td>श्/ಶ್</td> <td>ष्/ಷ್</td> <td>स्/ಸ್</td> <td>ह्/ಹ್</td> <td></td> </tr>
+</table>
+Here Hindi just puts a small slash (called हलन्त) below the letter while Kannada has a design to the top right). There is consistency in both scripts.
+</p>
+
+<h3>A curious similarity: प/ಪ vs ष/ಷ</h3>
+<p>
+It is very interesting to note that in Hindi ष is formed by a backward slash across प. In 
+Kannada too corresponding ಷ is formed by a backwards slash across corresponding ಪ , suggesting a common origin
+of the two scripts.
+</p>
+
+<h1>Combining consonants and vowels</h1>
+<p>
+Both the languages are largely consisnt in how they add vowels to consonants. First, let's look at Hindi.
+</p>
+<table style="border-collapse: collapse; width: 100%;">
+<tr style="background-color: #f2f2f2;">
+<tr><td>क</td> <td>क</td> <td>का</td> <td>कि</td> <td>की</td> <td>कु</td> <td>कू</td> <td>के</td> <td>कै</td> <td>को</td> <td>कौ</td> <td>कं</td> <td>कः</td></tr>
+<tr><td>ख</td> <td>ख</td> <td>खा</td> <td>खि</td> <td>खी</td> <td>खु</td> <td>खू</td> <td>खे</td> <td>खै</td> <td>खो</td> <td>खौ</td> <td>खं</td> <td>खः</td></tr>
+<tr><td>ग</td> <td>ग</td> <td>गा</td> <td>गि</td> <td>गी</td> <td>गु</td> <td>गू</td> <td>गे</td> <td>गै</td> <td>गो</td> <td>गौ</td> <td>गं</td> <td>गः</td></tr>
+<tr><td>घ</td> <td>घ</td> <td>घा</td> <td>घि</td> <td>घी</td> <td>घु</td> <td>घू</td> <td>घे</td> <td>घै</td> <td>घो</td> <td>घौ</td> <td>घं</td> <td>घः</td></tr>
+<tr><td>ङ</td> <td>ङ</td> <td>ङा</td> <td>ङि</td> <td>ङी</td> <td>ङु</td> <td>ङू</td> <td>ङे</td> <td>ङै</td> <td>ङो</td> <td>ङौ</td> <td>ङं</td> <td>ङः</td></tr>
+<tr><td>च</td> <td>च</td> <td>चा</td> <td>चि</td> <td>ची</td> <td>चु</td> <td>चू</td> <td>चे</td> <td>चै</td> <td>चो</td> <td>चौ</td> <td>चं</td> <td>चः</td></tr>
+<tr><td>छ</td> <td>छ</td> <td>छा</td> <td>छि</td> <td>छी</td> <td>छु</td> <td>छू</td> <td>छे</td> <td>छै</td> <td>छो</td> <td>छौ</td> <td>छं</td> <td>छः</td></tr>
+<tr><td>ज</td> <td>ज</td> <td>जा</td> <td>जि</td> <td>जी</td> <td>जु</td> <td>जू</td> <td>जे</td> <td>जै</td> <td>जो</td> <td>जौ</td> <td>जं</td> <td>जः</td></tr>
+<tr><td>झ</td> <td>झ</td> <td>झा</td> <td>झि</td> <td>झी</td> <td>झु</td> <td>झू</td> <td>झे</td> <td>झै</td> <td>झो</td> <td>झौ</td> <td>झं</td> <td>झः</td></tr>
+<tr><td>ञ</td> <td>ञ</td> <td>ञा</td> <td>ञि</td> <td>ञी</td> <td>ञु</td> <td>ञू</td> <td>ञे</td> <td>ञै</td> <td>ञो</td> <td>ञौ</td> <td>ञं</td> <td>ञः</td></tr>
+<tr><td>ट</td> <td>ट</td> <td>टा</td> <td>टि</td> <td>टी</td> <td>टु</td> <td>टू</td> <td>टे</td> <td>टै</td> <td>टो</td> <td>टौ</td> <td>टं</td> <td>टः</td></tr>
+<tr><td>ठ</td> <td>ठ</td> <td>ठा</td> <td>ठि</td> <td>ठी</td> <td>ठु</td> <td>ठू</td> <td>ठे</td> <td>ठै</td> <td>ठो</td> <td>ठौ</td> <td>ठं</td> <td>ठः</td></tr>
+<tr><td>ड</td> <td>ड</td> <td>डा</td> <td>डि</td> <td>डी</td> <td>डु</td> <td>डू</td> <td>डे</td> <td>डै</td> <td>डो</td> <td>डौ</td> <td>डं</td> <td>डः</td></tr>
+<tr><td>ढ</td> <td>ढ</td> <td>ढा</td> <td>ढि</td> <td>ढी</td> <td>ढु</td> <td>ढू</td> <td>ढे</td> <td>ढै</td> <td>ढो</td> <td>ढौ</td> <td>ढं</td> <td>ढः</td></tr>
+<tr><td>ण</td> <td>ण</td> <td>णा</td> <td>णि</td> <td>णी</td> <td>णु</td> <td>णू</td> <td>णे</td> <td>णै</td> <td>णो</td> <td>णौ</td> <td>णं</td> <td>णः</td></tr>
+<tr><td>त</td> <td>त</td> <td>ता</td> <td>ति</td> <td>ती</td> <td>तु</td> <td>तू</td> <td>ते</td> <td>तै</td> <td>तो</td> <td>तौ</td> <td>तं</td> <td>तः</td></tr>
+<tr><td>थ</td> <td>थ</td> <td>था</td> <td>थि</td> <td>थी</td> <td>थु</td> <td>थू</td> <td>थे</td> <td>थै</td> <td>थो</td> <td>थौ</td> <td>थं</td> <td>थः</td></tr>
+<tr><td>द</td> <td>द</td> <td>दा</td> <td>दि</td> <td>दी</td> <td>दु</td> <td>दू</td> <td>दे</td> <td>दै</td> <td>दो</td> <td>दौ</td> <td>दं</td> <td>दः</td></tr>
+<tr><td>ध</td> <td>ध</td> <td>धा</td> <td>धि</td> <td>धी</td> <td>धु</td> <td>धू</td> <td>धे</td> <td>धै</td> <td>धो</td> <td>धौ</td> <td>धं</td> <td>धः</td></tr>
+<tr><td>न</td> <td>न</td> <td>ना</td> <td>नि</td> <td>नी</td> <td>नु</td> <td>नू</td> <td>ने</td> <td>नै</td> <td>नो</td> <td>नौ</td> <td>नं</td> <td>नः</td></tr>
+<tr><td>प</td> <td>प</td> <td>पा</td> <td>पि</td> <td>पी</td> <td>पु</td> <td>पू</td> <td>पे</td> <td>पै</td> <td>पो</td> <td>पौ</td> <td>पं</td> <td>पः</td></tr>
+<tr><td>फ</td> <td>फ</td> <td>फा</td> <td>फि</td> <td>फी</td> <td>फु</td> <td>फू</td> <td>फे</td> <td>फै</td> <td>फो</td> <td>फौ</td> <td>फं</td> <td>फः</td></tr>
+<tr><td>ब</td> <td>ब</td> <td>बा</td> <td>बि</td> <td>बी</td> <td>बु</td> <td>बू</td> <td>बे</td> <td>बै</td> <td>बो</td> <td>बौ</td> <td>बं</td> <td>बः</td></tr>
+<tr><td>भ</td> <td>भ</td> <td>भा</td> <td>भि</td> <td>भी</td> <td>भु</td> <td>भू</td> <td>भे</td> <td>भै</td> <td>भो</td> <td>भौ</td> <td>भं</td> <td>भः</td></tr>
+<tr><td>म</td> <td>म</td> <td>मा</td> <td>मि</td> <td>मी</td> <td>मु</td> <td>मू</td> <td>मे</td> <td>मै</td> <td>मो</td> <td>मौ</td> <td>मं</td> <td>मः</td></tr>
+<tr><td>य</td> <td>य</td> <td>या</td> <td>यि</td> <td>यी</td> <td>यु</td> <td>यू</td> <td>ये</td> <td>यै</td> <td>यो</td> <td>यौ</td> <td>यं</td> <td>यः</td></tr>
+<tr><td>र</td> <td>र</td> <td>रा</td> <td>रि</td> <td>री</td> <td>रु</td> <td>रू</td> <td>रे</td> <td>रै</td> <td>रो</td> <td>रौ</td> <td>रं</td> <td>रः</td></tr>
+<tr><td>ल</td> <td>ल</td> <td>ला</td> <td>लि</td> <td>ली</td> <td>लु</td> <td>लू</td> <td>ले</td> <td>लै</td> <td>लो</td> <td>लौ</td> <td>लं</td> <td>लः</td></tr>
+<tr><td>व</td> <td>व</td> <td>वा</td> <td>वि</td> <td>वी</td> <td>वु</td> <td>वू</td> <td>वे</td> <td>वै</td> <td>वो</td> <td>वौ</td> <td>वं</td> <td>वः</td></tr>
+<tr><td>श</td> <td>श</td> <td>शा</td> <td>शि</td> <td>शी</td> <td>शु</td> <td>शू</td> <td>शे</td> <td>शै</td> <td>शो</td> <td>शौ</td> <td>शं</td> <td>शः</td></tr>
+<tr><td>ष</td> <td>ष</td> <td>षा</td> <td>षि</td> <td>षी</td> <td>षु</td> <td>षू</td> <td>षे</td> <td>षै</td> <td>षो</td> <td>षौ</td> <td>षं</td> <td>षः</td></tr>
+<tr><td>स</td> <td>स</td> <td>सा</td> <td>सि</td> <td>सी</td> <td>सु</td> <td>सू</td> <td>से</td> <td>सै</td> <td>सो</td> <td>सौ</td> <td>सं</td> <td>सः</td></tr>
+<tr><td>ह</td> <td>ह</td> <td>हा</td> <td>हि</td> <td>ही</td> <td>हु</td> <td>हू</td> <td>हे</td> <td>है</td> <td>हो</td> <td>हौ</td> <td>हं</td> <td>हः</td></tr>
+</table>
+<p>
+All good except for one unexplicable glitch - why is it रु / रू rather than how it is in मु / मू  or नु / नू or तु / तू or with any other 
+consonant? Just as in previous cases - script gives a special treatment to र and makes needless exceptions.
+</p>
+<p> How about Kannada?</p>
+
+<table>
+           <tr><td>ಕ</td><td>ಕಾ</td><td>ಕಿ</td><td>ಕೀ</td><td>ಕು</td><td>ಕೂ</td><td>ಕೆ</td><td>ಕೇ</td><td>ಕೈ</td><td>ಕೊ</td><td>ಕೋ</td><td>ಕೌ</td><td>ಕಂ</td><td>ಕಃ</td></tr>
+            <tr><td>ಖ</td><td>ಖಾ</td><td>ಖಿ</td><td>ಖೀ</td><td>ಖು</td><td>ಖೂ</td><td>ಖೆ</td><td>ಖೇ</td><td>ಖೈ</td><td>ಖೊ</td><td>ಖೋ</td><td>ಖೌ</td><td>ಖಂ</td><td>ಖಃ</td></tr>
+            <tr><td>ಗ</td><td>ಗಾ</td><td>ಗಿ</td><td>ಗೀ</td><td>ಗು</td><td>ಗೂ</td><td>ಗೆ</td><td>ಗೇ</td><td>ಗೈ</td><td>ಗೊ</td><td>ಗೋ</td><td>ಗೌ</td><td>ಗಂ</td><td>ಗಃ</td></tr>
+            <tr><td>ಘ</td><td>ಘಾ</td><td>ಘಿ</td><td>ಘೀ</td><td>ಘು</td><td>ಘೂ</td><td>ಘೆ</td><td>ಘೇ</td><td>ಘೈ</td><td>ಘೊ</td><td>ಘೋ</td><td>ಘೌ</td><td>ಘಂ</td><td>ಘಃ</td></tr>
+            <tr><td>ಙ</td><td>ಙಾ</td><td>ಙಿ</td><td>ಙೀ</td><td>ಙು</td><td>ಙೂ</td><td>ಙೆ</td><td>ಙೇ</td><td>ಙೈ</td><td>ಙೊ</td><td>ಙೋ</td><td>ಙೌ</td><td>ಙಂ</td><td>ಙಃ</td></tr>
+            <tr><td>ಚ</td><td>ಚಾ</td><td>ಚಿ</td><td>ಚೀ</td><td>ಚು</td><td>ಚೂ</td><td>ಚೆ</td><td>ಚೇ</td><td>ಚೈ</td><td>ಚೊ</td><td>ಚೋ</td><td>ಚೌ</td><td>ಚಂ</td><td>ಚಃ</td></tr>
+            <tr><td>ಛ</td><td>ಛಾ</td><td>ಛಿ</td><td>ಛೀ</td><td>ಛು</td><td>ಛೂ</td><td>ಛೆ</td><td>ಛೇ</td><td>ಛೈ</td><td>ಛೊ</td><td>ಛೋ</td><td>ಛೌ</td><td>ಛಂ</td><td>ಛಃ</td></tr>
+            <tr><td>ಜ</td><td>ಜಾ</td><td>ಜಿ</td><td>ಜೀ</td><td>ಜು</td><td>ಜೂ</td><td>ಜೆ</td><td>ಜೇ</td><td>ಜೈ</td><td>ಜೊ</td><td>ಜೋ</td><td>ಜೌ</td><td>ಜಂ</td><td>ಜಃ</td></tr>
+            <tr><td>ಝ</td><td>ಝಾ</td><td>ಝಿ</td><td>ಝೀ</td><td>ಝು</td><td>ಝೂ</td><td>ಝೆ</td><td>ಝೇ</td><td>ಝೈ</td><td>ಝೊ</td><td>ಝೋ</td><td>ಝೌ</td><td>ಝಂ</td><td>ಝಃ</td></tr>
+            <tr><td>ಞ</td><td>ಞಾ</td><td>ಞಿ</td><td>ಞೀ</td><td>ಞು</td><td>ಞೂ</td><td>ಞೆ</td><td>ಞೇ</td><td>ಞೈ</td><td>ಞೊ</td><td>ಞೋ</td><td>ಞೌ</td><td>ಞಂ</td><td>ಞಃ</td></tr>
+            <tr><td>ಟ</td><td>ಟಾ</td><td>ಟಿ</td><td>ಟೀ</td><td>ಟು</td><td>ಟೂ</td><td>ಟೆ</td><td>ಟೇ</td><td>ಟೈ</td><td>ಟೊ</td><td>ಟೋ</td><td>ಟೌ</td><td>ಟಂ</td><td>ಟಃ</td></tr>
+            <tr><td>ಠ</td><td>ಠಾ</td><td>ಠಿ</td><td>ಠೀ</td><td>ಠು</td><td>ಠೂ</td><td>ಠೆ</td><td>ಠೇ</td><td>ಠೈ</td><td>ಠೊ</td><td>ಠೋ</td><td>ಠೌ</td><td>ಠಂ</td><td>ಠಃ</td></tr>
+            <tr><td>ಡ</td><td>ಡಾ</td><td>ಡಿ</td><td>ಡೀ</td><td>ಡು</td><td>ಡೂ</td><td>ಡೆ</td><td>ಡೇ</td><td>ಡೈ</td><td>ಡೊ</td><td>ಡೋ</td><td>ಡೌ</td><td>ಡಂ</td><td>ಡಃ</td></tr>
+            <tr><td>ಢ</td><td>ಢಾ</td><td>ಢಿ</td><td>ಢೀ</td><td>ಢು</td><td>ಢೂ</td><td>ಢೆ</td><td>ಢೇ</td><td>ಢೈ</td><td>ಢೊ</td><td>ಢೋ</td><td>ಢೌ</td><td>ಢಂ</td><td>ಢಃ</td></tr>
+            <tr><td>ಣ</td><td>ಣಾ</td><td>ಣಿ</td><td>ಣೀ</td><td>ಣು</td><td>ಣೂ</td><td>ಣೆ</td><td>ಣೇ</td><td>ಣೈ</td><td>ಣೊ</td><td>ಣೋ</td><td>ಣೌ</td><td>ಣಂ</td><td>ಣಃ</td></tr>
+            <tr><td>ತ</td><td>ತಾ</td><td>ತಿ</td><td>ತೀ</td><td>ತು</td><td>ತೂ</td><td>ತೆ</td><td>ತೇ</td><td>ತೈ</td><td>ತೊ</td><td>ತೋ</td><td>ತೌ</td><td>ತಂ</td><td>ತಃ</td></tr>
+            <tr><td>ಥ</td><td>ಥಾ</td><td>ಥಿ</td><td>ಥೀ</td><td>ಥು</td><td>ಥೂ</td><td>ಥೆ</td><td>ಥೇ</td><td>ಥೈ</td><td>ಥೊ</td><td>ಥೋ</td><td>ಥೌ</td><td>ಥಂ</td><td>ಥಃ</td></tr>
+            <tr><td>ದ</td><td>ದಾ</td><td>ದಿ</td><td>ದೀ</td><td>ದು</td><td>ದು</td><td>ದೆ</td><td>ದೇ</td><td>ದೈ</td><td>ದೊ</td><td>ದೋ</td><td>ದೌ</td><td>ದಂ</td><td>ದಃ</td></tr>
+            <tr><td>ಧ</td><td>ಧಾ</td><td>ಧಿ</td><td>ಧೀ</td><td>ಧು</td><td>ಧೂ</td><td>ಧೆ</td><td>ಧೇ</td><td>ಧೈ</td><td>ಧೊ</td><td>ಧೋ</td><td>ಧೌ</td><td>ಧಂ</td><td>ಧಃ</td></tr>
+            <tr><td>ನ</td><td>ನಾ</td><td>ನಿ</td><td>ನೀ</td><td>ನು</td><td>ನೂ</td><td>ನೆ</td><td>ನೇ</td><td>ನೈ</td><td>ನೊ</td><td>ನೋ</td><td>ನೌ</td><td>ನಂ</td><td>ನಃ</td></tr>
+            <tr><td>ಪ</td><td>ಪಾ</td><td>ಪಿ</td><td>ಪೀ</td><td>ಪು</td><td>ಪು</td><td>ಪೆ</td><td>ಪೇ</td><td>ಪೈ</td><td>ಪೊ</td><td>ಪೋ</td><td>ಪೌ</td><td>ಪಂ</td><td>ಪಃ</td></tr>
+            <tr><td>ಫ</td><td>ಫಾ</td><td>ಫಿ</td><td>ಫೀ</td><td>ಫು</td><td>ಫೂ</td><td>ಫೆ</td><td>ಫೇ</td><td>ಫೈ</td><td>ಫೊ</td><td>ಫೋ</td><td>ಫೌ</td><td>ಫಂ</td><td>ಫಃ</td></tr>
+            <tr><td>ಬ</td><td>ಬಾ</td><td>ಬಿ</td><td>ಬೀ</td><td>ಬು</td><td>ಬೂ</td><td>ಬೆ</td><td>ಬೇ</td><td>ಬೈ</td><td>ಬೊ</td><td>ಬೋ</td><td>ಬೌ</td><td>ಬಂ</td><td>ಬಃ</td></tr>
+            <tr><td>ಭ</td><td>ಭಾ</td><td>ಭಿ</td><td>ಭೀ</td><td>ಭು</td><td>ಭೂ</td><td>ಭೆ</td><td>ಭೇ</td><td>ಭೈ</td><td>ಭೊ</td><td>ಭೋ</td><td>ಭೌ</td><td>ಭಂ</td><td>ಭಃ</td></tr>
+            <tr><td>ಮ</td><td>ಮಾ</td><td>ಮಿ</td><td>ಮೀ</td><td>ಮು</td><td>ಮೂ</td><td>ಮೆ</td><td>ಮೇ</td><td>ಮೈ</td><td>ಮೊ</td><td>ಮೋ</td><td>ಮೌ</td><td>ಮಂ</td><td>ಮಃ</td></tr>
+            <tr><td>ಯ</td><td>ಯಾ</td><td>ಯಿ</td><td>ಯೀ</td><td>ಯು</td><td>ಯೂ</td><td>ಯೆ</td><td>ಯೇ</td><td>ಯೈ</td><td>ಯೊ</td><td>ಯೋ</td><td>ಯೌ</td><td>ಯಂ</td><td>ಯಃ</td></tr>
+            <tr><td>ರ</td><td>ರಾ</td><td>ರಿ</td><td>ರೀ</td><td>ರು</td><td>ರೂ</td><td>ರೆ</td><td>ರೇ</td><td>ರೈ</td><td>ರೊ</td><td>ರೋ</td><td>ರೌ</td><td>ರಂ</td><td>ರಃ</td></tr>
+            <tr><td>ಲ</td><td>ಲಾ</td><td>ಲಿ</td><td>ಲೀ</td><td>ಲು</td><td>ಲೂ</td><td>ಲೆ</td><td>ಲೇ</td><td>ಲೈ</td><td>ಲೊ</td><td>ಲೋ</td><td>ಲೌ</td><td>ಲಂ</td><td>ಲಃ</td></tr>
+            <tr><td>ವ</td><td>ವಾ</td><td>ವಿ</td><td>ವೀ</td><td>ವು</td><td>ವೂ</td><td>ವೆ</td><td>ವೇ</td><td>ವೈ</td><td>ವೊ</td><td>ವೋ</td><td>ವೌ</td><td>ವಂ</td><td>ವಃ</td></tr>
+            <tr><td>ಳ</td><td>ಳಾ</td><td>ಳಿ</td><td>ಳೀ</td><td>ಳು</td><td>ಳೂ</td><td>ಳೆ</td><td>ಳೇ</td><td>ಳೈ</td><td>ಳೊ</td><td>ಳೋ</td><td>ಳೌ</td><td>ಳಂ</td><td>ಳಃ</td></tr>
+            <tr><td>ಶ</td><td>ಶಾ</td><td>ಶಿ</td><td>ಶೀ</td><td>ಶು</td><td>ಶೂ</td><td>ಶೆ</td><td>ಶೇ</td><td>ಶೈ</td><td>ಶೊ</td><td>ಶೋ</td><td>ಶೌ</td><td>ಶಂ</td><td>ಶಃ</td></tr>
+            <tr><td>ಷ</td><td>ಷಾ</td><td>ಷಿ</td><td>ಷೀ</td><td>ಷು</td><td>ಷೂ</td><td>ಷೆ</td><td>ಷೇ</td><td>ಷೈ</td><td>ಷೊ</td><td>ಷೋ</td><td>ಷೌ</td><td>ಷಂ</td><td>ಷಃ</td></tr>
+            <tr><td>ಸ</td><td>ಸಾ</td><td>ಸಿ</td><td>ಸೀ</td><td>ಸು</td><td>ಸು</td><td>ಸೆ</td><td>ಸೇ</td><td>ಸೈ</td><td>ಸೊ</td><td>ಸೋ</td><td>ಸೌ</td><td>ಸಂ</td><td>ಸಃ</td></tr>
+            <tr><td>ಹ</td><td>ಹಾ</td><td>ಹಿ</td><td>ಹೀ</td><td>ಹು</td><td>ಹೂ</td><td>ಹೆ</td><td>ಹೇ</td><td>ಹೈ</td><td>ಹೊ</td><td>ಹೋ</td><td>ಹೌ</td><td>ಹಂ</td><td>ಹಃ</td></tr>
+</table>
+<p>
+This is completely consistent, no exceptions for ರ.
+</p>
+<h2>The headstroke of शिरोरेखा</h2>
+<p>
+Lastly we come the funny construct of Devanagari script the शिरोरेखा- the horizonal line which is drawn at the top of 
+each word and helps separate the words from each other. Proponents of this line might say it helps separate the words
+but the spacing itself suffices for word separation. Indeed Gujrati - a close cousin of Devanagri script (see for instance - 
+મારે નમસ્તે, હું ગુજરાતી છું) does not use शिरोरेखा and manages just fine. Note however, that Punjabi (ਸਤ ਸ੍ਰੀ ਅਕਾਲ, ਮੈਂ ਪੰਜਾਬੀ ਹਾਂ) does have
+शिरोरेखा .
+</p>
+<p>
+I have got used to शिरोरेखा in Hindi since I have used it from birth, but logically I think it destroys the beauty of
+the script for an outsider. Indeed to foreigners (who don't know Devanagri at all) Hindi words appear to be 
+<a href="https://www.reddit.com/r/india/comments/aq4o9z/hanging_snakes_coiled_and_ready_to_strike/">"hanging snakes,
+coiled and ready to strike"</a>.
+</p>
+
+<p>
+There is no horizonal line in Kannada script.
+</p>
+<h2>Summary</h2>
+<p>
+There is immense correspondence between the two scripts, and as such someone who is proficient in one script can 
+transfer their proficiency in the other one with small effort. While the way letters are written is
+completely different, beyond this superficial difference - the idea of vowel and consonants, how the matras
+are applied to consonants, compound consonants, etc are very similar. There are some common idiosyncracies too - 
+like प/ಪ vs ष/ಷ and special treatment of र / ರ.
+</p>
+</body>
+
+</html>
