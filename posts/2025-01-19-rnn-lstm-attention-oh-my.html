@@ -1,0 +1,193 @@
+<html>
+<head>
+  <title>RNN, LSTM, Transformers - OMG </title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_SVG"></script>
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+            TeX: {
+                extensions: ["AMScd.js"]
+            },
+            "HTML-CSS": { scale: 100 }
+        };
+    </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1450977-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)};
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-1450977-3');
+  </script>
+
+    <meta property='og:title' content='RNN, LSTM, Transformers - OMG'/>
+    <meta property='og:image' content='some-imagejpeg'/>
+    <meta property='og:description' content='RNN, LSTM, Transformers - OMG'/>
+    <meta property='og:url' content='http://thevivekpandey.github.io/posts/2024-08-11-in-defence-of-grunt-work.html'/>
+
+   <style>
+        .container {
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+        }
+       table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+    </style>
+
+</head>
+
+<body>
+<h1>RNN, LSTM, Transformers - OMG</h1>
+<p>
+LLMs are the hot topic of the times and not knowing details of LLMs makes me feel uneducated. Fortunately I have been 
+traditionally interested and resonably strong in Mathematics so understanding the models well enough to make me feel 
+happy is a matter of a bit of effort. I am not going to know the nitty gritty of training LLMs unless I work full time
+on the topic, but just knowing the basic architecture at mathematical level makes me feel wholesome.
+<p>
+
+<p>
+LLMs are a type of sequence models, so in this article we are going to understand mathematical formulations
+of various types of sequence models.
+</p>
+
+<h2>Prerequisites</h2>
+You need to know the following:
+<ol>
+<li><b>Matrix multiplication:</b> If you are not comfortable with matrix multiplication, you need to brush up class 12 mathematics.</li>
+<li><b>$\sigma(x)$, $\tanh(x)$, and softmax functions:</b> Find quick intro of these <a href="/posts/2024-12-09-lstm-for-mathematicians.html">here</a></li>
+</ol>
+
+<h2>Commonalities across all sequence models</h2>
+<p>
+There is an input sequence $x_1, x_2, \dots, x_m$, and we want to translate it to output sequence $y_1, y_2, \dots y_n$.
+</p>
+<h2>Basic RNN</h2> 
+<p>
+Let inputs be of size $n$. RNN consists of first deciding $h$ - the size of hidden state, and then finding the following five matrices:
+<ul>
+<li>$W_h$, of size $h \times h$</li>
+<li>$W_x$, of size $h \times n$</li>
+<li>$b_h$, of size $h \times 1$</li>
+<li>$W_y$, of size $o \times h$</li>
+<li>$b_y$, of size $o \times 1$</li>
+</ul>
+</p>
+
+<p>
+Once we have the above three matrices, output $y_t$ is found using following equations:
+
+$h_t = \tanh(W_hh_{t-1} + W_xx_t + b_h)$
+<br>
+$y_t = W_yh_t + b_y$
+<br>
+</p>
+
+<p>
+Diagramatically we can visualise this as following:
+</p>
+   <div class="container">
+        \[
+        \boxed{
+        \begin{CD}
+        @. h_0 @. @. \\
+        @. @VVV @. @. \\
+        x_1 @>>> \boxed{\begin{array}{l} h_1 = \tanh(W_h h_0 + W_x x_1) \\ y_1 = W_y h_1 + b_y \end{array}} @>>> y_1 \\
+        @. @VVV \\
+        @. h_1 \\
+        @. @VVV \\
+        x_2 @>>> \boxed{\begin{array}{l} h_2 = \tanh(W_h h_1 + W_x x_2) \\ y_2 = W_y h_2 + b_y \end{array}} @>>> y_2 \\
+        @. @VVV \\
+        @. h_2 \\
+        @. @VVV \\
+        x_3 @>>> \boxed{\begin{array}{l} h_3 = \tanh(W_h h_2 + W_x x_3) \\ y_3 = W_y h_3 + b_y \end{array}} @>>> y_3 \\
+        @. @VVV \\
+        @. h_3 \\
+        @. @VVV \\
+        @. \vdots
+        \end{CD}
+        }
+        \]
+    </div>
+
+<p>
+Limitation of basic RNN is that $h_t$ needs to contain the full context of the sequence so far - its memory is mostly short term. Further,
+it is not aware of future context. So, if some $y_i$'s depend on $x_j$ with $j>i$, that depedency capturing is not possible.
+</p>
+<h2>LSTM</h2> 
+<p>
+LSTM try to solve for the problem that RNN memory is short term.
+</p>
+
+
+<p>
+Again, let input vectors $x_i$'s be of size $n$. We decide the size $h$ of hidden states.
+</p>
+<p>
+There are five intermediate variables: $f_t, i_t, \tilde{C_t}, c_t, h_t$ for $t = 1, 2, \dots$. Here is a description of those
+   <table>
+        <tr>
+            <th>Variable</th>
+            <th>Purpose</th>
+            <th>Dimension</th>
+            <th>Formula</th>
+        </tr>
+        <tr>
+            <td>$f_t$</td>
+            <td>Forget gate vector - controls what information to remove from cell state</td>
+            <td>h×1</td>
+            <td>$f_t = \sigma(W_f[h_{t-1}, x_t] + b_f)$</td>
+        </tr>
+        <tr>
+            <td>$i_t$</td>
+            <td>Input gate vector - controls what new information to store</td>
+            <td>h×1</td>
+            <td>$i_t = \sigma(W_i[h_{t-1}, x_t] + b_i)$</td>
+        </tr>
+        <tr>
+            <td>$\tilde{C}_t$</td>
+            <td>Candidate cell state - proposes new values to potentially add to state</td>
+            <td>h×1</td>
+            <td>$\tilde{C}_t = \tanh(W_C[h_{t-1}, x_t] + b_C)$</td>
+        </tr>
+        <tr>
+            <td>$c_t$</td>
+            <td>Cell state - maintains long-term memory</td>
+            <td>h×1</td>
+            <td>$c_t = f_t \odot c_{t-1} + i_t \odot \tilde{C}_t$</td>
+        </tr>
+        <tr>
+            <td>$h_t$</td>
+            <td>Hidden state - output and passed to next time step</td>
+            <td>h×1</td>
+            <td>$h_t = o_t \odot \tanh(c_t)$ where $o_t = \sigma(W_o[h_{t-1}, x_t] + b_o)$</td>
+        </tr>
+    </table>
+
+</p>
+
+<p>
+And as you can see there are four "weight matrics" and four "bias vectors" that the model needs to learn.
+$W_f, W_i, W_C, W_o$ and $b_f, b_i, b_C, b_o$. Dimensions of weight matrices are $h \times (n + h) $ and
+dimensions of bias matrices are $h \times 1$.
+</p>
+
+Here is a diagram illustrating the above computations.
+<img src="./lstm.png" />
+</body>
+</html>
