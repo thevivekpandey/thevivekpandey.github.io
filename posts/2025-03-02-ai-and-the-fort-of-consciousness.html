@@ -56,7 +56,9 @@
 <h1>AI and the fort of consciousness</h1>
 <img src="ai-advancement.png" width="600px"/>
 <p>
-Scientific advances "explain away" what is otherwise magical and metaphysical.
+Scientific advances "explain away" what is otherwise magical and metaphysical. In this article we explore how
+scientific advances in general and AI advances in particular are reducing the set of attributes we regard
+as uniquely human.
 </p>
 
 <p>
@@ -87,10 +89,11 @@ building blocks of living cells. They could not create living cells though.
 </p>
 
 <p>
-Humans have a tendency to think that "We are special" - Indians are very proud of their ancient culture and Americans talk
+This arc of scientific progress of explaining various attributes we think are unique to humans or to living things collides with our 
+tendency to think that "We are special" - Indians are very proud of their ancient culture and Americans talk
 about <a href="https://en.wikipedia.org/wiki/American_exceptionalism">American Exceptionalism</a>. 
-There is <a href="https://en.wikipedia.org/wiki/Chinese_exceptionalism">Chinese Exceptionalism</a> called - 中国例外主义  and
-who can be more cultured than Europeans? In terms of religion - of course, everyone's religion is the one true right path and it
+There is <a href="https://en.wikipedia.org/wiki/Chinese_exceptionalism">Chinese Exceptionalism</a> called - 中国例外主义 too.
+In terms of religion - of course, everyone's religion is the one true right path and it
 is silly not to follow that path.
 </p>
 
@@ -131,20 +134,33 @@ they acted only like "glorified auto complete"
 <p>
 But then reinforcement learning introduced another way of improving the models. Alphago combined deep learning with reinforcement learning
 and was able to defeat the best human player in Go. LLMs enhance deep learning with reinforcement learning and can solve IMO level Maths
-problems and solve competitive programming problems. And many of the solutions are creative. At this point we can not make either of the 
-following statements:
+problems and solve competitive programming problems. While in strict sense-
 <ul>
-<li>It is just brute force computation</li>
-<li>It is just memorization and interpolation (i.e. glorified auto complete)</li>
+<li>It is just brute force computation - we know exactly what computation steps are there.</li>
+<li>It is just memorization and interpolation / extrapolation - learning phase is a kind of memorization </li>
 </ul>
+But it is clear that this memorization is little bit of generalized memorization, just the kind that can be used to solve the problems
+that were not seen by the model in the trainig set.
 </p>
 
 <p>
 Furthermore, just by (a) Training LLMs for next token prediction (b) Supplementing the training with reinforcement learning, some human
-like qualities are emerging in LLMs - like 
-<a href="https://www.reddit.com/r/OpenAI/comments/1i6jsr2/deepseek_discovered_their_new_model_having_an_aha/">Aha moment</a>, and even
-<a href="https://arxiv.org/pdf/2307.16513">deception</a> (See <a href="https://arxiv.org/html/2501.16513v2">here</a> too) where model
-may develop new capabilities in test time (in effect hiding the true capabilities in training time)
+like qualities are emerging in LLMs.
+<ul>
+<li><b>Chain of thought reasoning</b> When we prompt large model using chain of thoughts, then model solves problem using reasoning. An example
+from <a href="https://arxiv.org/pdf/2201.11903">here</a> is below. 
+<img src="./chain-of-thought-prompting.png" width="700px">
+Chain of though reasoning capabilities emerges only in very large models (say 100B+ parameter models) - so bigger models are in some ways
+getting closer to human capabilities. 
+</li>
+</ul>
+
+<li><b>Deception capabilities</b> Larger models also have better deception capabilities - as show <a href="https://arxiv.org/pdf/2308.01404">here</a>,
+in game where there is a secret unknown killer amongst all the participants, and everyone discusses amongst themselves to determine
+who the killer is, bigger model is better able to convince smaller models that it cannot be the killer. Or else, as noted <a href="https://bounded-regret.ghost.io/emergent-deception-optimization/">here</a> a model may say that "As an AI assistant I don't have subjective opinion on this matter" whereas
+actually it would have opinion on that matter. All the deceptive behaviors emerge from the fact that model efficiently learns the behavior
+that reduce its training loss.
+</li>
 </p>
 
 <p>
@@ -155,22 +171,35 @@ in DNNs increase it is possible for new human like traits emerge in DNNs.
 
 <p>
 That brings me back to what we started with - we are running out of qualities that humans (or animals, or even living things) uniquely
-possess. May be unique possession is "consciousness", or perhaps the ability to feel pleasure and pain. That might the last and the most
+possess. Long term planning is unique to use today, but as DNNs get even larger, we losing our edge more in future is more likely that not.
+So, may be unique possession is "consciousness", or perhaps the ability to feel pleasure and pain. That might the last and the most
 promising holdout for humanity under attack from its own invention.
 </p>
 
 <p>
 I view the uniquely human capabilties like a fort - doing maths, playing chess, doing science, discovering things, wondering about the world,
-being aware of the self and experiencing pleasure and pain. Perhaps only experiencing pleasure and pain will survive the onslaught of machines.
+being aware of the self and experiencing pleasure and pain. The fort is being breached. Perhaps only experiencing pleasure and pain will 
+survive the onslaught of machines.
 But then, feeling pleasure and pain is a very different capability. Unlike other capabilities, it is not problem solving or accomplishing tasks. 
-Is that capability 
-the only capability that is uniquely human? Why does this capability even exist? Does that give us purpose? May be, because at least in Hinduism
+Is that capability the only capability that is uniquely human? Why does this capability even exist? Does that give us purpose? 
+May be, because at least in Hinduism
 and Buddhism, the aim of life is to get Moksha which is absence of pain. May be it is pain and pleasure which give us purpose. And in absence
 of this, AI will be very good problem solver, but remain purposeless and derive purpose from us.
 </p>
 
 <p>
-It will be very interesting to see how all this unfolds in coming 20-30 years.
+But then while other abilities are verifiable, experiencing pain and pleasure is subjective and hence not verifiable. What then is the 
+guaratnee that it even exists? It might just be an illusion after all. Our saints has been saying <a href="https://www.arshavidya.in/Newsletter/April18/Brahma-satyam%20Jagan-mithya.pdf">Brahm-Satyam Jagan-Mithyā Jivo Brahmaiva Nāparaḥ</a> (Only Brahm is True, the world is an illusion and invidual
+is not separate from Brahm). Perhaps it is time to reinterpreat the Upanishads in light of the latest technological advances.
+</p>
+
+<p>
+At any rate, it will be very interesting to see how all this unfolds in coming 20-30 years. There are phases in human history when
+there is rapid progress in some areas - There was the period of 1900 - 1930 when so much of progress happened in Physics - Einstein,
+Planck, Bohr, Heisenberg, Schrodinger - all were contemporaries. There is a 1927 
+<a href="https://www.openculture.com/2021/01/the-most-intelligent-photo-ever-taken.html">most intelligent photo ever taken</a> where 
+so many of these scientists in one frame. This is time of similarly rapid progress in the field of computing, even Nobel prizes
+are being won by people in AI - and we will look back at this time as pivotal.
 </p>
 
 </body>
