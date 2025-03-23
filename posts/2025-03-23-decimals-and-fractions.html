@@ -1,0 +1,220 @@
+<html>
+<head>
+  <title>Decimals and Fractions</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_SVG"></script>
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+            TeX: {
+                extensions: ["AMScd.js"]
+            },
+            "HTML-CSS": { scale: 100 }
+        };
+    </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1450977-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)};
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-1450977-3');
+  </script>
+
+   <style>
+        .container {
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+        }
+       table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+    </style>
+
+</head>
+
+<body>
+<h1>Decimals and Fractions</h1>
+
+<p>
+Decimals and Fractions are two ways to represent numbers. Representation matters, and I have often wondered
+if one of these two methods is superior, or better aligned with the mathematical reality. In this article
+we argue that fractions are more aligned with reality, but decimals are easier to work with for humans. That
+may argue that humnas are not aligned with reality - well we never suspected we are.
+</p>
+
+<p>
+First let's see how fractions outperform decimals.
+</p>
+
+<h2>$\frac{1}{3}$ vs $0.3333\dots$ </h2>
+<p>
+The struggle of decimal starts very early. While <br>$\frac{1}{2}$ = $0.5$ <br>$\frac{1}{10}$ = $0.1$, <br>we have<br>
+$\frac{1}{3} = 0.3333\dots$ <br>$\frac{1}{7} = 0.142857142857142857\dots$.
+</p>
+
+<p>
+So decimal representation has to resort to infinite number of digits to represent a number as simple as $\frac{1}{3}$.
+Now, infinity is a part of reality, so it is legit to use it - that's why decimal representation is also a
+correct representation, but it is better if we can do without it, since using infinity brings with itself notions
+of convergent series et al.
+</p>
+
+<p>
+We call decimals like $0.333\dots$ as repeating decimals.
+</p>
+<h2>Repeat-ness is dependent on the choice of base</h2>
+<p>
+Whether a decimal number is repeating or not is dependent on base. $\frac{1}{3} = 0.333\dots$ in
+base 10, but it is simply $0.1$ in base 3. In general a fraction $\frac{1}{p}$ terminates in base
+N if prime factorization of $p$ only contains primes which divide $N$. For instance a number $\frac{1}{p}$
+will be terminating in base 10 if $p$ contains only $2$ and $5$ as prime factors. That is why 1/2, 1/5, 
+1/10 and 1/50 terminate, but 1/3, 1/6 or 1/28 don't.
+</p>
+
+<p>
+We could have lived happily with the fact that some fractions are repeating and some are terminating, just
+as we live with the fact that some numbers are prime and some are not, or that some numbers are multiples
+of 7 and some are not. However, whether a fraction is repeating or not depends on the base that we use,
+which means that this is not a property of the number, this an artifcat of the notation that we use.
+</p>
+
+<h2>Irrational numbers: $\sqrt{2}, e, \phi, \pi$ etc</h2>
+<p>
+Next we look at irrational numbers. The first instinct may be that decimals make a good attempt to approximate them:
+
+$$ \sqrt{2} = 1.4142135624\dots$$
+$$e = 2.718281828459045\dots $$
+$$\phi = 1.61803398875\dots $$ (golden ratio)
+$$\pi = 3.14156\dots$$
+and we simply cannot write them as fractions, since these numbers are irrational.
+</p>
+
+<p>
+But behold! Continued fractions come to our rescue! There is nothing stopping from numerator and denominator of a
+fraction itself to be a fraction, and once we use that we see that
+
+$$
+\sqrt{2} = 1 + \dfrac{1}{2 + \dfrac{1}{2 + \dfrac{1}{2 + \dots}}}
+$$
+$$
+e= 2 + \dfrac{1}{1 + \dfrac{1}{2 + \dfrac{1}{1+ \dfrac{1}{1+\dfrac{1}{4 + \dfrac{1}{1+\dfrac{1}{1 + \dfrac{1}{6+\dfrac{1}{1+\dfrac{1}{1 + \dfrac{1}{8+\dots}}}}}}}}}}}
+$$
+and very elgantly
+
+$$
+e = 2 + \dfrac{2}{2 + \dfrac{3}{3 + \dfrac{4}{4+\dfrac{5}{5+\dfrac{6}{6+\dots}}}}}
+$$
+
+Similarly, 
+
+$$\phi = 1 + \dfrac{1}{1+\dfrac{1}{1+\dfrac{1}{1+\dots}}}
+$$
+
+$$
+\pi = \dfrac{4}{1 + \dfrac{1^2}{2 + \dfrac{3^2}{2 + \dfrac{5^2}{2+\dfrac{7^2}{2 + \dots}}}}}
+$$
+</p>
+
+<p>
+While digits in decimal expansions of numbers are arbitrary, we find patterns in the continued fraction representation of numbers, which
+supports the assertion that fractions are real deal, while decimals are a hack for the real world.
+</p>
+<h2>Algebraic vs transcendental numbers</h2>
+<p>
+Consider the four numbers we considered above, $\sqrt{2}, e, \phi, \pi$. Of these, $\sqrt{2}$ and $\phi$ are "algebraic" numbers
+since they are the roots of equations all whose coeffients are integers. Specifically, $\sqrt{2}$ is the solution for $x^2 = 2$
+and $\phi$ is the solution for $x + 1 = x^2$. The other two are "transcendental" numbers.
+</p>
+
+<p>
+We won't go into the detail, but only mention that if we write a "simple" continued fraction for a number (all numerators of simple
+continued fraction are 1), then a continued fraction which termintes or else there is periodicity in the partial quotients then that
+number is algebraic. If there is no period then the number is transcental. That is why
+
+$$
+\sqrt{2} = 1 + \dfrac{1}{2 + \dfrac{1}{2 + \dfrac{1}{2 + \dots}}}
+$$
+
+is algberaic, but
+
+$$
+e= 2 + \dfrac{1}{1 + \dfrac{1}{2 + \dfrac{1}{1+ \dfrac{1}{1+\dfrac{1}{4 + \dfrac{1}{1+\dfrac{1}{1 + \dfrac{1}{6+\dfrac{1}{1+\dfrac{1}{1 + \dfrac{1}{8+\dots}}}}}}}}}}}
+$$
+
+is transcendntal.
+</p>
+
+<p>
+Thus, while decimal representation of a number throws no light on it being algebraic or trancendntal, fractional form makes it obvious. 
+[Edit: I later found out that above claim is not true. Only when equation has degree 2 is that that quotients have periodicity. So
+I am no longer sure if we can separate transcendtal and algebraic numbers by looking at their continued fractions.]
+</p>
+
+<h2>If fractions are so good, why are decimals more popular?</h2>
+<p>
+We have argued above that fractions are more superior representations of numbers. If that is the case, then why 
+are they not used more than decimals? Everywhere, we find decimals: GDP of India is 3.6 trillion - 
+why is not $3\frac{3}{5}$ trillion? Stock market yesterday rose by 1.1%, why not by a more precise $\frac{1123}{1012}$%?
+Even when physicists or computer scientists, who are fully familiar with both the representations, practice their trade, 
+they talk in decimals: server response time is 45.34ms and training loss is 6.2343603.
+</p>
+
+<p>
+The reason, I think is that our brains can comprehend decimals better. In particular, comparing two decimals is very easy
+for our brains compared to comparing two fractions. It is difficult to find what is bigger: $\dfrac{64}{71}$ or $\dfrac{13}{14}$,
+but once you know that $\dfrac{64}{71} \approx 0.9014$ and $\dfrac{13}{14} \approx 0.9285$, you instantly know what the answer is.
+</p>
+
+<p>
+Another reason is that adding fractions involves multiplying numbers and multiplication is a heavier operation. Adding two 
+decimals involves only adding digits, and so it is simpler.
+</p>
+
+<p>
+It might also be that decimals got more in use because fractions are unwieldy to write, while decimals can fit in with other language
+text.
+</p>
+
+<h2>Fraction vs decimal for computers</h2>
+<p>
+Our brains are wired so that decimals appeal more to them. However, what about computers? We know that computers have instructions
+for integer addition, multiplication and division (add, mul and div respectively), and also floating point addition, multiplication 
+and addition (fadd, fmul, fdiv respectively). Even programming languages have a data type for "float" / "double". Could it be 
+beneficial to have fraction as a native data type?
+</p>
+
+<p>
+My guess is "no". Decimals have the advantage that they can represent very large and very small numbers (like $10^{100}$ and $10^{-100}$
+respectively), a fraction representation would struggle to do that since then we will need to store represent large integers which
+is not supported by architecture - for 64 bit integers, $2^{64}$ is far less than $10^{100}$. You can indeed represent larger
+integers using software but then operations become slower.
+</p>
+
+<p>
+Further, to do a fraction addition, you will need three integer mulitplications and an integer addition
+(since $\dfrac{a}{b} + \dfrac{c}{d} = \dfrac{a * d + b * c}{b * d}$). And then worry about overflows and underflows. I am 
+not how well we can work it out.
+</p>
+
+<h2>Conclusion</h2>
+<p>
+My conclusion is that reality fundamentally is described by fractions, but the way we perceive that complex reality is better
+served by decimals - decimals are good practical tools for us to solve our day to day problems.
+</p>
+</body>
+</html>
