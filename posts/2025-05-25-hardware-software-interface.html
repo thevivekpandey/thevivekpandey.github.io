@@ -133,20 +133,31 @@
     </style>
 </head>
 <body>
-    <h1>Hardware-Software Interface in Processors</h1>
+    <h1>Hardware-Software Interface - what they did not teach you in architecture class </h1>
     
-    <p>Computers are fascinating machines, and the vehicle for most of the innovation that is happening today. Most software engineers write application programs in high-level languages and thus don't appreciate the layers beneath. This article delineates some details at the boundary of software and hardware. This article is inspired by the discussions that I had in the paper reading session where 
+    <p>Computers are fascinating machines, and the vehicle for most of the innovation that 
+is happening today. Most software engineers write application programs in high-level 
+languages and thus don't appreciate the layers beneath. 
+   </p>
+
+This article delineates some 
+details at the boundary of software and hardware. This article is inspired by the 
+discussions that I had in the paper reading session where 
 <a href="https://www.linkedin.com/in/vijay9455/">Vijay</a>, 
 <a href="https://www.linkedin.com/in/vinayaksuresh/">Vinayak</a>, 
 <a href="https://www.linkedin.com/in/chirag-goyal-59923aa0/">Chirag</a>, 
 <a href="https://www.linkedin.com/in/himanshuagarwal2/">Himanshu</a> and I read the paper <a href="https://web.stanford.edu/class/cs240/readings/hwsw.pdf">A Comparison of Software and Hardware Techniques for x86 Virtualization</a>. This paper was published by two VMware engineers while I was at VMware, and reading it again helped me brush up the main ideas behind software virtualization, specifically binary translation and how processors work in general.</p>
     
+<p>
+I realized that a lot of details about the hardware software interface is not taught 
+well in univerisities - most of what I write here I learn while at job.
+</p>
     <p>High level languages are compiled to assembly language which is then compiled to machine code. In this article we take a tour
 of how the processor interprets and executes the instructions. A computer has three prominent parts: (a) CPU (b) Memory (c) I/O. In this article we will study CPU and Memory, focusing on the hardware-software boundary.</p>
     
     <h2>Warmup - a quick exercise</h2>
 <p>
-Perhaps a quick exercise will help us get warmed up for things to come. Consider the following straightforward C program, in a file called 
+Perhaps a quick exercise will help us get warmed up for things to come. Consider the following straightforward C program, in a file called test.c.
 </p>
 
 <table border="1px"><tr><td>
@@ -174,8 +185,8 @@ int main(int argc, char *argv[]) {
 </tr></td></table>
 
 <p>
-You can first compile it to assembly, by running <span class="register">gcc -S test.c</span>, 
-you can convert it to assembly. Here is the output on my system:
+You can first compile it to assembly, by running <span class="register">gcc -S test.c</span> 
+and convert it to assembly. Here is the output on my system:
 
 <table style="border: 1px solid black; height: 200px; overflow-y: auto"><tr><td>
 <pre>
@@ -464,9 +475,9 @@ Our objective in rest of the article is to get some understanding how the bytes 
     
     <p>A CPU, at the core, has a straightforward life cycle - <strong>fetch-decode-execute</strong> - instruction after instruction. In the next few paragraphs we elucidate on what it means.</p>
     
-    <p>In order to understand "fetch-decode-execute", we should visualize that the processor consists of registers, and some circuitry (called ALUs) to do operations on the values in registers. (Often the values to be operated upon come from main memory too.)</p>
+    <p>In order to understand "fetch-decode-execute", we should visualize that the processor consists of registers, and some circuitry (called ALUs) to do operations on the values in registers. (Often the values to be operated upon come from main memory.)</p>
     
-    <p>An instruction is a sequence of bits. What else could it be! There is however an elaborate structure to the bits in the instruction, which is described by ISA (Instruction Set Architecture) of the processor. Typically, first few bits encode the operations (load vs store vs add vs multiply etc). Next few bits may specify first operand and subsequent few bits may specify second operand.</p>
+    <p>An instruction is a sequence of bits. What else could it be! There is however an elaborate structure to the bits in the instruction, which is described by ISA (Instruction Set Architecture - look <a href="https://cdrdv2.intel.com/v1/dl/getContent/671200">here</a> for intel x8664 ISA for example.) of the processor. Typically, first few bits encode the operations (load vs store vs add vs multiply etc). Next few bits may specify first operand and subsequent few bits may specify second operand.</p>
     
     <p>For instance, consider the following bit sequence:</p>
     
@@ -477,10 +488,10 @@ Our objective in rest of the article is to get some understanding how the bytes 
     <p>On x86, the assembly corresponding to this machine code is: <span class="instruction">add rax, 34</span> i.e. add 34 to the contents of register <span class="register">rax</span>. Here are some specific details:</p>
     
     <ul>
-        <li>The first byte (<span class="inline-code">48</span>) is the REX prefix that enables 64-bit operation.</li>
-        <li>The second byte (<span class="inline-code">83</span>) denotes that this is an add instruction with 8-bit immediate.</li>
-        <li>The third byte (<span class="inline-code">C0</span>) contains ModR/M information specifying register-direct mode and the <span class="register">rax</span> register.</li>
-        <li>The fourth byte (<span class="inline-code">22</span>) represents the immediate value 34 in hexadecimal.</li>
+        <li>The first byte (<span class="inline-code">0x48</span>) is the REX prefix that enables 64-bit operation.</li>
+        <li>The second byte (<span class="inline-code">0x83</span>) denotes that this is an add instruction with 8-bit immediate.</li>
+        <li>The third byte (<span class="inline-code">0xC0</span>) contains ModR/M information specifying register-direct mode and the <span class="register">rax</span> register.</li>
+        <li>The fourth byte (<span class="inline-code">0x22</span>) represents the immediate value 34 in hexadecimal.</li>
     </ul>
     
     <p>So, the job of the processor is - fetch the next instruction from the memory, decode it and "execute" it - i.e. do what is specified in the instruction.</p>
@@ -621,12 +632,12 @@ notPrime: xor %eax, %eax     ; %eax = 0
           ret
     </pre>
     
-    <p>In the above example, 'isPrime', 'nexti' etc will all be addresses. When the processor executes <span class="instruction">"cmp %ecx, %esi"</span> it compares the values in the registers <span class="register">%esi</span> and <span class="register">%ecx</span>, and sets or unsets a specific bit in a flags register <span class="register">RFLAGS</span> depending on whether the two values are equal or not. Next when <span class="instruction">"jge prime"</span> ("jump if greater than or equal") executes - then <span class="register">RIP</span> is set to either the address called 'prime' if previous comparison was true (this info is now in flags register), or else <span class="register">RIP</span> is incremented by the instruction length if previous comparison was false. So, the execution either jumps to some target or else continues linearly depending on the result of previous comparison.</p>
+    <p>In the above example, <code>isPrime</code>, <code>nexti</code> etc will all be addresses. When the processor executes <span class="instruction">"cmp %ecx, %esi"</span> it compares the values in the registers <span class="register">%esi</span> and <span class="register">%ecx</span>, and sets or unsets a specific bit in a flags register <span class="register">RFLAGS</span> depending on whether the two values are equal or not. Next when <span class="instruction">"jge prime"</span> ("jump if greater than or equal") executes - then <span class="register">RIP</span> is set to either the address called 'prime' if previous comparison was true (this info is now in flags register), or else <span class="register">RIP</span> is incremented by the instruction length if previous comparison was false. So, the execution either jumps to some target or else continues linearly depending on the result of previous comparison.</p>
     
     
     <h3>Interrupt Handling</h3>
     
-    <p>Another phenomenon in which <span class="register">RIP</span> changes to value other than <span class="register">RIP</span> + instruction_length is when interrupt happens. When an interrupt happens (e.g. when you type in something on your keyboard or when disk I/O completes), current context is saved on the stack (just as it happens in function call) and <span class="register">RIP</span> becomes the address of interrupt handler. How does the processor know the address of the interrupt handler? The kernel needs to set that address at a specific location in memory when the machine is starting up.</p>
+    <p>Another phenomenon in which <span class="register">RIP</span> changes to value other than <span class="register">RIP</span> + instruction_length is when interrupt happens. When an interrupt happens (e.g. when you type in something on your keyboard or when disk I/O completes), current context is saved on the stack (just as it happens in function call) and <span class="register">RIP</span> is assigned the address of interrupt handler. How does the processor know the address of the interrupt handler? The kernel needs to set that address at a specific location in memory when the machine is starting up.</p>
     
     <h3>Call/ret Instructions</h3>
     
@@ -675,7 +686,7 @@ notPrime: xor %eax, %eax     ; %eax = 0
 </svg>
     
 <p>
-However, the part of the processor which need to do fetching, decoding and execution are different, and so while execution of a certain
+However, the parts of the processor which need to do fetching, decoding and execution are different, and so while execution of a certain
 instruction is happening, the next instruction can get to decoding stage and the instruction next to that can get to fetch stage. That way, overall IPC (instructions per cycle) increases. So, the execution looks like this:</p>
 
 <svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
@@ -757,8 +768,8 @@ Also, instructions need not be executed in the same order as they appear in the 
 
 <pre>
 1. load r1, [memory]     // Takes 100+ cycles (cache miss)
-2. add r2, r3, r4        // Takes 1 cycle, but waits for instruction 1
-3. mul r5, r6, r7        // Takes 1 cycle, but waits for instruction 2
+2. add r2, r3, r4        // Takes 1 cycle, 
+3. mul r5, r6, r7        // Takes 1 cycle, 
 4. add r8, r1, r9        // Needs r1 from instruction 1
 </pre>
 
@@ -773,9 +784,9 @@ a time, then that is all that we would need. However, we want to multi processin
 </p>
 
 <p>
-The key thing to note is that all the processor refer to memory addresses and they are compiled independently. Thus, if two processes
+The key thing to note is that all the processes refer to memory addresses and they are compiled independently. Thus, if two processes
 run together then they may read from or write to same memory location. That is not what we want - a process may write value 
-<code>x</code> to a memory location <code>m</code>, and moments late when it reads back the value, it may read <code>y</code> 
+<code>x</code> to a memory location <code>m</code>, and moments later when it reads back the value, it may read <code>y</code> 
 since some othe process overwrote the value. To avoid this - we introduce the concept of "virtual memory".
 </p>
 
@@ -1192,12 +1203,12 @@ those use cases in the next section.
 This is a good point to study "page fault". To understand that we need to look back at the <a href="#pte-structure">structure of page table entry</a>. Bit 0 there was <code>P</code> which stands for "present". This bit is 1 if the entry is valid and 0 if the entry is not 
 valid. If, during page walk, the processor encounters an entry which is not present, then it means that the translation of the
 corresponding virtual address does not exit. Then the processor generates a "page fault" - i.e. saves the current state on the stack,
-looks up the page fault handler address in IDT (interrupt descriptor table - which is set by kernel at boot time), switches execution to rring 0 (i.e. kernel mode) and executes the handler.
+looks up the page fault handler address in IDT (interrupt descriptor table - which is set by kernel at boot time), switches execution to ring 0 (i.e. kernel mode) and executes the handler.
 </p>
 
 <p>
 Why would page table entry not be present? Well, by default entries have to be not present. Virtual address space is very large - 
-since we use bits 0-47 i.e. a total of 48 bits for address translation, total virtual space present with a process is 2 ** 48 = 256 TB.
+since we use bits 0-47 from virtual address, i.e. a total of 48 bits for address translation, total virtual space present with a process is 2 ** 48 = 256 TB.
 Most systems don't have that much physical address, so most virtual addresses won't have corresponding physical addresses. The processor
 thus needs a way to find what translations are present and what are not.
 </p>
@@ -1214,7 +1225,7 @@ This time, the instruction would succeed.
 
 <h4>Fork</h4>
 <p>
-This is also a good place to study how <code>fork</code> sysetm call is implemented, at least in linux kerenel. Before we study
+This is also a good place to study how <code>fork</code> sysetm call is implemented, at least in linux kernel. Before we study
 fork, we need to know of bit 1 - the read/write bit in the <a href="#pte-structure">structure of page table entry</a>. If the bit is 0,
 address translation will succeed only if it is happening during a read instruction. If address translation is happening during
 a write instruction then a page fault would be generated.
@@ -1268,15 +1279,7 @@ at user-kernel mode execution switch.
 
 <h2>Final thoughts</h2>
 <p>
-When I first studied computer architecture at IIT Kanpur, I understood very little as to what was going on. I then took
-a <a href="https://siebelschool.illinois.edu/academics/courses/cs433-120251">compute architecture course at UIUC</a> and
-thing were much clearer - like pipelining concepts. However, it was only when I worked at VMware and talked to relevant
-people over several years, these concepts became clear enough to my satisfaction.
-</p>
-
-<p>
-Most of these things are not taught in the courses in the right way - and the beauty of the whole implementation gets lost
-in the details. I hope I was able to bring some of the beauty of the computer architecture in this article.
+I hope you enjoyed reading this article as much as I enjoyed writing it.
 </p>
 </body>
 </html>
