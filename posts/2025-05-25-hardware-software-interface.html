@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hardware-Software Interface in Processors</title>
+    <style>
+        body {
+            font-family: Georgia, 'Times New Roman', serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+            background-color: #fafafa;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        
+        h2 {
+            color: #34495e;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+        }
+        
+        h3 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        .code {
+            font-family: 'Courier New', Monaco, monospace;
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .inline-code {
+            font-family: 'Courier New', Monaco, monospace;
+            background-color: #f1f3f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        .binary {
+            font-family: 'Courier New', Monaco, monospace;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #d63384;
+        }
+        
+        .register {
+            font-family: 'Courier New', Monaco, monospace;
+            font-weight: bold;
+            color: #0d6efd;
+        }
+        
+        .instruction {
+            font-family: 'Courier New', Monaco, monospace;
+            font-weight: bold;
+            color: #198754;
+        }
+        
+        ul {
+            margin-bottom: 20px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .highlight {
+            background-color: #fff3cd;
+            padding: 15px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .register-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 8px;
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #e3f2fd;
+            border-radius: 6px;
+        }
+        
+        .register-item {
+            font-family: 'Courier New', Monaco, monospace;
+            font-weight: bold;
+            text-align: center;
+            padding: 6px;
+            background-color: white;
+            border-radius: 4px;
+            color: #0d6efd;
+        }
+        
+        .correction {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 15px 0;
+            font-size: 0.9em;
+        }
+        
+        .correction::before {
+            content: "📝 Correction: ";
+            font-weight: bold;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hardware-Software Interface in Processors</h1>
+    
+    <p>Computers are fascinating machines, and the vehicle for most of the innovation that is happening today. Most software engineers write application programs in high-level languages and thus don't appreciate the layers beneath. This article delineates some details at the boundary of software and hardware. This article is inspired by the discussions that I had in the paper reading session where 
+<a href="https://www.linkedin.com/in/vijay9455/">Vijay</a>, 
+<a href="https://www.linkedin.com/in/vinayaksuresh/">Vinayak</a>, 
+<a href="https://www.linkedin.com/in/chirag-goyal-59923aa0/">Chirag</a>, 
+<a href="https://www.linkedin.com/in/himanshuagarwal2/">Himanshu</a> and I read the paper <a href="https://web.stanford.edu/class/cs240/readings/hwsw.pdf">A Comparison of Software and Hardware Techniques for x86 Virtualization</a>. This paper was published by two VMware engineers while I was at VMware, and reading it again helped me brush up the main ideas behind software virtualization, specifically binary translation and how processors work in general.</p>
+    
+    <p>High level languages are compiled to assembly language which is then compiled to machine code. In this article we take a tour
+of how the processor interprets and executes the instructions. A computer has three prominent parts: (a) CPU (b) Memory (c) I/O. In this article we will study CPU and Memory, focusing on the hardware-software boundary.</p>
+    
+    <h2>Warmup - a quick exercise</h2>
+<p>
+Perhaps a quick exercise will help us get warmed up for things to come. Consider the following straightforward C program, in a file called 
+</p>
+
+<table border="1px"><tr><td>
+<pre>
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int isPrime(int a) {
+    if (a < 2) return 0;
+    for (int i = 2; i < a; i++) {
+        if (a % i == 0) return 0;
+    }
+    return 1;
+}
+
+int main(int argc, char *argv[]) {
+    int number = atoi(argv[1]);
+    
+    int result = isPrime(number);
+    printf("%d is %s prime.\n", number, result ? "" : "not");
+    
+    return 0;
+}
+</pre>
+</tr></td></table>
+
+<p>
+You can first compile it to assembly, by running <span class="register">gcc -S test.c</span>, 
+you can convert it to assembly. Here is the output on my system:
+
+<table style="border: 1px solid black; height: 200px; overflow-y: auto"><tr><td>
+<pre>
+	.file	"test.c"
+	.text
+	.globl	isPrime
+	.type	isPrime, @function
+isPrime:
+.LFB6:
+	.cfi_startproc
+	endbr64
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset 6, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register 6
+	movl	%edi, -20(%rbp)
+	cmpl	$1, -20(%rbp)
+	jg	.L2
+	movl	$0, %eax
+	jmp	.L3
+.L2:
+	movl	$2, -4(%rbp)
+	jmp	.L4
+.L6:
+	movl	-20(%rbp), %eax
+	cltd
+	idivl	-4(%rbp)
+	movl	%edx, %eax
+	testl	%eax, %eax
+	jne	.L5
+	movl	$0, %eax
+	jmp	.L3
+.L5:
+	addl	$1, -4(%rbp)
+.L4:
+	movl	-4(%rbp), %eax
+	cmpl	-20(%rbp), %eax
+	jl	.L6
+	movl	$1, %eax
+.L3:
+	popq	%rbp
+	.cfi_def_cfa 7, 8
+	ret
+	.cfi_endproc
+.LFE6:
+	.size	isPrime, .-isPrime
+	.section	.rodata
+.LC0:
+	.string	""
+.LC1:
+	.string	"not"
+.LC2:
+	.string	"%d is %s prime.\n"
+	.text
+	.globl	main
+	.type	main, @function
+main:
+.LFB7:
+	.cfi_startproc
+	endbr64
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset 6, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register 6
+	subq	$32, %rsp
+	movl	%edi, -20(%rbp)
+	movq	%rsi, -32(%rbp)
+	movq	-32(%rbp), %rax
+	addq	$8, %rax
+	movq	(%rax), %rax
+	movq	%rax, %rdi
+	call	atoi@PLT
+	movl	%eax, -8(%rbp)
+	movl	-8(%rbp), %eax
+	movl	%eax, %edi
+	call	isPrime
+	movl	%eax, -4(%rbp)
+	cmpl	$0, -4(%rbp)
+	je	.L8
+	leaq	.LC0(%rip), %rax
+	jmp	.L9
+.L8:
+	leaq	.LC1(%rip), %rax
+.L9:
+	movl	-8(%rbp), %ecx
+	movq	%rax, %rdx
+	movl	%ecx, %esi
+	leaq	.LC2(%rip), %rax
+	movq	%rax, %rdi
+	movl	$0, %eax
+	call	printf@PLT
+	movl	$0, %eax
+	leave
+	.cfi_def_cfa 7, 8
+	ret
+	.cfi_endproc
+.LFE7:
+	.size	main, .-main
+	.ident	"GCC: (Ubuntu 13.2.0-23ubuntu4) 13.2.0"
+	.section	.note.GNU-stack,"",@progbits
+	.section	.note.gnu.property,"a"
+	.align 8
+	.long	1f - 0f
+	.long	4f - 1f
+	.long	5
+0:
+	.string	"GNU"
+1:
+	.align 8
+	.long	0xc0000002
+	.long	3f - 2f
+2:
+	.long	0x3
+3:
+	.align 8
+4:
+</pre>
+</td></tr></table>
+</p>
+
+<p>
+Further, by running <span class="register">gcc -o test test.c</span> and then running hexdump on the 
+output <span class="register">hexdump test</span>, we get the following binary output (first column
+is byte offset, next 8 columns are successive bytes, expressed in hexadecimal numbers for clarity)
+</p>
+
+<table style="border: 1px solid black"><tr><td><pre>
+0000000 facf feed 000c 0100 0000 0000 0002 0000
+0000010 0011 0000 0420 0000 0085 0020 0000 0000
+0000020 0019 0000 0048 0000 5f5f 4150 4547 455a
+0000030 4f52 0000 0000 0000 0000 0000 0000 0000
+0000040 0000 0000 0001 0000 0000 0000 0000 0000
+0000050 0000 0000 0000 0000 0000 0000 0000 0000
+0000060 0000 0000 0000 0000 0019 0000 0188 0000
+0000070 5f5f 4554 5458 0000 0000 0000 0000 0000
+0000080 0000 0000 0001 0000 4000 0000 0000 0000
+0000090 0000 0000 0000 0000 4000 0000 0000 0000
+00000a0 0005 0000 0005 0000 0004 0000 0000 0000
+00000b0 5f5f 6574 7478 0000 0000 0000 0000 0000
+00000c0 5f5f 4554 5458 0000 0000 0000 0000 0000
+00000d0 0460 0000 0001 0000 0118 0000 0000 0000
+00000e0 0460 0000 0002 0000 0000 0000 0000 0000
+00000f0 0400 8000 0000 0000 0000 0000 0000 0000
+0000100 5f5f 7473 6275 0073 0000 0000 0000 0000
+0000110 5f5f 4554 5458 0000 0000 0000 0000 0000
+0000120 0578 0000 0001 0000 0018 0000 0000 0000
+0000130 0578 0000 0002 0000 0000 0000 0000 0000
+0000140 0408 8000 0000 0000 000c 0000 0000 0000
+0000150 5f5f 7363 7274 6e69 0067 0000 0000 0000
+0000160 5f5f 4554 5458 0000 0000 0000 0000 0000
+0000170 0590 0000 0001 0000 0016 0000 0000 0000
+0000180 0590 0000 0000 0000 0000 0000 0000 0000
+0000190 0002 0000 0000 0000 0000 0000 0000 0000
+00001a0 5f5f 6e75 6977 646e 695f 666e 006f 0000
+00001b0 5f5f 4554 5458 0000 0000 0000 0000 0000
+00001c0 05a8 0000 0001 0000 0060 0000 0000 0000
+00001d0 05a8 0000 0002 0000 0000 0000 0000 0000
+00001e0 0000 0000 0000 0000 0000 0000 0000 0000
+00001f0 0019 0000 0098 0000 5f5f 4144 4154 435f
+0000200 4e4f 5453 0000 0000 4000 0000 0001 0000
+0000210 4000 0000 0000 0000 4000 0000 0000 0000
+0000220 4000 0000 0000 0000 0003 0000 0003 0000
+0000230 0001 0000 0010 0000 5f5f 6f67 0074 0000
+0000240 0000 0000 0000 0000 5f5f 4144 4154 435f
+0000250 4e4f 5453 0000 0000 4000 0000 0001 0000
+0000260 0010 0000 0000 0000 4000 0000 0003 0000
+0000270 0000 0000 0000 0000 0006 0000 0002 0000
+0000280 0000 0000 0000 0000 0019 0000 0048 0000
+0000290 5f5f 494c 4b4e 4445 5449 0000 0000 0000
+00002a0 8000 0000 0001 0000 4000 0000 0000 0000
+00002b0 8000 0000 0000 0000 02e8 0000 0000 0000
+00002c0 0001 0000 0001 0000 0000 0000 0000 0000
+00002d0 0034 8000 0010 0000 8000 0000 0068 0000
+00002e0 0033 8000 0010 0000 8068 0000 0040 0000
+00002f0 0002 0000 0018 0000 80b0 0000 0005 0000
+0000300 8110 0000 0038 0000 000b 0000 0050 0000
+0000310 0000 0000 0000 0000 0000 0000 0003 0000
+0000320 0003 0000 0002 0000 0000 0000 0000 0000
+0000330 0000 0000 0000 0000 0000 0000 0000 0000
+0000340 8100 0000 0004 0000 0000 0000 0000 0000
+0000350 0000 0000 0000 0000 000e 0000 0020 0000
+0000360 000c 0000 752f 7273 6c2f 6269 642f 6c79
+0000370 0064 0000 0000 0000 001b 0000 0018 0000
+0000380 f8b8 6142 3635 6530 f3bc f8e9 1d7b a6d1
+0000390 0032 0000 0020 0000 0001 0000 0000 000f
+00003a0 0400 000f 0001 0000 0003 0000 0401 048f
+00003b0 002a 0000 0010 0000 0000 0000 0000 0000
+00003c0 0028 8000 0018 0000 04f0 0000 0000 0000
+00003d0 0000 0000 0000 0000 000c 0000 0038 0000
+00003e0 0018 0000 0002 0000 0000 0547 0000 0001
+00003f0 752f 7273 6c2f 6269 6c2f 6269 7953 7473
+0000400 6d65 422e 642e 6c79 6269 0000 0000 0000
+0000410 0026 0000 0010 0000 80a8 0000 0008 0000
+0000420 0029 0000 0010 0000 80b0 0000 0000 0000
+0000430 001d 0000 0010 0000 8150 0000 0198 0000
+0000440 0000 0000 0000 0000 0000 0000 0000 0000
+0000460 43ff d100 0be0 b900 0be8 b940 0908 7100
+0000470 008a 5400 0001 1400 0fff b900 001a 1400
+0000480 0048 5280 07e8 b900 0001 1400 07e8 b940
+0000490 0be9 b940 0108 6b09 020a 5400 0001 1400
+00004a0 0be8 b940 07ea b940 0d09 1aca 7d29 1b0a
+00004b0 0108 6b09 0088 3500 0001 1400 0fff b900
+00004c0 0009 1400 0001 1400 07e8 b940 0508 1100
+00004d0 07e8 b900 ffee 17ff 0028 5280 0fe8 b900
+00004e0 0001 1400 0fe0 b940 43ff 9100 03c0 d65f
+00004f0 03ff d101 7bfd a903 c3fd 9100 0008 5280
+0000500 17e8 b900 c3bf b81f 83a0 b81f 03a1 f81f
+0000510 03a8 f85f 0500 f940 0018 9400 c3a0 b81e
+0000520 c3a0 b85e ffcf 97ff 1be0 b900 c3a8 b85e
+0000530 03ea aa08 1beb b940 0009 9000 8929 9116
+0000540 0008 9000 8508 9116 016b 7100 1108 9a89
+0000550 03e9 9100 012a f900 0528 f900 0000 9000
+0000560 4000 9116 0008 9400 17e0 b940 7bfd a943
+0000570 03ff 9101 03c0 d65f 0030 9000 0210 f940
+0000580 0200 d61f 0030 9000 0610 f940 0200 d61f
+0000590 6425 6920 2073 7325 7020 6972 656d 0a2e
+00005a0 0000 6f6e 0074 0000 0001 0000 001c 0000
+00005b0 0000 0000 001c 0000 0000 0000 001c 0000
+00005c0 0002 0000 0460 0000 0040 0000 0040 0000
+00005d0 0578 0000 0000 0000 0040 0000 0000 0000
+00005e0 0000 0000 0000 0000 0003 0000 000c 0002
+00005f0 0014 0002 0000 0000 0090 0100 1000 0200
+0000600 0000 0400 0000 0000 0000 0000 0000 0000
+0000610 0000 0000 0000 0000 0000 0000 0000 0000
+*
+0004000 0000 0000 0000 8010 0001 0000 0000 8000
+0004010 0000 0000 0000 0000 0000 0000 0000 0000
+*
+0008000 0000 0000 0020 0000 0050 0000 0058 0000
+0008010 0002 0000 0001 0000 0000 0000 0000 0000
+0008020 0004 0000 0000 0000 0000 0000 0018 0000
+0008030 0000 0000 0000 0000 0018 0000 4000 0006
+0008040 4000 0000 0000 0000 0000 0000 0001 0000
+0008050 0201 0000 0e01 0000 5f00 7461 696f 5f00
+0008060 7270 6e69 6674 0000 0100 005f 0017 0000
+0008070 0200 0000 0300 e000 0008 0003 09f0 0000
+0008080 5f03 686d 655f 6578 7563 6574 685f 6165
+0008090 6564 0072 6909 5073 6972 656d 0d00 616d
+00080a0 6e69 1200 0000 0000 08e0 0190 0000 0000
+00080b0 0002 0000 010f 0010 0000 0000 0001 0000
+00080c0 0016 0000 010f 0000 0460 0000 0001 0000
+00080d0 001f 0000 010f 0000 04f0 0000 0001 0000
+00080e0 0025 0000 0001 0100 0000 0000 0000 0000
+00080f0 002b 0000 0001 0100 0000 0000 0000 0000
+0008100 0003 0000 0004 0000 0003 0000 0004 0000
+0008110 0020 5f5f 686d 655f 6578 7563 6574 685f
+0008120 6165 6564 0072 695f 5073 6972 656d 5f00
+0008130 616d 6e69 5f00 7461 696f 5f00 7270 6e69
+0008140 6674 0000 0000 0000 0000 0000 0000 0000
+0008150 defa c00c 0000 9101 0000 0100 0000 0000
+0008160 0000 1400 defa 020c 0000 7d01 0200 0004
+0008170 0200 0200 0000 5d00 0000 5800 0000 0000
+0008180 0000 0900 0000 5081 0220 0c00 0000 0000
+0008190 0000 0000 0000 0000 0000 0000 0000 0000
+*
+00081b0 0000 1801 0000 0000 0000 0100 6574 7473
+00081c0 7200 3491 9416 5236 d202 d56e 4115 d487
+00081d0 93ab cb3f b3bc 9a09 2636 6f0c 9428 16ca
+00081e0 ad88 ac7f 58b2 c66f 66e9 04c0 d1d7 6bd1
+00081f0 4f02 0558 7cff 7cb4 857a bdda 488b 2c89
+0008200 ada7 ac7f 58b2 c66f 66e9 04c0 d1d7 6bd1
+0008210 4f02 0558 7cff 7cb4 857a bdda 488b 2c89
+0008220 ada7 ac7f 58b2 c66f 66e9 04c0 d1d7 6bd1
+0008230 4f02 0558 7cff 7cb4 857a bdda 488b 2c89
+0008240 61a7 b452 6a7e 8ad4 04ca 428c 82a4 6900
+0008250 bf7c 6ca0 798a 11ca 5c6c 4bee 8234 1679
+0008260 ada8 ac7f 58b2 c66f 66e9 04c0 d1d7 6bd1
+0008270 4f02 0558 7cff 7cb4 857a bdda 488b 2c89
+0008280 ada7 ac7f 58b2 c66f 66e9 04c0 d1d7 6bd1
+0008290 4f02 0558 7cff 7cb4 857a bdda 488b 2c89
+00082a0 ada7 ac7f 58b2 c66f 66e9 04c0 d1d7 6bd1
+00082b0 4f02 0558 7cff 7cb4 857a bdda 488b 2c89
+00082c0 44a7 9985 eb85 a4bd d297 ba4a ac74 375b
+00082d0 7e81 6e32 abe1 0eff ff54 5d90 d88a f59d
+00082e0 00ed 0000 0000 0000                    
+00082e8
+</pre>
+</td></tr></table>
+<p>
+Our objective in rest of the article is to get some understanding how the bytes above are interpreted as instructions and executed by the processor.
+</p>
+
+    <h2>CPU - "Fetch and Execute"</h2>
+    
+    <p>A CPU, at the core, has a straightforward life cycle - <strong>fetch-decode-execute</strong> - instruction after instruction. In the next few paragraphs we elucidate on what it means.</p>
+    
+    <p>In order to understand "fetch-decode-execute", we should visualize that the processor consists of registers, and some circuitry (called ALUs) to do operations on the values in registers. (Often the values to be operated upon come from main memory too.)</p>
+    
+    <p>An instruction is a sequence of bits. What else could it be! There is however an elaborate structure to the bits in the instruction, which is described by ISA (Instruction Set Architecture) of the processor. Typically, first few bits encode the operations (load vs store vs add vs multiply etc). Next few bits may specify first operand and subsequent few bits may specify second operand.</p>
+    
+    <p>For instance, consider the following bit sequence:</p>
+    
+    <div class="code">
+        <span class="binary">01001000 10000011 11000000 00100010</span>
+    </div>
+    
+    <p>On x86, the assembly corresponding to this machine code is: <span class="instruction">add rax, 34</span> i.e. add 34 to the contents of register <span class="register">rax</span>. Here are some specific details:</p>
+    
+    <ul>
+        <li>The first byte (<span class="inline-code">48</span>) is the REX prefix that enables 64-bit operation.</li>
+        <li>The second byte (<span class="inline-code">83</span>) denotes that this is an add instruction with 8-bit immediate.</li>
+        <li>The third byte (<span class="inline-code">C0</span>) contains ModR/M information specifying register-direct mode and the <span class="register">rax</span> register.</li>
+        <li>The fourth byte (<span class="inline-code">22</span>) represents the immediate value 34 in hexadecimal.</li>
+    </ul>
+    
+    <p>So, the job of the processor is - fetch the next instruction from the memory, decode it and "execute" it - i.e. do what is specified in the instruction.</p>
+    
+    <p>Great. So now we know what an instruction is. Along the way we also came to know that there are "registers" in the processor. Registers are like scratch spaces which a programmer can use.</p>
+    
+    <p>It is the right time to understand registers a bit better.</p>
+    
+    <h2>Registers</h2>
+    
+    <p>Some details on registers here. Each register is a 64-bit (8-byte) storage space. They are of two types: (a) general purpose and (b) special purpose registers. A general purpose register is really like the scratch space to be used by the programmer to achieve some computation. A special purpose register has some specific purpose - they are meant to communicate some specific information to the rest of the processor.</p>
+    
+    <p>There are 15 general purpose registers:</p>
+    
+    <div class="register-list">
+        <div class="register-item">RAX</div>
+        <div class="register-item">RBX</div>
+        <div class="register-item">RCX</div>
+        <div class="register-item">RDX</div>
+        <div class="register-item">RSI</div>
+        <div class="register-item">RBP</div>
+        <div class="register-item">RDI</div>
+        <div class="register-item">R8</div>
+        <div class="register-item">R9</div>
+        <div class="register-item">R10</div>
+        <div class="register-item">R11</div>
+        <div class="register-item">R12</div>
+        <div class="register-item">R13</div>
+        <div class="register-item">R14</div>
+        <div class="register-item">R15</div>
+    </div>
+    
+    <p>Then there are some special purpose registers. There are many of them, but in this article we will need to know of the following:</p>
+    
+    <ul>
+        <li><span class="register">RIP</span>: the instruction pointer - contains the address of the next instruction to be executed</li>
+        <li><span class="register">IR</span>: the instruction register - contains the instruction currently being executed. So the value in <span class="register">IR</span> comes from the address stored in <span class="register">RIP</span>.</li>
+        <li><span class="register">RSP</span>: the stack pointer - contains the address of the top of the stack. More on this later.</li>
+        <li><span class="register">RFLAGS</span>: the flags register. This register contains some flags (0 or 1) around the execution results of some other instructions. E.g. if there is an overflow in a previous operation then certain bit will get set. Another bit will get set based on the result of comparison of two values in an instruction</li>
+        <li><span class="register">CR3</span>: contains the page table base address. We will discuss more about this when we discuss MMU (memory management unit) later in this article</li>
+    </ul>
+    
+    <p>There are many more, but for the purpose of our discussion only the above registers will suffice.</p>
+    
+    <h3>The Common Flow of Instructions, and the Instruction Pointer RIP</h3>
+    
+    <p>Now that we have seen how a single instruction executes, it is easy to see that instructions can be stored one after the other in memory, fetched serially and executed. And that is, indeed, most of the execution. Once an instruction execution is done, <span class="register">RIP</span> is incremented by the length of the current instruction and then the processor fetches-decodes-executes the next instruction.</p>
+    
+    <p>Let's say content of address <span class="inline-code">0x12345678</span> is <span class="binary">01001000 10000011 11000000 00100010</span>. Instead of writing human unfriendly bit sequence we will write it as <span class="instruction">"add rax, 34"</span>. Let's also say that at next address i.e. <span class="inline-code">0x1234567C</span>, we have <span class="instruction">"add rbx, 22"</span>. We succinctly write this as:</p>
+    
+    <pre>
+A: add rax, 34
+   add rbx, 22
+    </pre>
+    
+    <p>where A is a shorthand for <span class="inline-code">0x12345678</span>. Initially, value of <span class="register">RIP</span> is A, and thus <span class="instruction">"add rax, 34"</span> gets executed. Post the execution of this instruction <span class="register">RIP</span> changes to A + 4 where the next instruction resides. Thus, the next instruction gets fetched and executed.</p>
+    
+    <h3>Function Calls and the Stack Pointer (RSP register)</h3>
+    
+    <p>The next concept we need to understand to appreciate fetch-decode-execute lifecycle is how function calls are implemented in the processors and the role of <span class="register">RSP</span>.</p>
+    
+    <p>If the concept of "function" did not exist in high level programming languages, then perhaps one could do without <span class="register">RSP</span>. However, functions are integral to programming languages - they help us organize our code in logical groupings.</p>
+    
+    <p>Now suppose that in your high level language you write a function <span class="inline-code">func</span>. At the time of writing this function <span class="inline-code">func</span>, you probably won't know which all functions can call this function. Maybe today, <span class="inline-code">func1</span> and <span class="inline-code">func2</span> can call this, and tomorrow someone might write a third function <span class="inline-code">func3</span> which can call the function <span class="inline-code">func</span>. <span class="inline-code">func</span> itself can also call <span class="inline-code">func</span> (recursion). And when <span class="inline-code">func</span> is executing, it does not know who called it.</p>
+    
+    <p>So, you have to compile the function <span class="inline-code">func</span> to assembly and then to machine code in a way that does not depend on who will call this function. Let's say the compiler (or even you!) compiles the function and you use a lot of registers - <span class="register">rax</span>, <span class="register">rbx</span>, <span class="register">rcx</span> etc. Now, when function <span class="inline-code">func1</span> calls you, that function too might be using the same registers, and once execution of <span class="inline-code">func</span> is finished, <span class="inline-code">func1</span> will need those values. So, if code for <span class="inline-code">func1</span> is executing and function call to <span class="inline-code">func</span> is made, then before starting to execute the code of <span class="inline-code">func</span>, all the registers should be saved somewhere, and when execution of 
+<span class="inline-code">func</span> finishes, all the registers should be restored. The only place where we can save it is in memory. We refer to the set of registers as the "context" - so we say that context is saved in the stack or restored from the stack.</p>
+    <p>There can be long chain of function calls - <span class="inline-code">func1</span>  calling <span class="inline-code">func2</span> calling <span class="inline-code">func3</span> and so on. All the context that will be needed later needs to be saved, and then restored
+as needed (when return happens).</p>
+    
+    
+    <p>This whole problem is solved by having a concept of "stack" in the memory. For any given process (now what is a 
+"process" will be more concretely discussed in a later section of this article), the kernel allocates some memory and the 
+start of the address is stored in the register <span class="register">RSP</span>. Then, before any <span class="instruction">"call"</span> 
+instruction (<span class="instruction">"call"</span> is the assembly instruction for function call), the compiled code saves relevant registers - which it was using as scratch space - on the stack (i.e. starting at the values pointed to by <span class="register">RSP</span>). <span class="instruction">"call"</span> instruction automatically saves 
+the current <span class="register">RIP</span>, at the top of the stack, changes <span class="register">RIP</span> to the argument provided in <span class="instruction">call</span>, and updates <span class="register">RSP</span>. Next instruction to execute will be of the callee since <span class="register">RIP</span> has been updated. 
+Similarly, on <span class="instruction">"ret"</span> instruction 
+(<span class="instruction">"ret"</span> is the assembly instruction for returning from a function call), 
+processor automatically restores updates <span class="register">RIP</span> from the
+value at the top of the stack (it will be value of <span class="register">RIP</span> we saved at the time of call). The assembly 
+code in the caller then restores the registers previously saved from the stack. 
+    
+<p>And here is a quick example cooked up by claude</p>
+
+<img src="call-ret-claude.png" width="600px"/>
+    <p>Above description should make clear that (1) Function call is not a software-only concept - the hardware supports it. However, were the hardware not supporting it, we can still have been implemented in software (assembly code could have done all the saving/restoring of the context and jump instruction could have been used instead of call and ret.), however, it would have resulted in slower execution of the programs. (2) <span class="register">RSP</span> - the stack pointer is involved in implementing the saving/restore of the context on the stack, and stores the address of the top of the stack.</p>
+    
+    
+    <h3>Details about the Instruction Pointer (RIP)</h3>
+    
+    <p>We had a brief look at the <span class="register">RIP</span> earlier, and saw that in the linear execution of the instructions, <span class="register">RIP</span> always gets incremented by the length of the currently executing instruction (Note that in some architectures, like x86, instruction length is variable; but in other architectures, like ARM, instruction length is fixed). Now, let's look at <span class="register">RIP</span> in details and see the scenarios where it changes in non-linear fashion.</p>
+    
+    <p>The value of <span class="register">RIP</span> changes as per the following logic:</p>
+    
+    <ul>
+        <li>Unless the current instruction is a jump instruction, <span class="register">RIP</span> gets incremented to <span class="register">RIP</span> + instruction_length as the current instruction executes</li>
+        <li>If the current instruction is a jump or conditional jump instruction, then the value of <span class="register">RIP</span> changes as per the result of jump instruction</li>
+        <li>At any time an "interrupt" may come. If that happens, <span class="register">RIP</span> immediately changes to interrupt handler</li>
+        <li><span class="register">RIP</span> changes in different ways when a <span class="instruction">call</span> / <span class="instruction">ret</span> instruction happens</li>
+    </ul>
+    
+    
+    <p>The first of the cases has been studied already. Let's look at the next scenarios.</p>
+    
+    <h3>Branches</h3>
+    
+    <p><span class="inline-code">if</span> and <span class="inline-code">for</span> statements of high level languages are translated to a variety of jump instructions.</p>
+    
+    <p>Consider the following C code from the paper:</p>
+    
+    <pre>
+int isPrime(int a) {
+   for (int i = 2; i &lt; a; i++) {
+      if (a % i == 0) return 0;
+   }
+   return 1;
+}
+    </pre>
+    
+    <p>It translates to following assembly:</p>
+    
+    <pre>
+isPrime:  mov %edi, %ecx     ; %ecx = %edi (a)
+          mov $2, %esi       ; i = 2
+          cmp %ecx, %esi     ; is i >= a?
+          jge prime          ; jump if yes
+nexti:    mov %ecx, %eax     ; set %eax = a
+          cdq                ; sign-extend
+          idiv %esi          ; a % i
+          test %edx, %edx    ; is remainder zero?
+          jz notPrime        ; jump if yes
+          inc %esi           ; i++
+          cmp %ecx, %esi     ; is i >= a?
+          jl nexti           ; jump if no
+prime:    mov $1, %eax       ; return value in %eax
+          ret
+notPrime: xor %eax, %eax     ; %eax = 0
+          ret
+    </pre>
+    
+    <p>In the above example, 'isPrime', 'nexti' etc will all be addresses. When the processor executes <span class="instruction">"cmp %ecx, %esi"</span> it compares the values in the registers <span class="register">%esi</span> and <span class="register">%ecx</span>, and sets or unsets a specific bit in a flags register <span class="register">RFLAGS</span> depending on whether the two values are equal or not. Next when <span class="instruction">"jge prime"</span> ("jump if greater than or equal") executes - then <span class="register">RIP</span> is set to either the address called 'prime' if previous comparison was true (this info is now in flags register), or else <span class="register">RIP</span> is incremented by the instruction length if previous comparison was false. So, the execution either jumps to some target or else continues linearly depending on the result of previous comparison.</p>
+    
+    
+    <h3>Interrupt Handling</h3>
+    
+    <p>Another phenomenon in which <span class="register">RIP</span> changes to value other than <span class="register">RIP</span> + instruction_length is when interrupt happens. When an interrupt happens (e.g. when you type in something on your keyboard or when disk I/O completes), current context is saved on the stack (just as it happens in function call) and <span class="register">RIP</span> becomes the address of interrupt handler. How does the processor know the address of the interrupt handler? The kernel needs to set that address at a specific location in memory when the machine is starting up.</p>
+    
+    <h3>Call/ret Instructions</h3>
+    
+    <p>We have already looked at <span class="instruction">call</span> and <span class="instruction">ret</span> instructions, they also lead to non-linear jumps in the value of <span class="register">RIP</span>.</p>
+    
+    <p>This ends the description of the fetch-decode-execute cycle of the processors. However, while we are at it, a few other concepts are in order.</p>
+    <h3>Pipelining </h3>
+    <p> Above "fetch-decode-execute" suggests that the order in which operations happen is: fetch instruction 1, decode instruction 1, execute instruction 1, fetch instruction 2, decode instruction 2, execute instruction 2, and so on. </p>
+
+<svg viewBox="0 0 800 150" xmlns="http://www.w3.org/2000/svg">
+  <!-- First cycle blocks -->
+  <rect x="20" y="40" width="80" height="50" fill="#e3f2fd" stroke="#1976d2" stroke-width="2" rx="5"/>
+  <text x="60" y="62" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#1976d2">fetch</text>
+  <text x="60" y="78" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#1976d2">instruction 1</text>
+  
+  <rect x="120" y="40" width="80" height="50" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="2" rx="5"/>
+  <text x="160" y="62" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#7b1fa2">decode</text>
+  <text x="160" y="78" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#7b1fa2">instruction 1</text>
+  
+  <rect x="220" y="40" width="80" height="50" fill="#e8f5e8" stroke="#388e3c" stroke-width="2" rx="5"/>
+  <text x="260" y="62" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#388e3c">execute</text>
+  <text x="260" y="78" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#388e3c">instruction 1</text>
+  
+  <!-- Second cycle blocks -->
+  <rect x="320" y="40" width="80" height="50" fill="#e3f2fd" stroke="#1976d2" stroke-width="2" rx="5"/>
+  <text x="360" y="62" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#1976d2">fetch</text>
+  <text x="360" y="78" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#1976d2">instruction 2</text>
+  
+  <rect x="420" y="40" width="80" height="50" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="2" rx="5"/>
+  <text x="460" y="62" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#7b1fa2">decode</text>
+  <text x="460" y="78" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#7b1fa2">instruction 2</text>
+  
+  <rect x="520" y="40" width="80" height="50" fill="#e8f5e8" stroke="#388e3c" stroke-width="2" rx="5"/>
+  <text x="560" y="62" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#388e3c">execute</text>
+  <text x="560" y="78" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#388e3c">instruction 2</text>
+  
+  <!-- Right arrow -->
+  <path d="M 620 65 L 670 65" stroke="#333" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+  </defs>
+</svg>
+    
+<p>
+However, the part of the processor which need to do fetching, decoding and execution are different, and so while execution of a certain
+instruction is happening, the next instruction can get to decoding stage and the instruction next to that can get to fetch stage. That way, overall IPC (instructions per cycle) increases. So, the execution looks like this:</p>
+
+<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Time step 1 -->
+  <rect x="20" y="40" width="80" height="50" fill="#e3f2fd" stroke="#1976d2" stroke-width="2" rx="5"/>
+  <text x="60" y="62" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#1976d2">fetch</text>
+  <text x="60" y="78" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#1976d2">instruction 1</text>
+  
+  <!-- Time step 2 -->
+  <rect x="120" y="40" width="80" height="50" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="2" rx="5"/>
+  <text x="160" y="62" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#7b1fa2">decode</text>
+  <text x="160" y="78" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#7b1fa2">instruction 1</text>
+  
+  <rect x="120" y="110" width="80" height="50" fill="#e3f2fd" stroke="#1976d2" stroke-width="2" rx="5"/>
+  <text x="160" y="132" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#1976d2">fetch</text>
+  <text x="160" y="148" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#1976d2">instruction 2</text>
+  
+  <!-- Time step 3 -->
+  <rect x="220" y="40" width="80" height="50" fill="#e8f5e8" stroke="#388e3c" stroke-width="2" rx="5"/>
+  <text x="260" y="62" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#388e3c">execute</text>
+  <text x="260" y="78" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#388e3c">instruction 1</text>
+  
+  <rect x="220" y="110" width="80" height="50" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="2" rx="5"/>
+  <text x="260" y="132" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#7b1fa2">decode</text>
+  <text x="260" y="148" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#7b1fa2">instruction 2</text>
+  
+  <rect x="220" y="180" width="80" height="50" fill="#e3f2fd" stroke="#1976d2" stroke-width="2" rx="5"/>
+  <text x="260" y="202" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#1976d2">fetch</text>
+  <text x="260" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#1976d2">instruction 3</text>
+  
+  <!-- Time step 4 -->
+  <rect x="320" y="110" width="80" height="50" fill="#e8f5e8" stroke="#388e3c" stroke-width="2" rx="5"/>
+  <text x="360" y="132" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#388e3c">execute</text>
+  <text x="360" y="148" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#388e3c">instruction 2</text>
+  
+  <rect x="320" y="180" width="80" height="50" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="2" rx="5"/>
+  <text x="360" y="202" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#7b1fa2">decode</text>
+  <text x="360" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#7b1fa2">instruction 3</text>
+  
+  <!-- Time step 5 -->
+  <rect x="420" y="180" width="80" height="50" fill="#e8f5e8" stroke="#388e3c" stroke-width="2" rx="5"/>
+  <text x="460" y="202" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#388e3c">execute</text>
+  <text x="460" y="218" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#388e3c">instruction 3</text>
+  
+  <!-- Right arrow -->
+  <path d="M 520 205 L 570 205" stroke="#333" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+  </defs>
+</svg>
+<p>
+In this article we have discussed a 3 stage pipeline. In real life processors, pipeline has many stages - e.g. 12 to 20 stages.
+</p>
+
+<p>
+Note that when instructions are to be executed one after the then the above scheme works well. However, if the pipeline encounters
+a conditional jump instruction then what do we do? We don't know what instruction will be executed after the jump instruction till the
+time jump instruction has finished execution. In such cases processors do "branch prediction" - they make a good guess about what 
+path the branch would take and do "speculative execution". We take care not to write anything to memory since that would be irreversible. 
+In case the guess turns out to be wrong, there is "pipeline flushing" - we redo the right branch path. Though branch mispredictions
+are costly due to pipeline flushes, branch prediction is still worth it because for most workloads, it is easy to get 99%+ accuracy
+since most branches almost always take a certain of the two directions e.g. in <code>while i &lt; 100</code> will for 100 times go in one
+direction and then once in other direction.</p>
+</p>
+
+<h4>Superscalar and out of order executions</h4>
+<p>
+Modern processors are much more complex. In particular, they are "superscalar" i.e. multiple instructions can be in execute stage
+simultaneously as long as they don't have data dependence. E.g. if you have <code>A = B + C</code> and <code>D = E * F</code> then
+the machine instructions for them can execute simultaneously.
+</p>
+<p>
+Also, instructions need not be executed in the same order as they appear in the program. E.g. suppose you have following instructions:
+</p>
+
+<pre>
+1. load r1, [memory]     // Takes 100+ cycles (cache miss)
+2. add r2, r3, r4        // Takes 1 cycle, but waits for instruction 1
+3. mul r5, r6, r7        // Takes 1 cycle, but waits for instruction 2
+4. add r8, r1, r9        // Needs r1 from instruction 1
+</pre>
+
+<p>
+Since instrucions 2 and 3 will wait for 1, and they will be waiting for a long time, instruction 4 can execute before 2 or 3 
+since its execution does not depend on instrucions 1 or 2 or 3.
+</p>
+<h2>The need for Memory Management Unit - MMU</h2>
+<p>
+In the last section we studied the basics of processors - fetch, decode and execute. If there were only one process needing to run at
+a time, then that is all that we would need. However, we want to multi processing systems - where we time share the same processor between many processes, so that you can run a text editor, a web browser, and database server and a web server all simultaneously.
+</p>
+
+<p>
+The key thing to note is that all the processor refer to memory addresses and they are compiled independently. Thus, if two processes
+run together then they may read from or write to same memory location. That is not what we want - a process may write value 
+<code>x</code> to a memory location <code>m</code>, and moments late when it reads back the value, it may read <code>y</code> 
+since some othe process overwrote the value. To avoid this - we introduce the concept of "virtual memory".
+</p>
+
+<h4>Page table walk and address translation</h4>
+<p>
+In modern procesors, when a processor accesses a memory location address <code>V</code>, like in 
+<span class="inline-code">load r1, V</span>, RAM address <code>V</code> is not accessed - rather
+<code>V</code> is treated as a "virtual address" and is translated to "physical address" <code>P</code>
+which is then accessed in the main memory.  
+</p>
+
+<p>
+This translation is done by the processor itself - kernel code is not involved in the mechanics
+of translation. However kernel sets up "page tables" using which translation is done. So, we now look at this process in detail.
+</p>
+
+<p>
+First, we consider the anatomy of a virtual address <code>V</code>.
+</p>
+
+<svg viewBox="0 0 1000 270" xmlns="http://www.w3.org/2000/svg">
+  <!-- Title -->
+  <text x="500" y="30" text-anchor="middle" font-size="20" font-weight="bold" fill="#333">64-bit Virtual Address Structure (x86-64)</text>
+  
+  <!-- Main address bar -->
+  <rect x="50" y="60" width="900" height="60" fill="#e8f4fd" stroke="#2196F3" stroke-width="2"/>
+  
+  <!-- Bit divisions -->
+  <line x1="190" y1="60" x2="190" y2="120" stroke="#666" stroke-width="1"/>
+  <line x1="330" y1="60" x2="330" y2="120" stroke="#666" stroke-width="1"/>
+  <line x1="470" y1="60" x2="470" y2="120" stroke="#666" stroke-width="1"/>
+  <line x1="610" y1="60" x2="610" y2="120" stroke="#666" stroke-width="1"/>
+  <line x1="750" y1="60" x2="750" y2="120" stroke="#666" stroke-width="1"/>
+  
+  <!-- Bit numbers -->
+  <text x="50" y="50" font-size="12" fill="#666">63</text>
+  <text x="190" y="50" font-size="12" fill="#666">48</text>
+  <text x="330" y="50" font-size="12" fill="#666">39</text>
+  <text x="470" y="50" font-size="12" fill="#666">30</text>
+  <text x="610" y="50" font-size="12" fill="#666">21</text>
+  <text x="750" y="50" font-size="12" fill="#666">12</text>
+  <text x="950" y="50" font-size="12" fill="#666">0</text>
+  
+  <!-- Section labels -->
+  <text x="120" y="85" text-anchor="middle" font-size="12" font-weight="bold" fill="#333">Sign Ext.</text>
+  <text x="120" y="100" text-anchor="middle" font-size="10" fill="#666">(16 bits)</text>
+  
+  <text x="260" y="85" text-anchor="middle" font-size="12" font-weight="bold" fill="#333">PML4</text>
+  <text x="260" y="100" text-anchor="middle" font-size="10" fill="#666">(9 bits)</text>
+  
+  <text x="400" y="85" text-anchor="middle" font-size="12" font-weight="bold" fill="#333">PDPT</text>
+  <text x="400" y="100" text-anchor="middle" font-size="10" fill="#666">(9 bits)</text>
+  
+  <text x="540" y="85" text-anchor="middle" font-size="12" font-weight="bold" fill="#333">PD</text>
+  <text x="540" y="100" text-anchor="middle" font-size="10" fill="#666">(9 bits)</text>
+  
+  <text x="680" y="85" text-anchor="middle" font-size="12" font-weight="bold" fill="#333">PT</text>
+  <text x="680" y="100" text-anchor="middle" font-size="10" fill="#666">(9 bits)</text>
+  
+  <text x="850" y="85" text-anchor="middle" font-size="12" font-weight="bold" fill="#ff6b35">Page Offset</text>
+  <text x="850" y="100" text-anchor="middle" font-size="10" fill="#ff6b35">(12 bits)</text>
+  
+  <!-- Color coding -->
+  <rect x="50" y="60" width="140" height="60" fill="#ffeb3b" fill-opacity="0.3"/>
+  <rect x="190" y="60" width="140" height="60" fill="#4caf50" fill-opacity="0.3"/>
+  <rect x="330" y="60" width="140" height="60" fill="#4caf50" fill-opacity="0.3"/>
+  <rect x="470" y="60" width="140" height="60" fill="#4caf50" fill-opacity="0.3"/>
+  <rect x="610" y="60" width="140" height="60" fill="#4caf50" fill-opacity="0.3"/>
+  <rect x="750" y="60" width="200" height="60" fill="#ff9800" fill-opacity="0.3"/>
+  
+  <!-- Legend -->
+  <text x="50" y="160" font-size="16" font-weight="bold" fill="#333">Legend:</text>
+  
+  <rect x="50" y="180" width="20" height="15" fill="#ffeb3b" fill-opacity="0.3" stroke="#666"/>
+  <text x="80" y="192" font-size="14" fill="#333">Sign Extension (Canonical Address)</text>
+  
+  <rect x="50" y="205" width="20" height="15" fill="#4caf50" fill-opacity="0.3" stroke="#666"/>
+  <text x="80" y="217" font-size="14" fill="#333">Page Table Walking Bits (36 bits total)</text>
+  
+  <rect x="50" y="230" width="20" height="15" fill="#ff9800" fill-opacity="0.3" stroke="#666"/>
+  <text x="80" y="242" font-size="14" fill="#333">Page Offset (within 4KB page)</text>
+  
+</svg>
+
+<p>
+Given a virtual address <code>V</code>, here is the process to find the physical address <code>P</code> corresponding
+to it. We call this process "page table walk".
+</p>
+
+<p>
+First, the procesor read the register <span class="register">CR3</span>. This register is written to by the kernel
+at the time of context switch. We say that <span class="register">CR3</span> points to the root of the page table
+hierarchy. Imagine that there are beginning at the address CR3, there are 512 entries, each entry of 8 bytes.
+We will see which of these 1024 entries we want to read during page translation.
+</p>
+
+<p>
+Then the the processor accesses the memory address <span class="inline-code">CR3 + 8 * V[39:47]</span> There
+are 9 bits in <span class="inline-code">V[39:47]</span> and since 2 ** 9 = 512, these 9 bits encode
+which of 512 entires in the page table root we want to read. Thus 8 bytes starting <span class="include-code">CR3 + 8 * V[39:47]</span>
+is a certain page table entry.
+</p>
+
+<p>
+So, now the processor read these 8 bytes, called PML4 entry (page map level 4 entry). Here is the structure of page table entry.
+</p>
+<table style="border: 1px solid" id = "pte-structure">
+<th>Page Table Entry Structure</th>
+<tr><td>Bits 63-52 </td><td>Available for OS use</td></tr>
+<tr><td>Bits 51-12 </td><td>Physical address (40 bits) - points to next level or physical page</td></tr>
+<tr><td>Bits 11-9  </td><td>Available for OS use</td></tr>
+<tr><td>Bit 8      </td><td>Global (G)</td></tr>
+<tr><td>Bit 7      </td><td>Page size (PS) - 0 for 4KB, 1 for larger pages</td></tr>
+<tr><td>Bit 6      </td><td>Dirty (D)</td></tr>
+<tr><td>Bit 5      </td><td>Accessed (A)  </td></tr>
+<tr><td>Bit 4      </td><td>Cache disable (PCD)</td></tr>
+<tr><td>Bit 3      </td><td>Write-through (PWT)</td></tr>
+<tr><td>Bit 2      </td><td>User/Supervisor (U/S)</td></tr>
+<tr><td>Bit 1      </td><td>Read/Write (R/W)</td></tr>
+<tr><td>Bit 0      </td><td>Present (P)</td></tr>
+</table>
+
+<p>
+For now we will ignore all the bits except for bits 51-12. These bits contain the start address of the next level of page table
+hierarchy that we need to access. If this address is <code>A3</code>, the processor finds the next level page table entry by
+the reading the 8 bytes starting <span class="inline-code">A3 + 8 * V[30:38]</span>. We call these 8 bytes as an PDPT entry 
+(page directory pointer table entry).
+</p>
+
+<p>
+Again, if A2 is the content of bits 51-12 in PDPT entry, then the processor reads 8 bytes starting 
+<span class="inline-code">A2 + 8 * V[21:29]</span>, and we call this PDT entry (page directory table entry).
+</p>
+
+<p>
+If A1 is the content of bits 51-12 in PDT page table entry, then the processor reads 8 bytes starting
+<span class="inline-code">A1 + 8 * V[12:28]</span>, and we call this PT entry (page table entry).
+</p>
+
+<p>
+Finally, if A0 is content of 51-12 in PT entry, then the processor reads the byte (or however may
+bytes are needed to be read) from the address <span class="inline-code">A1 + V[12:28]</span>. In other words
+<span class = "inline-code">A1 + V[12:28]</span> is the <em>physical address</em> corresponding the original
+virtual address <code>V</code>.
+</p>
+
+<p>
+Here is a comprehensive diagram illustrating the page table walk, thanks to claude.
+</p>
+<svg viewBox="0 0 800 900" xmlns="http://www.w3.org/2000/svg">
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#333">64-bit Page Table Walk Process</text>
+  
+  <!-- Virtual Address at top -->
+  <text x="50" y="65" font-size="12" font-weight="bold" fill="#333">Virtual Address (64-bit):</text>
+  
+  <!-- Virtual address breakdown -->
+  <rect x="50" y="75" width="80" height="30" fill="#ffeb3b" fill-opacity="0.5" stroke="#333"/>
+  <rect x="130" y="75" width="60" height="30" fill="#4caf50" fill-opacity="0.5" stroke="#333"/>
+  <rect x="190" y="75" width="60" height="30" fill="#4caf50" fill-opacity="0.5" stroke="#333"/>
+  <rect x="250" y="75" width="60" height="30" fill="#4caf50" fill-opacity="0.5" stroke="#333"/>
+  <rect x="310" y="75" width="60" height="30" fill="#4caf50" fill-opacity="0.5" stroke="#333"/>
+  <rect x="370" y="75" width="80" height="30" fill="#ff9800" fill-opacity="0.5" stroke="#333"/>
+  
+  <!-- Virtual address labels -->
+  <text x="90" y="87" text-anchor="middle" font-size="8" font-weight="bold">Sign</text>
+  <text x="90" y="97" text-anchor="middle" font-size="7">(63-48)</text>
+  
+  <text x="160" y="87" text-anchor="middle" font-size="8" font-weight="bold">PML4</text>
+  <text x="160" y="97" text-anchor="middle" font-size="7">(47-39)</text>
+  
+  <text x="220" y="87" text-anchor="middle" font-size="8" font-weight="bold">PDPT</text>
+  <text x="220" y="97" text-anchor="middle" font-size="7">(38-30)</text>
+  
+  <text x="280" y="87" text-anchor="middle" font-size="8" font-weight="bold">PD</text>
+  <text x="280" y="97" text-anchor="middle" font-size="7">(29-21)</text>
+  
+  <text x="340" y="87" text-anchor="middle" font-size="8" font-weight="bold">PT</text>
+  <text x="340" y="97" text-anchor="middle" font-size="7">(20-12)</text>
+  
+  <text x="410" y="87" text-anchor="middle" font-size="8" font-weight="bold">Offset</text>
+  <text x="410" y="97" text-anchor="middle" font-size="7">(11-0)</text>
+  
+  <!-- Example values -->
+  <text x="90" y="115" text-anchor="middle" font-size="8" fill="#666">0x0000</text>
+  <text x="160" y="115" text-anchor="middle" font-size="8" fill="#666">0x1A3</text>
+  <text x="220" y="115" text-anchor="middle" font-size="8" fill="#666">0x0F2</text>
+  <text x="280" y="115" text-anchor="middle" font-size="8" fill="#666">0x045</text>
+  <text x="340" y="115" text-anchor="middle" font-size="8" fill="#666">0x1B7</text>
+  <text x="410" y="115" text-anchor="middle" font-size="8" fill="#666">0x2A8</text>
+  
+  <!-- CR3 Register -->
+  <rect x="500" y="75" width="150" height="45" fill="#e1f5fe" stroke="#0277bd" stroke-width="2"/>
+  <text x="575" y="92" text-anchor="middle" font-size="12" font-weight="bold" fill="#0277bd">CR3 Register</text>
+  <text x="575" y="105" text-anchor="middle" font-size="10" fill="#0277bd">PML4 Base Address</text>
+  <text x="575" y="115" text-anchor="middle" font-size="9" fill="#666">0x87654000</text>
+  
+  <!-- Step 1: PML4 Access -->
+  <text x="50" y="150" font-size="14" font-weight="bold" fill="#333">Step 1: Access PML4 Table</text>
+  
+  <!-- Arrow from CR3 to PML4 -->
+  <path d="M 575 120 Q 575 135 400 160" stroke="#0277bd" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="490" y="140" font-size="9" fill="#0277bd">CR3 → PML4</text>
+  
+  <!-- PML4 Table -->
+  <rect x="50" y="160" width="400" height="100" fill="#e8f5e8" stroke="#4caf50" stroke-width="2"/>
+  <text x="250" y="178" text-anchor="middle" font-size="12" font-weight="bold" fill="#4caf50">PML4 Table (Physical: 0x87654000)</text>
+  
+  <!-- PML4 entries -->
+  <rect x="60" y="185" width="380" height="12" fill="#fff" stroke="#ccc"/>
+  <text x="65" y="194" font-size="8">Entry 0x000: [8 bytes] → PDPT at 0x12345000</text>
+  
+  <rect x="60" y="200" width="380" height="12" fill="#fff" stroke="#ccc"/>
+  <text x="65" y="209" font-size="8">...</text>
+  
+  <rect x="60" y="215" width="380" height="12" fill="#ffeb3b" stroke="#f57f17" stroke-width="2"/>
+  <text x="65" y="224" font-size="8" font-weight="bold">Entry 0x1A3: [8 bytes] → PDPT at 0xABCD8000 ← Selected</text>
+  
+  <rect x="60" y="230" width="380" height="12" fill="#fff" stroke="#ccc"/>
+  <text x="65" y="239" font-size="8">...</text>
+  
+  <rect x="60" y="245" width="380" height="12" fill="#fff" stroke="#ccc"/>
+  <text x="65" y="254" font-size="8">Entry 0x1FF: [8 bytes] → PDPT at 0x98765000</text>
+  
+  <!-- Index calculation box -->
+  <rect x="480" y="180" width="250" height="50" fill="#fff3e0" stroke="#ff9800" stroke-width="1"/>
+  <text x="605" y="195" text-anchor="middle" font-size="10" font-weight="bold">Index Calculation:</text>
+  <text x="605" y="208" text-anchor="middle" font-size="9">PML4 Index = 0x1A3 (419)</text>
+  <text x="605" y="220" text-anchor="middle" font-size="9">PML4[419] = 0xABCD8000</text>
+  
+  <!-- Step 2: PDPT Access -->
+  <text x="50" y="290" font-size="14" font-weight="bold" fill="#333">Step 2: Access PDPT Table</text>
+  
+  <!-- Arrow from PML4 to PDPT -->
+  <path d="M 250 260 Q 250 275 250 300" stroke="#4caf50" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="270" y="280" font-size="9" fill="#4caf50">PML4[0x1A3] → PDPT</text>
+  
+  <!-- PDPT Table -->
+  <rect x="50" y="300" width="400" height="100" fill="#e8f5e8" stroke="#4caf50" stroke-width="2"/>
+  <text x="250" y="318" text-anchor="middle" font-size="12" font-weight="bold" fill="#4caf50">PDPT Table (Physical: 0xABCD8000)</text>
+  
+  <rect x="60" y="325" width="380" height="12" fill="#fff" stroke="#ccc"/>
+  <text x="65" y="334" font-size="8">Entry 0x000: [8 bytes] → PD at 0x11111000</text>
+  
+  <rect x="60" y="340" width="380" height="12" fill="#fff" stroke="#ccc"/>
+  <text x="65" y="349" font-size="8">...</text>
+  
+  <rect x="60" y="355" width="380" height="12" fill="#ffeb3b" stroke="#f57f17" stroke-width="2"/>
+  <text x="65" y="364" font-size="8" font-weight="bold">Entry 0x0F2: [8 bytes] → PD at 0x22222000 ← Selected</text>
+  
+  <rect x="60" y="370" width="380" height="12" fill="#fff" stroke="#ccc"/>
+  <text x="65" y="379" font-size="8">...</text>
+  
+  <rect x="60" y="385" width="380" height="12" fill="#fff" stroke="#ccc"/>
+  <text x="65" y="394" font-size="8">Entry 0x1FF: [8 bytes] → PD at 0x33333000</text>
+  
+  <!-- PDPT Index calculation -->
+  <rect x="480" y="320" width="250" height="50" fill="#fff3e0" stroke="#ff9800" stroke-width="1"/>
+  <text x="605" y="335" text-anchor="middle" font-size="10" font-weight="bold">Index Calculation:</text>
+  <text x="605" y="348" text-anchor="middle" font-size="9">PDPT Index = 0x0F2 (242)</text>
+  <text x="605" y="360" text-anchor="middle" font-size="9">PDPT[242] = 0x22222000</text>
+  
+  <!-- Step 3: PD Access -->
+  <text x="50" y="430" font-size="14" font-weight="bold" fill="#333">Step 3: Access PD Table</text>
+  
+  <!-- Arrow from PDPT to PD -->
+  <path d="M 250 400 Q 250 415 250 440" stroke="#4caf50" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="270" y="420" font-size="9" fill="#4caf50">PDPT[0x0F2] → PD</text>
+  
+  <!-- PD Table -->
+  <rect x="50" y="440" width="400" height="100" fill="#e8f5e8" stroke="#4caf50" stroke-width="2"/>
+  <text x="250" y="458" text-anchor="middle" font-size="12" font-weight="bold" fill="#4caf50">PD Table (Physical: 0x22222000)</text>
+  
+  <rect x="60" y="465" width="380" height="12" fill="#fff" stroke="#ccc"/>
+  <text x="65" y="474" font-size="8">Entry 0x000: [8 bytes] → PT at 0x44444000</text>
+  
+  <rect x="60" y="480" width="380" height="12" fill="#fff" stroke="#ccc"/>
+  <text x="65" y="489" font-size="8">...</text>
+  
+  <rect x="60" y="495" width="380" height="12" fill="#ffeb3b" stroke="#f57f17" stroke-width="2"/>
+  <text x="65" y="504" font-size="8" font-weight="bold">Entry 0x045: [8 bytes] → PT at 0x55555000 ← Selected</text>
+  
+  <rect x="60" y="510" width="380" height="12" fill="#fff" stroke="#ccc"/>
+  <text x="65" y="519" font-size="8">...</text>
+  
+  <rect x="60" y="525" width="380" height="12" fill="#fff" stroke="#ccc"/>
+  <text x="65" y="534" font-size="8">Entry 0x1FF: [8 bytes] → PT at 0x66666000</text>
+  
+  <!-- PD Index calculation -->
+  <rect x="480" y="460" width="250" height="50" fill="#fff3e0" stroke="#ff9800" stroke-width="1"/>
+  <text x="605" y="475" text-anchor="middle" font-size="10" font-weight="bold">Index Calculation:</text>
+  <text x="605" y="488" text-anchor="middle" font-size="9">PD Index = 0x045 (69)</text>
+  <text x="605" y="500" text-anchor="middle" font-size="9">PD[69] = 0x55555000</text>
+  
+  <!-- Step 4: PT Access -->
+  <text x="50" y="570" font-size="14" font-weight="bold" fill="#333">Step 4: Access PT Table</text>
+  
+  <!-- Arrow from PD to PT -->
+  <path d="M 250 540 Q 250 555 250 580" stroke="#4caf50" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="270" y="560" font-size="9" fill="#4caf50">PD[0x045] → PT</text>
+  
+  <!-- PT Table -->
+  <rect x="50" y="580" width="400" height="100" fill="#e8f5e8" stroke="#4caf50" stroke-width="2"/>
+  <text x="250" y="598" text-anchor="middle" font-size="12" font-weight="bold" fill="#4caf50">PT Table (Physical: 0x55555000)</text>
+  
+  <rect x="60" y="605" width="380" height="12" fill="#fff" stroke="#ccc"/>
+  <text x="65" y="614" font-size="8">Entry 0x000: [8 bytes] → Page at 0x77777000</text>
+  
+  <rect x="60" y="620" width="380" height="12" fill="#fff" stroke="#ccc"/>
+  <text x="65" y="629" font-size="8">...</text>
+  
+  <rect x="60" y="635" width="380" height="12" fill="#ffeb3b" stroke="#f57f17" stroke-width="2"/>
+  <text x="65" y="644" font-size="8" font-weight="bold">Entry 0x1B7: [8 bytes] → Page at 0x88888000 ← Selected</text>
+  
+  <rect x="60" y="650" width="380" height="12" fill="#fff" stroke="#ccc"/>
+  <text x="65" y="659" font-size="8">...</text>
+  
+  <rect x="60" y="665" width="380" height="12" fill="#fff" stroke="#ccc"/>
+  <text x="65" y="674" font-size="8">Entry 0x1FF: [8 bytes] → Page at 0x99999000</text>
+  
+  <!-- PT Index calculation -->
+  <rect x="480" y="600" width="250" height="50" fill="#fff3e0" stroke="#ff9800" stroke-width="1"/>
+  <text x="605" y="615" text-anchor="middle" font-size="10" font-weight="bold">Index Calculation:</text>
+  <text x="605" y="628" text-anchor="middle" font-size="9">PT Index = 0x1B7 (439)</text>
+  <text x="605" y="640" text-anchor="middle" font-size="9">PT[439] = 0x88888000</text>
+  
+  <!-- Step 5: Final Physical Address -->
+  <text x="50" y="710" font-size="14" font-weight="bold" fill="#333">Step 5: Calculate Final Physical Address</text>
+  
+  <!-- Arrow from PT to final address -->
+  <path d="M 250 680 Q 250 695 250 720" stroke="#4caf50" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="270" y="700" font-size="9" fill="#4caf50">PT[0x1B7] → Physical Page</text>
+  
+  <!-- Final calculation -->
+  <rect x="50" y="720" width="680" height="70" fill="#ffebee" stroke="#f44336" stroke-width="2"/>
+  <text x="390" y="738" text-anchor="middle" font-size="13" font-weight="bold" fill="#f44336">Final Physical Address Calculation</text>
+  <text x="70" y="755" font-size="11" fill="#333">Physical Page Base: 0x88888000</text>
+  <text x="70" y="770" font-size="11" fill="#333">Page Offset: 0x2A8</text>
+  <text x="70" y="785" font-size="11" font-weight="bold" fill="#f44336">Final Physical Address: 0x88888000 + 0x2A8 = 0x888882A8</text>
+  
+  <!-- Memory access visualization -->
+  <rect x="50" y="810" width="300" height="50" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
+  <text x="200" y="828" text-anchor="middle" font-size="12" font-weight="bold" fill="#1976d2">Physical Memory Access</text>
+  <text x="200" y="843" text-anchor="middle" font-size="10" fill="#1976d2">Address: 0x888882A8</text>
+  <text x="200" y="855" text-anchor="middle" font-size="9" fill="#666">Read/Write actual data</text>
+  
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#666"/>
+    </marker>
+  </defs>
+</svg>
+
+
+<h4>Translation lookaside buffer (TLB)</h4>
+<p>
+As would be clear from above description, a single virtual address access, can lead to multiple actual memory accesses
+<ol>
+<li>Reading the address contained in CR3</li>
+<li>Reading PML4 entry</li>
+<li>Reading PDPT entry</li>
+<li>Reading PDT entry</li>
+<li>Reading PT entry</li>
+<li>Reading the content of actual physical address</li>
+</ol>
+</p>
+
+<p>
+This is 6 memory accesses for a single load / store assembly instruction! So, the processors use caching - in a cache
+called "Translation lookaside buffer", they cache the translation of <code>V[12:47]</code> thus avoiding all memory
+accesses except the last one. (Even the last access could be cached in L1/L2 caches, but we are not going there)
+</p>
+
+<h4>Context switch, CR3 changes and TLB flushes</h4>
+<p>
+From the above description it follows that CR3 - the address of the root of the page table hierarchy - is one per
+process. So, when a context switch from one process to another happen, the write to CR3 register by the kernel can
+be thought of as the precise point at which context switch happens:
+
+<table border="1px"><tr><td>
+<pre>
+void context_switch(struct task_struct *prev, struct task_struct *next) {
+    // Save current state
+    save_registers(prev);
+    
+    // Switch page tables - this is the key step
+    if (prev->mm != next->mm) {  // Different address spaces
+        load_cr3(next->mm->pgd);  // Write new PML4 base to CR3
+        // Above intruction translates to something like mov %rax, %cr3
+        // This immediately changes the virtual address mapping
+    }
+    
+    // Switch to new process's kernel stack
+    switch_to(prev, next);
+}
+</pre>
+</tr></td></table>
+</p>
+
+<p>
+Another thing to note is that when the write to CR3 happens then TLB is flushed, i.e. all the entries
+of TLB are invalidated, since new process will would have a different set of translations.
+</p>
+
+<p>
+It is the responsibility of the kernel to ensure that virtual addresses from two different processes don't translate
+to the same physical address. Actually in some cases, two different process have same translations, and we see
+those use cases in the next section.
+</p>
+
+<h4>Page faults</h4>
+<p>
+This is a good point to study "page fault". To understand that we need to look back at the <a href="#pte-structure">structure of page table entry</a>. Bit 0 there was <code>P</code> which stands for "present". This bit is 1 if the entry is valid and 0 if the entry is not 
+valid. If, during page walk, the processor encounters an entry which is not present, then it means that the translation of the
+corresponding virtual address does not exit. Then the processor generates a "page fault" - i.e. saves the current state on the stack,
+looks up the page fault handler address in IDT (interrupt descriptor table - which is set by kernel at boot time), switches execution to rring 0 (i.e. kernel mode) and executes the handler.
+</p>
+
+<p>
+Why would page table entry not be present? Well, by default entries have to be not present. Virtual address space is very large - 
+since we use bits 0-47 i.e. a total of 48 bits for address translation, total virtual space present with a process is 2 ** 48 = 256 TB.
+Most systems don't have that much physical address, so most virtual addresses won't have corresponding physical addresses. The processor
+thus needs a way to find what translations are present and what are not.
+</p>
+
+<p>
+Another phenomenon to consider is the following. When the application program allocates a large amount of memory (say 1 GB), then
+the kernel need not allocate physical memory for the whole 1 GB. It can just note down in its data structures that it has promised
+1 GB of memory, starting at some virtual address <code>V</code>. When the application code accesses any address from <code>V</code> 
+to <code>V + 1 GB</code>, a page fault will be generated since P bit in page table entry would be 0. The kernel would then find that
+it had allocated this address to the application code. So, it would find an available physical page (which is not allocated to another
+process), set the page table entry (including setting P bit to 1) and jump back to the same instruction which caused the page fault.
+This time, the instruction would succeed.
+</p>
+
+<h4>Fork</h4>
+<p>
+This is also a good place to study how <code>fork</code> sysetm call is implemented, at least in linux kerenel. Before we study
+fork, we need to know of bit 1 - the read/write bit in the <a href="#pte-structure">structure of page table entry</a>. If the bit is 0,
+address translation will succeed only if it is happening during a read instruction. If address translation is happening during
+a write instruction then a page fault would be generated.
+</p>
+
+<p>
+Coming back to the fork system call, when a fork happens, both parent and child processes are supposed to have the view of the memory
+that the parent had before the fork. If address <code>a</code> has content <code>c</code> in parent process, same should hold 
+true in child process. After the fork however, parent and child go their own way - updates by one are not reflected to the other.
+</p>
+
+<p>
+One way to implement fork would to copy all the pages physical pages corresponding to the parent process, and create a fresh set of
+page tables that contain the new translations and have CR3 point to the root of the new page table hierarchy. However, that would
+mean copying large amounts of data, and what is worse - many times <code>fork</code> is followed by <code>exec</code> in the child
+code, in which the child completely ignores the memory it received from the parents.
+child 
+</p>
+
+<p>
+So, kernel instead follows a better scheme. A basic version of that scheme is that the kernel creates new page table entries
+for the child, in a way that all the address translations from the new set of tables are the same as the old translations.
+However, both in the parent and in the child, all entries are marked read-only. As long as the child and the parent processes
+only read the memory location, there is no problem. However, when someone attempts to write to a location, a page fault is generated
+(since PTE mentions the translation to be read only). In servicing the page fault, the kernel creates a fresh copy of the page
+that was attempted to be written to. Then, the PTEs of parent and child are updated so that the translations are now to different
+physical pages. Also, now both the entries are marked as read-write. And then the faulting instruction is re-attempted. This time
+it would succeed. 
+</p>
+
+<p>
+Note that the application code would be oblivious to all this. It attempted a write, and then write succeeded. We call the above
+the process as copy on write, or COW.
+</p>
+
+<h4>Kernel is mapped to all address spaces accessible in kernel mode only</h4>
+<p>
+Finally, note that when an interrupt arrives, or a page fault happens, then application code (user mode code) stops executing
+and kernel code starts executing (from a prespecified address). On this switch, CR3 does not change - i.e. the process remains
+the same. So, there are virtual addresses which map to kernel code and data. However, we don't want user mode code to access
+this code and data, despite some virtual addresses mapping to it. To achieve this, we use bit 2 - user/supervisor bit of the 
+<a href="#pte-structure">structure of page table entry</a>. When set to 1, it means that this entry can be used only during
+the kernel mode of execution. So, if a user code tries to accesss the virtual addresses corresponding to this entry, there
+would be a page fault.
+</p>
+
+<p>
+This is an elegant way that avoids both copying the kernel code in all address spaces, as well as avoiding teh change of CR3
+at user-kernel mode execution switch.
+</p>
+
+<h2>Final thoughts</h2>
+<p>
+When I first studied computer architecture at IIT Kanpur, I understood very little as to what was going on. I then took
+a <a href="https://siebelschool.illinois.edu/academics/courses/cs433-120251">compute architecture course at UIUC</a> and
+thing were much clearer - like pipelining concepts. However, it was only when I worked at VMware and talked to relevant
+people over several years, these concepts became clear enough to my satisfaction.
+</p>
+
+<p>
+Most of these things are not taught in the courses in the right way - and the beauty of the whole implementation gets lost
+in the details. I hope I was able to bring some of the beauty of the computer architecture in this article.
+</p>
+</body>
+</html>
