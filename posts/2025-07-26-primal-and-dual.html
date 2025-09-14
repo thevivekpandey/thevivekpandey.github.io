@@ -1,0 +1,104 @@
+<html>
+<head>
+  <title>Primal and Dual</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_SVG"></script>
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+            TeX: {
+                extensions: ["AMScd.js"]
+            },
+            "HTML-CSS": { scale: 100 }
+        };
+    </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1450977-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)};
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-1450977-3');
+  </script>
+
+   <style>
+        .container {
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+        }
+       table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+
+</head>
+
+<body>
+<h1>Primal and Dual</h1>
+
+<p>
+Every since I learnt about primals and duals in linear programming I have been mesmerized by that concept. 
+I have, passively, been observing this phenomena in diverse situations spanning Maths, Science and Philosophy. There are two different 
+but equivalent ways of viewing a phenomena. Knowing the two ways sometimes helps in solving problems, and sometimes throws light
+on the underlying phenomena and somtimes it is a bit frightening - attacking the hubris of mankind.
+</p>
+
+<p>
+In this article we look at several cases of primal and dual.
+</p>
+
+<h3>Primal and dual in linear programming</h3>
+<p>
+To understand this, first we need to understand linear programming. Here is a primer on that.
+</p>
+
+<p>
+In linear programming there are some linear constraints - either min value constraints or max value constraints - 
+on some variables and subject to those constraints an linear
+function of the variables needs to be optimised. Depending on type of constraints, there can be two types of linear problems -
+primal or dual.
+</p>
+<p> Let's first see the first type of linear problem - the primal. To motivate this, let's say there is a factory which
+produces  three products A, B, and C with the following constraints:
+
+<ul>
+<li>Machine time: Product A needs 2 hours, B needs 3 hours, C needs 1 hour</li>
+<li>Labor time: Product A needs 1 hour, B needs 2 hours, C needs 3 hours </li>
+<li>Raw material: Product A needs 3 kg, B needs 1 kg, C needs 2 kg</li>
+<li>Available resources: 100 machine hours, 80 labor hours, 90 kg raw material</li>
+<li>Profit per unit: A = $5, B = $4, C = $6</li>
+</ul>
+
+<p>
+We need to decided how much of A, B and C to produce. If we want to produce $x_1$ units of A, $x_2$ units of
+B and $x_3$ units C, we need to maximize
+
+$$Z = 5x_1 + 4x_2 + 6x_3$$
+subject to
+$$2x_1 + 3x_2 + x_3 \lte 100$$
+$$x_1 + 2x_2 + 3x_3 \lte 80$$
+$$3x_1 + x_2 + 2x_3 \lte 90$$
+$$x_1, x_2, x_3 \gte 0$$
+</p>
+
+</p>
+<p>
+</p>
+
+<p>
+</p>
+</body>
+</html>
