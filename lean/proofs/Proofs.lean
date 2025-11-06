@@ -1,4 +1,5 @@
 import Proofs.Basic
+import Proofs.Proofs2
 import Mathlib.Tactic
 import Mathlib.Data.Real.Sqrt
 import Mathlib.Data.Rat.Defs
