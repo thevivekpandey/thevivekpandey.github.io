@@ -9,7 +9,6 @@ import random_mover
 import basic_mcts
 
 # Configuration
-#LICHESS_TOKEN = "<my token>"  # Replace with your actual token
 BASE_URL = "https://lichess.org"
 
 # Headers for API requests
