@@ -1,2 +1,3 @@
 *.pth
 __pycache__/
+chess/mini-leela/lichess_puzzles.csv.zst

@@ -71,6 +71,14 @@ def head {α : Type} {n : Nat} : Vec α (n + 1) → α :=
    match v with
    | Vec.cons x _ => x
 
-
 def head1 {α : Type} {n : Nat} : Vec α (n + 1) → α
    | Vec.cons x _ => x
+
+def last {α : Type} : {n : Nat} → Vec α (n + 1) → α
+  | 0, Vec.cons x Vec.nil => x
+  | Nat.succ n, Vec.cons _ (Vec.cons y ys) => last (Vec.cons y ys)
+
+#eval last (Vec.cons 1 (Vec.cons 2 (Vec.cons 3 Vec.nil)))
+
+#eval 3 + 4
+

@@ -38,10 +38,10 @@ theorem no_rat_sq_eq_two : ¬ ∃ (q : ℚ), q * q = 2 := by
     rw [h1] at hq
     field_simp at hq
     have h2 : (q.num : ℚ) ^ 2 = 2 * (q.den : ℚ) ^ 2 := by
-      convert hq using 1 <;> ring
+      convert hq using 1; ring
     have h3 : ((q.num ^ 2 : ℤ) : ℚ) = ((2 * q.den ^ 2 : ℤ) : ℚ) := by
       push_cast
-      convert h2 using 1 <;> ring
+      convert h2 using 1;
     have h4 : q.num ^ 2 = 2 * (q.den : ℤ) ^ 2 := Int.cast_injective h3
     have h5 : q.num.natAbs ^ 2 = (2 * (q.den : ℤ) ^ 2).natAbs := by
       rw [← Int.natAbs_pow, ← h4]
@@ -52,4 +52,7 @@ theorem no_rat_sq_eq_two : ¬ ∃ (q : ℚ), q * q = 2 := by
   -- Apply lemma
   exact no_coprime_sq_eq_two q.reduced h_eq
 
-#check no_rat_sq_eq_two
+theorem sq_of_even_is_even : ∀ (n: Nat), Even (n) → Even (n^2) := by
+   intro h
+   have : 2 | n
+   
