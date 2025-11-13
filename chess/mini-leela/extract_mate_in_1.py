@@ -1,126 +1,138 @@
 """
-Extract mate-in-1 puzzles from Lichess puzzle database
+Extract mate-in-1 puzzles from mate_in_1.csv (pre-filtered Lichess puzzles)
+Creates TRAINING_POSITIONS (10K) and TEST_POSITIONS (4K)
 """
-import zstandard
 import csv
+import chess
 import random
 
-print("Decompressing and extracting mate-in-1 puzzles...")
+print("="*70)
+print("Processing mate-in-1 puzzles from mate_in_1.csv")
+print("="*70)
+print()
 
 mate_in_1_puzzles = []
 
-# Decompress and read CSV
-with open('lichess_puzzles.csv.zst', 'rb') as compressed:
-    dctx = zstandard.ZstdDecompressor()
-    with dctx.stream_reader(compressed) as reader:
-        text_stream = reader.read().decode('utf-8').splitlines()
-        csv_reader = csv.DictReader(text_stream)
+# Read the CSV file
+print("Reading mate_in_1.csv...")
+with open('mate_in_1.csv', 'r', encoding='utf-8') as f:
+    reader = csv.reader(f)
 
-        for i, row in enumerate(csv_reader):
-            if i % 100000 == 0:
-                print(f"Processed {i} puzzles, found {len(mate_in_1_puzzles)} mate-in-1 so far...")
+    for i, row in enumerate(reader):
+        if i % 10000 == 0 and i > 0:
+            print(f"Processed {i:,} rows, validated {len(mate_in_1_puzzles):,} puzzles...")
 
-            # Check if this is a mate-in-1 puzzle
-            themes = row['Themes']
-            if 'mateIn1' in themes:
-                fen = row['FEN']
-                moves = row['Moves'].split()
-                solution_move = moves[0]  # First move is the solution
+        # CSV format: PuzzleId, FEN, Moves, Rating, Popularity, NbPlays, Themes, GameUrl, OpeningTags
+        if len(row) < 4:
+            continue
 
-                puzzle_id = row['PuzzleId']
-                rating = row['Rating']
+        puzzle_id = row[0]
+        fen = row[1]
+        moves = row[2]
+        rating = row[3]
 
-                mate_in_1_puzzles.append({
-                    'fen': fen,
-                    'move': solution_move,
-                    'id': puzzle_id,
-                    'rating': int(rating)
-                })
+        if not fen or not moves:
+            continue
 
-            # Stop after collecting enough
-            if len(mate_in_1_puzzles) >= 15000:  # Get 15000 for diverse split
+        # Extract solution move (first move in the sequence)
+        solution_uci = moves.split()[0] if moves else ''
+        if not solution_uci:
+            continue
+
+        # Validate the position
+        try:
+            board = chess.Board(fen)
+            solution_move = chess.Move.from_uci(solution_uci)
+
+            # Verify it's legal
+            if solution_move not in board.legal_moves:
+                if len(mate_in_1_puzzles) < 5:  # Debug first few
+                    print(f"DEBUG: Illegal move {solution_uci} for {fen}")
+                continue
+
+            # Verify it leads to checkmate
+            board.push(solution_move)
+            if not board.is_checkmate():
+                if len(mate_in_1_puzzles) < 5:  # Debug first few
+                    print(f"DEBUG: Not checkmate - {solution_uci} for {fen}")
+                continue
+            board.pop()
+
+            # Add to collection
+            description = f"Lichess #{puzzle_id} (Rating: {rating})"
+            try:
+                rating_int = int(rating)
+            except:
+                rating_int = 1500
+            mate_in_1_puzzles.append((fen, solution_uci, description, rating_int))
+
+            # Print milestone
+            if len(mate_in_1_puzzles) in [1000, 5000, 10000, 14000, 15000]:
+                print(f"✓ Validated {len(mate_in_1_puzzles):,} puzzles...")
+
+            # Stop once we have enough
+            if len(mate_in_1_puzzles) >= 15000:
+                print(f"✓ Collected enough puzzles! Stopping at {len(mate_in_1_puzzles):,}")
                 break
 
-print(f"\nFound {len(mate_in_1_puzzles)} mate-in-1 puzzles")
+        except Exception as e:
+            # Skip invalid positions
+            if len(mate_in_1_puzzles) < 5:  # Debug first few
+                print(f"DEBUG: Exception {e} for FEN: {fen}, Move: {solution_uci}")
+            continue
 
-# Sort by rating to see the full difficulty range
-mate_in_1_puzzles.sort(key=lambda x: x['rating'])
-print(f"Rating range: {mate_in_1_puzzles[0]['rating']} to {mate_in_1_puzzles[-1]['rating']}")
+print(f"\n{'='*70}")
+print(f"Successfully validated {len(mate_in_1_puzzles):,} mate-in-1 puzzles")
+print(f"{'='*70}\n")
 
-# Target: 10K training, 4K test - sampled UNIFORMLY across all difficulty levels
-num_training = min(10000, len(mate_in_1_puzzles) - 4000)
-num_test = min(4000, len(mate_in_1_puzzles) - num_training)
+if len(mate_in_1_puzzles) < 14000:
+    print(f"⚠️  WARNING: Only found {len(mate_in_1_puzzles):,} puzzles, need at least 14,000")
+    if len(mate_in_1_puzzles) >= 1000:
+        print("Continuing with what we have...\n")
+    else:
+        print("Not enough puzzles to create datasets!")
+        exit(1)
 
-training_puzzles = []
-test_puzzles = []
+# Sort by rating for good distribution, then shuffle
+mate_in_1_puzzles.sort(key=lambda x: x[3])
+random.seed(42)
+random.shuffle(mate_in_1_puzzles)
 
-# Strategy: Sample uniformly across the sorted rating range
-# This ensures we get easy, medium, and hard puzzles
-total_available = len(mate_in_1_puzzles)
+# Split into train (10K) and test (4K)
+num_train = min(10000, len(mate_in_1_puzzles))
+num_test = min(4000, len(mate_in_1_puzzles) - num_train)
 
-# Take every Nth puzzle for training to spread across difficulties
-training_step = total_available / (num_training + num_test) * (num_training / (num_training + num_test))
-training_indices = set()
-for i in range(num_training):
-    idx = int(i * total_available / num_training)
-    training_indices.add(idx)
-    training_puzzles.append(mate_in_1_puzzles[idx])
+training_positions = [(fen, uci, desc) for fen, uci, desc, _ in mate_in_1_puzzles[:num_train]]
+test_positions = [(fen, uci, desc) for fen, uci, desc, _ in mate_in_1_puzzles[num_train:num_train+num_test]]
 
-# Take remaining puzzles for test, also spread across difficulties
-remaining_indices = [i for i in range(total_available) if i not in training_indices]
-test_step = max(1, len(remaining_indices) / num_test)
-for i in range(num_test):
-    idx = int(i * len(remaining_indices) / num_test)
-    if idx < len(remaining_indices):
-        test_puzzles.append(mate_in_1_puzzles[remaining_indices[idx]])
-
-print(f"\nTraining: {len(training_puzzles)} puzzles")
-print(f"  Rating range: {training_puzzles[0]['rating']} to {training_puzzles[-1]['rating']}")
-print(f"  Avg rating: {sum(p['rating'] for p in training_puzzles) / len(training_puzzles):.0f}")
-
-print(f"\nTest: {len(test_puzzles)} puzzles")
-print(f"  Rating range: {test_puzzles[0]['rating']} to {test_puzzles[-1]['rating']}")
-print(f"  Avg rating: {sum(p['rating'] for p in test_puzzles) / len(test_puzzles):.0f}")
+print(f"Created datasets:")
+print(f"  Training: {len(training_positions):,} positions")
+print(f"  Test:     {len(test_positions):,} positions\n")
 
 # Write to Python file
-with open('mate_in_1_positions.py', 'w') as f:
+print("Writing to mate_in_1_positions.py...")
+with open('mate_in_1_positions.py', 'w', encoding='utf-8') as f:
     f.write('"""\n')
-    f.write('Mate-in-1 positions from Lichess puzzle database\n')
-    f.write(f'{len(training_puzzles)} training + {len(test_puzzles)} test puzzles\n')
-    f.write('Sampled uniformly across all difficulty ratings for challenging learning\n')
+    f.write('Mate-in-1 chess positions from Lichess puzzle database\n')
+    f.write('Format: (FEN, solution_UCI, description)\n')
+    f.write(f'Total: {len(training_positions)} training + {len(test_positions)} test positions\n')
     f.write('"""\n\n')
 
-    f.write(f"# {len(training_puzzles)} training positions\n")
-    f.write("TRAINING_POSITIONS = [\n")
-    for p in training_puzzles:
-        desc = f"Lichess #{p['id']} (rating:{p['rating']})"
-        f.write(f"    ('{p['fen']}', '{p['move']}', '{desc}'),\n")
-    f.write("]\n\n")
+    f.write('TRAINING_POSITIONS = [\n')
+    for fen, uci, desc in training_positions:
+        fen_escaped = fen.replace("'", "\\'")
+        desc_escaped = desc.replace("'", "\\'")
+        f.write(f"    ('{fen_escaped}', '{uci}', '{desc_escaped}'),\n")
+    f.write(']\n\n')
 
-    f.write(f"# {len(test_puzzles)} test positions\n")
-    f.write("TEST_POSITIONS = [\n")
-    for p in test_puzzles:
-        desc = f"Lichess #{p['id']} (rating:{p['rating']})"
-        f.write(f"    ('{p['fen']}', '{p['move']}', '{desc}'),\n")
-    f.write("]\n\n")
+    f.write('TEST_POSITIONS = [\n')
+    for fen, uci, desc in test_positions:
+        fen_escaped = fen.replace("'", "\\'")
+        desc_escaped = desc.replace("'", "\\'")
+        f.write(f"    ('{fen_escaped}', '{uci}', '{desc_escaped}'),\n")
+    f.write(']\n')
 
-    f.write("""
-def get_training_fens():
-    return [pos[0] for pos in TRAINING_POSITIONS]
-
-def get_test_fens():
-    return [pos[0] for pos in TEST_POSITIONS]
-
-def get_all_fens():
-    return get_training_fens() + get_test_fens()
-
-def get_solution(fen):
-    for pos_list in [TRAINING_POSITIONS, TEST_POSITIONS]:
-        for pos_fen, solution, desc in pos_list:
-            if pos_fen == fen:
-                return solution, desc
-    return None, None
-""")
-
-print("\n✓ Saved to mate_in_1_positions.py")
-print("You can now use this for training!")
+print(f"✓ Successfully created mate_in_1_positions.py!")
+print(f"  Total puzzles: {len(training_positions) + len(test_positions):,}\n")
+print(f"Next step: Validate the positions:")
+print(f"  python3 validate_positions.py")
