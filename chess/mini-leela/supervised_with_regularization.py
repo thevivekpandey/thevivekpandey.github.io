@@ -2,6 +2,7 @@
 Supervised learning with regularization (Dropout + Weight Decay)
 To combat overfitting on the mate-in-1 dataset
 """
+import sys
 import chess
 import torch
 import torch.nn as nn
@@ -9,16 +10,21 @@ import torch.nn.functional as F
 import numpy as np
 import random
 from datetime import datetime
+from torchinfo import summary
 
 from mini_leela_complete_fixed import BoardEncoder, MoveEncoder
 from mini_leela_complete_with_dropout import ChessNetWithDropout
 from mate_in_1_positions import TRAINING_POSITIONS, TEST_POSITIONS
 
+# Enable multi-core CPU usage
+torch.set_num_threads(8)
+
 print("="*70)
-print("Supervised Learning with Regularization")
+print("Supervised Learning - LARGER MODEL")
 print("="*70)
-print("\nRegularization techniques:")
-print("  1. Dropout (30% in ResNet blocks and FC layers)")
+print("\nModel: 4 ResNet blocks, 128 channels (~4.6M parameters)")
+print("Regularization techniques:")
+print("  1. Dropout (10% in ResNet blocks and FC layers)")
 print("  2. Weight Decay (L2 regularization)")
 print("  3. Early stopping based on test accuracy\n")
 
@@ -27,27 +33,40 @@ encoder = BoardEncoder()
 move_encoder = MoveEncoder()
 
 # REGULARIZATION SETTINGS
-DROPOUT_RATE = 0.3        # 30% dropout
-WEIGHT_DECAY = 1e-4       # L2 regularization
+DROPOUT_RATE = 0.1        # 10% dropout (reduced from 30% - we were underfitting!)
+WEIGHT_DECAY = 5e-5       # L2 regularization (reduced from 1e-4)
 LEARNING_RATE = 0.01
 BATCH_SIZE = 32           # Larger batch size for better generalization
 
-# Create network WITH dropout (SMALLER MODEL)
+# Create network WITH dropout (LARGER MODEL to combat underfitting)
 network = ChessNetWithDropout(
     input_channels=19,
-    num_res_blocks=2,  # Reduced from 4 to 2
-    num_channels=64,    # Reduced from 128 to 64
+    num_res_blocks=4,  # Increased from 2 to 4
+    num_channels=128,   # Increased from 64 to 128
     dropout=DROPOUT_RATE
 )
 
 # Optimizer with weight decay
 optimizer = torch.optim.Adam(network.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY)
 
+# Print model summary
+print("\n" + "="*70)
+print("MODEL ARCHITECTURE")
+print("="*70)
+summary(network, input_size=(1, 19, 8, 8),
+        col_names=["output_size", "num_params", "trainable"],
+        depth=3)
+
+print("\n" + "="*70)
+print("TRAINING CONFIGURATION")
+print("="*70)
 print(f"Network parameters: {sum(p.numel() for p in network.parameters()):,}")
 print(f"Dropout rate: {DROPOUT_RATE}")
 print(f"Weight decay: {WEIGHT_DECAY}")
 print(f"Learning rate: {LEARNING_RATE}")
 print(f"Batch size: {BATCH_SIZE}\n")
+print("Exiting now")
+sys.exit(1)
 
 # Calculate and display average ratings
 train_ratings = [rating for _, _, rating in TRAINING_POSITIONS]
@@ -151,12 +170,12 @@ def evaluate(positions, network):
     return correct, len(positions), accuracy, avg_policy_loss, avg_value_loss
 
 # Initial evaluation
-print("Evaluating before training...")
-train_correct, train_total, train_acc, train_policy_loss, train_value_loss = evaluate(TRAINING_POSITIONS, network)
-test_correct, test_total, test_acc, test_policy_loss, test_value_loss = evaluate(TEST_POSITIONS, network)
-print(f"Before training:")
-print(f"  Train: {train_correct}/{train_total} ({train_acc*100:.1f}%) - Loss: {train_policy_loss:.4f}")
-print(f"  Test:  {test_correct}/{test_total} ({test_acc*100:.1f}%) - Loss: {test_policy_loss:.4f}")
+#print("Evaluating before training...")
+#train_correct, train_total, train_acc, train_policy_loss, train_value_loss = evaluate(TRAINING_POSITIONS, network)
+#test_correct, test_total, test_acc, test_policy_loss, test_value_loss = evaluate(TEST_POSITIONS, network)
+#print(f"Before training:")
+#print(f"  Train: {train_correct}/{train_total} ({train_acc*100:.1f}%) - Loss: {train_policy_loss:.4f}")
+#print(f"  Test:  {test_correct}/{test_total} ({test_acc*100:.1f}%) - Loss: {test_policy_loss:.4f}")
 
 # Training loop with early stopping
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -206,8 +225,8 @@ for epoch in range(1, num_epochs + 1):
         'model_state_dict': network.state_dict(),
         'network_config': {
             'input_channels': 19,
-            'num_res_blocks': 2,
-            'num_channels': 64,
+            'num_res_blocks': 4,
+            'num_channels': 128,
             'dropout': DROPOUT_RATE
         },
         'epoch': epoch,
