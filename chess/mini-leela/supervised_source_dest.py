@@ -19,24 +19,31 @@ from chess_net_source_dest import ChessNetSourceDest
 # Enable multi-core CPU usage
 torch.set_num_threads(8)
 
+# Device configuration - works on both CPU (Mac) and GPU (Databricks)
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+print(f"Using device: {device}")
+if torch.cuda.is_available():
+    print(f"GPU: {torch.cuda.get_device_name(0)}\n")
+
 # ============================================================================
 # DATA LOADING CONFIGURATION
 # ============================================================================
 CSV_FILE = "mate_in_1_processed.csv"
-TRAIN_SIZE = 20000  # Number of training examples to use
-TEST_SIZE = 2000    # Number of test examples to use
+TRAIN_SIZE = 200000  # Number of training examples to use
+TEST_SIZE = 20000    # Number of test examples to use
 
 print("="*70)
 print("Supervised Learning - SOURCE/DEST ENCODING")
 print("="*70)
-print("\nModel: 8 ResNet blocks, 128 channels")
+print("\nModel: 10 ResNet blocks, 256 channels (~10-12M params)")
 print("Move encoding: Separate source (64) + dest (64) predictions")
 print("  Instead of wasteful 1024→4096 (4.2M params)")
-print("  Using 1024→64 + 1024→64 (~131K params)")
-print("Regularization:")
-print("  1. Dropout (10% in ResNet blocks and FC layers)")
-print("  2. Weight Decay (L2 regularization)")
-print("  3. Early stopping based on test accuracy\n")
+print("  Using efficient source/dest encoding")
+print("\nTraining Configuration:")
+print("  Learning Rate: 0.001 (reduced from 0.01)")
+print("  Dropout: 0.0 (removed - was limiting capacity)")
+print("  Weight Decay: 5e-5 (light regularization)")
+print("  Early stopping: 10 epoch patience\n")
 
 # Setup
 encoder = BoardEncoder()
@@ -72,18 +79,18 @@ TEST_POSITIONS = all_positions[TRAIN_SIZE:TRAIN_SIZE + TEST_SIZE]
 print(f"Using {TRAIN_SIZE:,} training positions and {TEST_SIZE:,} test positions\n")
 
 # REGULARIZATION SETTINGS
-DROPOUT_RATE = 0.1
-WEIGHT_DECAY = 5e-5
-LEARNING_RATE = 0.01
+DROPOUT_RATE = 0.0         # Removed dropout - was preventing learning
+WEIGHT_DECAY = 5e-5        # Keep light weight decay
+LEARNING_RATE = 0.001      # Reduced from 0.01 - previous LR was too high!
 BATCH_SIZE = 32
 
 # Create network with SOURCE/DEST encoding
 network = ChessNetSourceDest(
     input_channels=19,
-    num_res_blocks=8,  # More blocks now that we saved params!
-    num_channels=128,
+    num_res_blocks=10,  # Increased from 8 to 10
+    num_channels=256,    # Increased from 128 to 256
     dropout=DROPOUT_RATE
-)
+).to(device)  # Move model to GPU if available
 
 # Optimizer with weight decay
 optimizer = torch.optim.Adam(network.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY)
@@ -138,7 +145,7 @@ for fen, solution_uci, rating in TRAINING_POSITIONS:
 
 
 # Training function with proper loss calculation for source/dest
-def train_epoch(data, network, optimizer, batch_size):
+def train_epoch(data, network, optimizer, batch_size, device):
     network.train()
     random.shuffle(data)
 
@@ -150,10 +157,10 @@ def train_epoch(data, network, optimizer, batch_size):
     for i in range(0, len(data), batch_size):
         batch = data[i:i+batch_size]
 
-        states = torch.FloatTensor(np.array([d[0] for d in batch]))
-        source_targets = torch.FloatTensor(np.array([d[1] for d in batch]))
-        dest_targets = torch.FloatTensor(np.array([d[2] for d in batch]))
-        value_targets = torch.FloatTensor(np.array([d[3] for d in batch])).unsqueeze(1)
+        states = torch.FloatTensor(np.array([d[0] for d in batch])).to(device)
+        source_targets = torch.FloatTensor(np.array([d[1] for d in batch])).to(device)
+        dest_targets = torch.FloatTensor(np.array([d[2] for d in batch])).to(device)
+        value_targets = torch.FloatTensor(np.array([d[3] for d in batch])).unsqueeze(1).to(device)
 
         source_logits, dest_logits, values = network(states)
 
@@ -179,7 +186,7 @@ def train_epoch(data, network, optimizer, batch_size):
 
 
 # Evaluation function for source/dest
-def evaluate(positions, network):
+def evaluate(positions, network, device):
     network.eval()
     correct = 0
     total_source_loss = 0.0
@@ -191,17 +198,17 @@ def evaluate(positions, network):
             board = chess.Board(fen)
             solution_move = chess.Move.from_uci(solution_uci)
 
-            board_tensor = torch.FloatTensor(encoder.encode_board(board)).unsqueeze(0)
+            board_tensor = torch.FloatTensor(encoder.encode_board(board)).unsqueeze(0).to(device)
             source_logits, dest_logits, values = network(board_tensor)
 
             # Calculate loss
-            source_target = torch.zeros(1, 64)
+            source_target = torch.zeros(1, 64).to(device)
             source_target[0, solution_move.from_square] = 1.0
 
-            dest_target = torch.zeros(1, 64)
+            dest_target = torch.zeros(1, 64).to(device)
             dest_target[0, solution_move.to_square] = 1.0
 
-            value_target = torch.FloatTensor([[1.0]])
+            value_target = torch.FloatTensor([[1.0]]).to(device)
 
             source_loss = -(source_target * F.log_softmax(source_logits, dim=1)).sum(dim=1).mean()
             dest_loss = -(dest_target * F.log_softmax(dest_logits, dim=1)).sum(dim=1).mean()
@@ -254,12 +261,12 @@ print("-" * 80)
 
 for epoch in range(1, num_epochs + 1):
     # Train
-    source_loss, dest_loss, value_loss = train_epoch(train_data, network, optimizer, BATCH_SIZE)
+    source_loss, dest_loss, value_loss = train_epoch(train_data, network, optimizer, BATCH_SIZE, device)
     policy_loss = source_loss + dest_loss  # Combined policy loss for display
 
     # Evaluate
-    train_correct, train_total, train_acc, train_src_loss, train_dst_loss, train_val_loss = evaluate(TRAINING_POSITIONS, network)
-    test_correct, test_total, test_acc, test_src_loss, test_dst_loss, test_val_loss = evaluate(TEST_POSITIONS, network)
+    train_correct, train_total, train_acc, train_src_loss, train_dst_loss, train_val_loss = evaluate(TRAINING_POSITIONS, network, device)
+    test_correct, test_total, test_acc, test_src_loss, test_dst_loss, test_val_loss = evaluate(TEST_POSITIONS, network, device)
 
     test_policy_loss = test_src_loss + test_dst_loss
 
@@ -288,8 +295,8 @@ for epoch in range(1, num_epochs + 1):
         'model_state_dict': network.state_dict(),
         'network_config': {
             'input_channels': 19,
-            'num_res_blocks': 8,
-            'num_channels': 128,
+            'num_res_blocks': 10,
+            'num_channels': 256,
             'dropout': DROPOUT_RATE
         },
         'epoch': epoch,
