@@ -2,6 +2,7 @@
 Configuration 3: 8 blocks, 192 channels
 Expected: ~5M parameters (smallest)
 Target: 93-94% test accuracy
+Saves models to S3 for Databricks
 """
 import chess
 import torch
@@ -10,11 +11,17 @@ import torch.nn.functional as F
 import numpy as np
 import random
 import csv
+import os
+import tempfile
 from datetime import datetime
 from torchinfo import summary
 
 from mini_leela_complete_fixed import BoardEncoder
 from chess_net_source_dest import ChessNetSourceDest
+
+# S3 Configuration
+MODEL_SAVE_PATH = os.environ.get('MODEL_SAVE_PATH', 's3://your-bucket/chess-models/')
+# Example: MODEL_SAVE_PATH = "s3://my-bucket/chess/models/"
 
 # Enable multi-core CPU usage
 torch.set_num_threads(8)
@@ -24,6 +31,68 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f"Using device: {device}")
 if torch.cuda.is_available():
     print(f"GPU: {torch.cuda.get_device_name(0)}\n")
+
+
+def save_model_to_s3(model_dict, s3_path):
+    """
+    Save model to S3 using Databricks dbutils
+
+    Args:
+        model_dict: Dictionary containing model state and metadata
+        s3_path: Full S3 path (e.g., s3://bucket/path/model.pth)
+    """
+    try:
+        # Check if running in Databricks
+        try:
+            from pyspark.dbutils import DBUtils
+            from pyspark.sql import SparkSession
+            spark = SparkSession.builder.getOrCreate()
+            dbutils = DBUtils(spark)
+            use_dbutils = True
+        except:
+            use_dbutils = False
+
+        if use_dbutils:
+            # Save to temporary file first
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.pth') as tmp_file:
+                torch.save(model_dict, tmp_file.name)
+                tmp_path = tmp_file.name
+
+            # Copy to S3 using dbutils
+            dbutils.fs.cp(f"file://{tmp_path}", s3_path)
+
+            # Clean up temp file
+            os.remove(tmp_path)
+            print(f"✓ Model saved to S3: {s3_path}")
+        else:
+            # Fallback: try using boto3 (if available)
+            import boto3
+
+            # Parse S3 path
+            s3_path_clean = s3_path.replace('s3://', '')
+            bucket = s3_path_clean.split('/')[0]
+            key = '/'.join(s3_path_clean.split('/')[1:])
+
+            # Save to temp file
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.pth') as tmp_file:
+                torch.save(model_dict, tmp_file.name)
+                tmp_path = tmp_file.name
+
+            # Upload to S3
+            s3_client = boto3.client('s3')
+            s3_client.upload_file(tmp_path, bucket, key)
+
+            # Clean up
+            os.remove(tmp_path)
+            print(f"✓ Model saved to S3: {s3_path}")
+
+    except Exception as e:
+        print(f"⚠ Warning: Failed to save to S3: {e}")
+        print(f"  Saving locally instead...")
+        # Fallback to local save
+        local_path = s3_path.split('/')[-1]
+        torch.save(model_dict, local_path)
+        print(f"✓ Model saved locally: {local_path}")
 
 # DATA LOADING
 CSV_FILE = "mate_in_1_processed.csv"
@@ -38,7 +107,9 @@ print("Target: 93-94% test accuracy")
 print("\nTraining Configuration:")
 print("  Learning Rate: 0.001")
 print("  Dropout: 0.0")
-print("  Weight Decay: 5e-5\n")
+print("  Weight Decay: 5e-5")
+print(f"\nModel Save Path: {MODEL_SAVE_PATH}")
+print()
 
 # Setup
 encoder = BoardEncoder()
@@ -222,8 +293,8 @@ for epoch in range(1, num_epochs + 1):
 
     # Save best model
     if status:
-        model_path = f"config3_8b_192ch_best_{timestamp}.pth"
-        torch.save({
+        model_filename = f"config3_8b_192ch_best_{timestamp}.pth"
+        model_dict = {
             'model_state_dict': network.state_dict(),
             'network_config': {
                 'input_channels': 19,
@@ -234,7 +305,13 @@ for epoch in range(1, num_epochs + 1):
             'epoch': epoch,
             'train_accuracy': train_acc,
             'test_accuracy': test_acc,
-        }, model_path)
+        }
+
+        # Construct full S3 path
+        s3_path = MODEL_SAVE_PATH.rstrip('/') + '/' + model_filename
+
+        # Save to S3 (with fallback to local)
+        save_model_to_s3(model_dict, s3_path)
 
     if epochs_without_improvement >= patience:
         print(f"\n⚠️  Early stopping triggered (no improvement for {patience} epochs)")
