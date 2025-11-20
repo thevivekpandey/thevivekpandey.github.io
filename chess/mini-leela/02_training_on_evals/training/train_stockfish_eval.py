@@ -124,17 +124,15 @@ with open(TRAIN_CSV_FILE, 'r') as f:
 
 print(f"Loaded {len(training_positions):,} training positions")
 
-# For validation, we'll use mate-in-1 positions with evaluation +/-10900 (forced mate)
+# Load validation data with actual stockfish evaluations
 print(f"Loading validation data from {VALIDATION_CSV_FILE}...")
 validation_positions = []
 with open(VALIDATION_CSV_FILE, 'r') as f:
     reader = csv.DictReader(f)
     for row in reader:
-        # Mate-in-1 positions should have high evaluation
-        # We'll assign +10900 for white to move, -10900 for black to move
-        board = chess.Board(row['fen'])
-        eval_score = 10900.0 if board.turn == chess.WHITE else -10900.0
-        validation_positions.append((row['fen'], eval_score))
+        # Use actual stockfish eval from the CSV
+        # Format: fen, answer (unused), stockfish_eval, rating (unused)
+        validation_positions.append((row['fen'], float(row['stockfish_eval'])))
 
 print(f"Loaded {len(validation_positions):,} validation positions\n")
 
@@ -273,7 +271,7 @@ for epoch in range(1, num_epochs + 1):
 
     # Save best model
     if status:
-        model_filename = f"stockfish_eval_best_{timestamp}.pth"
+        model_filename = f"stockfish_eval_best_epoch{epoch:03d}_{timestamp}.pth"
         model_dict = {
             'model_state_dict': network.state_dict(),
             'network_config': {

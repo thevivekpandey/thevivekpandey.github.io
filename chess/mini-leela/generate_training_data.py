@@ -110,7 +110,7 @@ def main():
     parser.add_argument('--output', default='training_data.csv', help='Output CSV file')
     parser.add_argument('--max-games', type=int, default=None,
                        help='Maximum games to process (default: all)')
-    parser.add_argument('--skip-opening', type=int, default=0,
+    parser.add_argument('--skip-opening', type=int, default=5,
                        help='Skip first N moves of each game (default: 0)')
     parser.add_argument('--skip-endgame', type=int, default=0,
                        help='Skip last N moves of each game (default: 0)')
