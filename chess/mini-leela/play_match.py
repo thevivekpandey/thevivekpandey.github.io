@@ -65,10 +65,11 @@ class NeuralEngine:
             return best_move
 
 
-def play_game(neural_engine, stockfish_engine, neural_plays_white, time_limit=1.0):
+def play_game(neural_engine, stockfish_engine, neural_plays_white, time_limit=1.0, game_log=None):
     """Play one game"""
     board = chess.Board()
     moves = []
+    san_moves = []
 
     while not board.is_game_over():
         if len(list(board.legal_moves)) == 0:
@@ -76,7 +77,7 @@ def play_game(neural_engine, stockfish_engine, neural_plays_white, time_limit=1.
 
         # Check for draw conditions
         if board.can_claim_draw():
-            return 0.5, moves, "draw"
+            return 0.5, moves, "draw", san_moves
 
         # Who's turn?
         white_to_move = board.turn == chess.WHITE
@@ -88,11 +89,17 @@ def play_game(neural_engine, stockfish_engine, neural_plays_white, time_limit=1.
             move = neural_engine.get_move(board)
             if move is None:
                 # No legal move found (shouldn't happen)
-                return 0.0 if neural_plays_white else 1.0, moves, "illegal"
+                return 0.0 if neural_plays_white else 1.0, moves, "illegal", san_moves
+            engine_name = "Neural"
         else:
             # Stockfish's turn
             result = stockfish_engine.play(board, chess.engine.Limit(time=time_limit))
             move = result.move
+            engine_name = "Stockfish"
+
+        # Get SAN notation before pushing the move
+        san = board.san(move)
+        san_moves.append(san)
 
         board.push(move)
         moves.append(move)
@@ -110,7 +117,7 @@ def play_game(neural_engine, stockfish_engine, neural_plays_white, time_limit=1.
         score = 0.5
         outcome = "draw"
 
-    return score, moves, outcome
+    return score, moves, outcome, san_moves
 
 
 def play_match(model_path, num_games=50, stockfish_skill=5, time_limit=1.0):
@@ -149,6 +156,17 @@ def play_match(model_path, num_games=50, stockfish_skill=5, time_limit=1.0):
     print("Engines loaded!")
     print()
 
+    # Create log file
+    log_file = f"match_log_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+    game_log = open(log_file, 'w')
+    game_log.write(f"Chess Match Log\n")
+    game_log.write(f"{'='*70}\n")
+    game_log.write(f"Model: {Path(model_path).name}\n")
+    game_log.write(f"Opponent: Stockfish (Skill Level {stockfish_skill}, ~{opponent_elo} ELO)\n")
+    game_log.write(f"Games: {num_games}\n")
+    game_log.write(f"Time per move: {time_limit}s\n")
+    game_log.write(f"{'='*70}\n\n")
+
     # Play match
     wins = 0
     losses = 0
@@ -163,12 +181,32 @@ def play_match(model_path, num_games=50, stockfish_skill=5, time_limit=1.0):
 
         print(f"Game {game_num}/{num_games} (Neural plays {color_str})... ", end="", flush=True)
 
-        score, moves, outcome = play_game(
+        # Log game header
+        game_log.write(f"\n{'='*70}\n")
+        game_log.write(f"GAME {game_num}/{num_games}\n")
+        game_log.write(f"White: {'Neural' if neural_plays_white else 'Stockfish'}\n")
+        game_log.write(f"Black: {'Stockfish' if neural_plays_white else 'Neural'}\n")
+        game_log.write(f"{'='*70}\n\n")
+
+        score, moves, outcome, san_moves = play_game(
             neural_engine,
             stockfish_engine,
             neural_plays_white,
             time_limit
         )
+
+        # Format moves in standard chess notation
+        move_text = ""
+        for i in range(0, len(san_moves), 2):
+            move_num = (i // 2) + 1
+            white_move = san_moves[i]
+            black_move = san_moves[i+1] if i+1 < len(san_moves) else ""
+            move_text += f"{move_num}. {white_move} {black_move} "
+            if move_num % 5 == 0:  # Line break every 5 moves
+                move_text += "\n"
+
+        game_log.write(f"{move_text.strip()}\n\n")
+        game_log.write(f"Result: {outcome.upper()} ({len(moves)} moves)\n")
 
         if outcome == "win":
             wins += 1
@@ -190,6 +228,14 @@ def play_match(model_path, num_games=50, stockfish_skill=5, time_limit=1.0):
             print()
 
     elapsed = time.time() - start_time
+
+    # Close log file
+    game_log.write(f"\n{'='*70}\n")
+    game_log.write(f"FINAL RESULTS\n")
+    game_log.write(f"{'='*70}\n")
+    game_log.write(f"Record: {wins}W - {losses}L - {draws}D\n")
+    game_log.write(f"Score: {wins + 0.5 * draws}/{num_games} ({(wins + 0.5 * draws) / num_games * 100:.1f}%)\n")
+    game_log.close()
 
     # Close Stockfish
     stockfish_engine.quit()
@@ -257,14 +303,15 @@ def play_match(model_path, num_games=50, stockfish_skill=5, time_limit=1.0):
         f.write(f"Estimated ELO: {estimated_elo:.0f}\n")
 
     print(f"Results saved to: {results_file}")
+    print(f"Game log saved to: {log_file}")
 
 
 def main():
     parser = argparse.ArgumentParser(description='Play match between neural engine and Stockfish')
     parser.add_argument('model', help='Path to model file (.pth)')
-    parser.add_argument('--games', type=int, default=50, help='Number of games to play')
-    parser.add_argument('--skill', type=int, default=5, help='Stockfish skill level (0-20)')
-    parser.add_argument('--time', type=float, default=1.0, help='Time per move (seconds)')
+    parser.add_argument('--games', type=int, default=10, help='Number of games to play')
+    parser.add_argument('--skill', type=int, default=0, help='Stockfish skill level (0-20)')
+    parser.add_argument('--time', type=float, default=5.0, help='Time per move (seconds)')
 
     args = parser.parse_args()
 
