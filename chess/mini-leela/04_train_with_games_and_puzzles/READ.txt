@@ -1,0 +1,12 @@
+Things are similar to 03 training. However, data is more and structured.
+
+Earier we had total 47K data
+
+44% mate in 1
+37% nearly equal
+18% not equal middle game.
+
+Now we have 190K
+
+100K puzzles of all type
+90K non opening positions of all types
