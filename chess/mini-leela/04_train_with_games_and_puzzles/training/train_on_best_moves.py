@@ -95,15 +95,18 @@ def save_model_to_s3(model_dict, s3_path):
 
 
 # DATA LOADING
-TRAIN_CSV_FILE = "../data/filtered_training_evals.csv"
-VALIDATION_CSV_FILE = "../data/filtered_validation_evals.csv"
+TRAIN_CSV_FILE = "training_data_04.csv"
+VALIDATION_CSV_FILE = "test_data_04.csv"
 
 print("="*70)
-print("TRAINING ON BEST MOVES (Filtered Data)")
+print("TRAINING ON GAMES AND PUZZLES")
 print("CONFIG: 8 ResNet blocks, 256 channels")
 print("="*70)
-print("\nData: Filtered positions with 0.5 <= |eval| <= 8.0")
-print("Target: Stockfish best move (source + destination)")
+print("\nTraining Targets:")
+print("  - Policy: Stockfish best move (source + destination)")
+print("  - Value: Position evaluation")
+print("\nModel Selection: Based on COMBINED policy + value loss")
+print("  (Ensures both move prediction AND position evaluation are good)")
 print("\nTraining Configuration:")
 print("  Learning Rate: 0.0005")
 print("  Dropout: 0.2")
@@ -139,6 +142,7 @@ DROPOUT_RATE = 0.2
 WEIGHT_DECAY = 1e-4
 LEARNING_RATE = 0.0005
 BATCH_SIZE = 64
+VALUE_LOSS_WEIGHT = 3.0  # Scale up value loss to balance with policy loss
 
 network = ChessNetSourceDest(
     input_channels=19,
@@ -160,7 +164,8 @@ summary(network, input_size=(1, 19, 8, 8),
 print(f"\n{'='*70}")
 print(f"Network parameters: {sum(p.numel() for p in network.parameters()):,}")
 print(f"Dropout: {DROPOUT_RATE}, Weight decay: {WEIGHT_DECAY}")
-print(f"Learning rate: {LEARNING_RATE}, Batch size: {BATCH_SIZE}\n")
+print(f"Learning rate: {LEARNING_RATE}, Batch size: {BATCH_SIZE}")
+print(f"Value loss weight: {VALUE_LOSS_WEIGHT}\n")
 
 # Prepare training data
 print("Preparing training data...")
@@ -192,6 +197,7 @@ def train_epoch(data, network, optimizer, batch_size, device):
 
     epoch_source_loss = 0.0
     epoch_dest_loss = 0.0
+    epoch_value_loss = 0.0
     num_batches = 0
 
     for i in range(0, len(data), batch_size):
@@ -208,7 +214,7 @@ def train_epoch(data, network, optimizer, batch_size, device):
         dest_loss = -(dest_targets * F.log_softmax(dest_logits, dim=1)).sum(dim=1).mean()
         value_loss = F.mse_loss(values, value_targets)
 
-        total_loss = source_loss + dest_loss + value_loss
+        total_loss = source_loss + dest_loss + VALUE_LOSS_WEIGHT * value_loss
 
         optimizer.zero_grad()
         total_loss.backward()
@@ -216,9 +222,10 @@ def train_epoch(data, network, optimizer, batch_size, device):
 
         epoch_source_loss += source_loss.item()
         epoch_dest_loss += dest_loss.item()
+        epoch_value_loss += value_loss.item()
         num_batches += 1
 
-    return epoch_source_loss / num_batches, epoch_dest_loss / num_batches
+    return epoch_source_loss / num_batches, epoch_dest_loss / num_batches, epoch_value_loss / num_batches
 
 
 # Evaluation function
@@ -227,6 +234,7 @@ def evaluate(positions, network, device):
     correct = 0
     total_source_loss = 0.0
     total_dest_loss = 0.0
+    total_value_loss = 0.0
 
     with torch.no_grad():
         for fen, solution_uci, stockfish_eval in positions:
@@ -245,8 +253,14 @@ def evaluate(positions, network, device):
             source_loss = -(source_target * F.log_softmax(source_logits, dim=1)).sum(dim=1).mean()
             dest_loss = -(dest_target * F.log_softmax(dest_logits, dim=1)).sum(dim=1).mean()
 
+            # Add value loss computation
+            normalized_value_target = np.tanh(stockfish_eval / 10.0)
+            value_target = torch.FloatTensor([[normalized_value_target]]).to(device)
+            value_loss = F.mse_loss(values, value_target)
+
             total_source_loss += source_loss.item()
             total_dest_loss += dest_loss.item()
+            total_value_loss += value_loss.item()
 
             source_probs = F.softmax(source_logits[0], dim=0)
             dest_probs = F.softmax(dest_logits[0], dim=0)
@@ -265,7 +279,11 @@ def evaluate(positions, network, device):
                 correct += 1
 
     accuracy = correct / len(positions)
-    return correct, len(positions), accuracy, total_source_loss / len(positions), total_dest_loss / len(positions)
+    avg_source_loss = total_source_loss / len(positions)
+    avg_dest_loss = total_dest_loss / len(positions)
+    avg_value_loss = total_value_loss / len(positions)
+
+    return correct, len(positions), accuracy, avg_source_loss, avg_dest_loss, avg_value_loss
 
 
 # Training loop
@@ -273,30 +291,36 @@ timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 print(f"Training run ID: {timestamp}\n")
 
 num_epochs = 100
-best_val_acc = 0.0
+best_val_loss = float('inf')  # Track combined validation loss (lower is better)
 best_val_epoch = 0
 patience = 10
 epochs_without_improvement = 0
 
-print(f"{'Epoch':<6} {'Policy Loss':<12} {'Val Loss':<12} {'Train Acc':<20} {'Val Acc':<20} {'Status'}")
-print("-" * 90)
+print(f"{'Epoch':<6} {'Train Policy':<13} {'Train Value':<13} {'Val Policy':<12} {'Val Value':<12} {'Total Val Loss':<15} {'Train Acc':<20} {'Val Acc':<20} {'Status'}")
+print("-" * 140)
 
 for epoch in range(1, num_epochs + 1):
-    source_loss, dest_loss = train_epoch(train_data, network, optimizer, BATCH_SIZE, device)
-    policy_loss = source_loss + dest_loss
+    # Train for one epoch - returns average losses
+    train_src_loss, train_dst_loss, train_value_loss = train_epoch(train_data, network, optimizer, BATCH_SIZE, device)
+    train_policy_loss = train_src_loss + train_dst_loss
+    train_combined_loss = train_policy_loss + VALUE_LOSS_WEIGHT * train_value_loss
 
-    # Evaluate on a sample of training data (to save time)
+    # Evaluate on a sample of training data (to save time) - for accuracy tracking
     train_sample = random.sample(training_positions, min(5000, len(training_positions)))
-    train_correct, train_total, train_acc, train_src_loss, train_dst_loss = evaluate(train_sample, network, device)
+    train_correct, train_total, train_acc, _, _, _ = evaluate(train_sample, network, device)
 
-    # Evaluate on full validation set
-    val_correct, val_total, val_acc, val_src_loss, val_dst_loss = evaluate(validation_positions, network, device)
+    # Evaluate on full validation set - this determines best model
+    val_correct, val_total, val_acc, val_src_loss, val_dst_loss, val_value_loss = evaluate(validation_positions, network, device)
 
     val_policy_loss = val_src_loss + val_dst_loss
+    val_combined_loss = val_policy_loss + VALUE_LOSS_WEIGHT * val_value_loss  # Combined loss for model selection (weighted)
 
-    if val_acc > best_val_acc:
-        best_val_acc = val_acc
+    # Select best model based on COMBINED loss (policy + value)
+    # Lower combined loss = better at BOTH move prediction AND position evaluation
+    if val_combined_loss < best_val_loss:
+        best_val_loss = val_combined_loss
         best_val_epoch = epoch
+        best_val_acc = val_acc  # Store for reporting only (NOT used for selection)
         epochs_without_improvement = 0
         status = "✓ BEST"
     else:
@@ -305,15 +329,18 @@ for epoch in range(1, num_epochs + 1):
 
     train_str = f"{train_correct}/{train_total}"
     val_str = f"{val_correct}/{val_total}"
-    print(f"{epoch:<6} {policy_loss:.4f}       "
+    print(f"{epoch:<6} {train_policy_loss:.4f}        "
+          f"{train_value_loss:.4f}        "
           f"{val_policy_loss:.4f}       "
+          f"{val_value_loss:.4f}       "
+          f"{val_combined_loss:.4f}          "
           f"{train_str:>10} ({train_acc*100:5.1f}%)  "
           f"{val_str:>10} ({val_acc*100:5.1f}%)  "
           f"{status}")
 
     # Save best model
     if status:
-        model_filename = f"best_move_filtered_epoch_{epoch:03d}_{timestamp}.pth"
+        model_filename = f"games_and_puzzles_{epoch:03d}_{timestamp}.pth"
         model_dict = {
             'model_state_dict': network.state_dict(),
             'network_config': {
@@ -325,6 +352,9 @@ for epoch in range(1, num_epochs + 1):
             'epoch': epoch,
             'train_accuracy': train_acc,
             'validation_accuracy': val_acc,
+            'validation_policy_loss': val_policy_loss,
+            'validation_value_loss': val_value_loss,
+            'validation_combined_loss': val_combined_loss,
             'timestamp': timestamp,
         }
 
@@ -337,15 +367,21 @@ for epoch in range(1, num_epochs + 1):
 
     if epochs_without_improvement >= patience:
         print(f"\n⚠️  Early stopping triggered (no improvement for {patience} epochs)")
-        print(f"   Best validation accuracy: {best_val_acc*100:.2f}% at epoch {best_val_epoch}")
+        print(f"   Best validation combined loss: {best_val_loss:.4f} at epoch {best_val_epoch}")
+        print(f"   Best validation accuracy: {best_val_acc*100:.2f}%")
         break
 
 print("\n" + "="*70)
-print("TRAINING COMPLETE - Best Move Prediction (Filtered Data)")
+print("TRAINING COMPLETE - Games and Puzzles Training")
 print("="*70)
-print(f"Best Validation Accuracy: {best_val_acc*100:.2f}% at epoch {best_val_epoch}")
-print(f"Final Train Accuracy: {train_acc*100:.2f}% (sampled)")
-print(f"Final Validation Accuracy: {val_acc*100:.2f}%")
-print(f"Gap: {(train_acc - val_acc)*100:+.2f}%")
-print(f"\nBest model saved as: best_move_filtered_epoch{best_val_epoch:03d}_{timestamp}.pth")
+print(f"Best Epoch: {best_val_epoch}")
+print(f"  Validation Combined Loss: {best_val_loss:.4f}")
+print(f"  Validation Accuracy: {best_val_acc*100:.2f}%")
+print(f"\nFinal Epoch: {epoch}")
+print(f"  Train Accuracy: {train_acc*100:.2f}% (sampled)")
+print(f"  Validation Accuracy: {val_acc*100:.2f}%")
+print(f"  Gap: {(train_acc - val_acc)*100:+.2f}%")
+print(f"  Policy Loss: {val_policy_loss:.4f}")
+print(f"  Value Loss: {val_value_loss:.4f}")
+print(f"\nBest model saved as: games_and_puzzles_{best_val_epoch:03d}_{timestamp}.pth")
 print("="*70)
