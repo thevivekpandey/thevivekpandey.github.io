@@ -253,6 +253,7 @@ def play_match(model_path, num_games=50, stockfish_skill=5, time_limit=1.0):
 
         game_log.write(f"{move_text.strip()}\n\n")
         game_log.write(f"Result: {outcome.upper()} ({len(moves)} moves)\n")
+        game_log.flush()  # Flush after every game
 
         if outcome == "win":
             wins += 1
@@ -338,17 +339,6 @@ def play_match(model_path, num_games=50, stockfish_skill=5, time_limit=1.0):
     print()
     print("=" * 70)
 
-    # Save results
-    results_file = f"match_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
-    with open(results_file, 'w') as f:
-        f.write(f"Model: {model_path}\n")
-        f.write(f"Opponent: Stockfish Skill {stockfish_skill} (~{opponent_elo} ELO)\n")
-        f.write(f"Games: {num_games}\n")
-        f.write(f"Result: {wins}W - {losses}L - {draws}D\n")
-        f.write(f"Score: {score_percentage:.1f}%\n")
-        f.write(f"Estimated ELO: {estimated_elo:.0f}\n")
-
-    print(f"Results saved to: {results_file}")
     print(f"Game log saved to: {log_file}")
 
 
