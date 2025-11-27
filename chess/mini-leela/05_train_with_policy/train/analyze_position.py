@@ -29,7 +29,7 @@ class PositionAnalyzer:
 
         # Load model
         print(f"Loading model from {model_path}...")
-        checkpoint = torch.load(model_path, map_location=self.device)
+        checkpoint = torch.load(model_path, map_location=self.device, weights_only=False)
         config = checkpoint['network_config']
 
         self.network = ChessNetSourceDest(
