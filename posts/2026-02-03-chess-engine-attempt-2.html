@@ -1,0 +1,121 @@
+<html>
+<head>
+  <title>Attempt 2 of making chess engine</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_SVG"></script>
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+            TeX: {
+                extensions: ["AMScd.js"]
+            },
+            "HTML-CSS": { scale: 100 }
+        };
+    </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1450977-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)};
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-1450977-3');
+  </script>
+
+   <style>
+        .container {
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+        }
+       table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+
+</head>
+
+<body>
+<h1>Making a chess engine - Part 2</h1>
+
+<p>
+<h2>Links</h2>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/DQaM4O3FYfc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+<br/>
+<b>Slides: </b><a href="https://docs.google.com/presentation/d/1FYalZ4qQhgP0a9HWbUEBVjK8RH4_bcWNul2BAVTroaE/edit">Here</a>
+<br/>
+<b>Code: </b><a href="https://github.com/thevivekpandey/chess/tree/main/attempt_02">Here</a> All the code is in attempt_02 directory.
+<br/>
+<b>Model on HF: </b><a href="https://huggingface.co/thevivekpandey/chess-model-01/blob/main/chess_model_legal_move_masking_epoch037.pt">Here</a>
+</p>
+
+<h2>Quick details on model and training</h2>
+<h3>Input</h3>
+<p>
+Input consists of 4M training positions and 400K test positions.
+<br>
+90% of these positions are got from real games from lichess. Positions have been chosen so that various eval ranges get equal representation. 10% are got from puzzle database of lichess.
+<br>
+Input consists of
+<ol>
+<li>FEN representation of the board</li>
+<li>eval of the position - got from stockfish</li>
+<li>top 5 moves and their scores (how much change in eval does the respective move cause) - got from stockfish</li>
+</ol>
+</p>
+
+<h3>Board representation</h3>
+<p>
+18 plane board encoding (12 for pieces, 4 for castling rights, 1 for move, 1 for en passant pawn). A total of ~10M weights in the model
+(conv and resnet layers).
+</p>
+
+<h3>Model</h3>
+<p>
+Total around 10M parameters in the model.
+</p>
+<p> Backbone consists of a convolution layer followed by 8 resenet blocks.</p>
+<p>Value head consists of 2 fully connected layers.</p>
+<p>Policy head consists of a conv layer leading to 64 * 73 logits which lead to softmax</p>
+<p>
+We represent the moves by 64 x 73 sized probability tensor - more details in the slides.
+</p>
+
+<h3>Loss function</h3>
+<p>
+Huber loss with beta = 0.2 used for value head loss.
+</p>
+<p>
+Cross entropy loss for policy head. Only the logits corresponding to valid moves participate in 
+cross entropy. 
+</p>
+<p>
+Weight of policy loss is 0.1.
+</p>
+<h2>Performance</h2>
+<p>
+We could go till depth 8 within reasonable move times (as opposed to depth 3 with no value head). We
+are competitive with level 6 of stockfish, which implies an ELO rating of 2300. 2300 is like FIDE
+Master level performance. Wow!
+</p>
+<img src="./attempt-2-performance.png" width="400px"/>
+
+<h2>Sample games</h2>
+<a href="https://lichess.org/4Hjh01is">Game 1: NN vs Stockfish (skill level 4) 1-0</a> (NN wins)
+<br>
+<a href="https://lichess.org/LtWoGT0Z">Game 2: NN vs Stockfish (skill level 16) 0-1</a> (Stockfish wins)
+<br>
+</body>
+</html>
