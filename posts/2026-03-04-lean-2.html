@@ -1,0 +1,101 @@
+<html>
+<head>
+  <title>My Notes on Lean4</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_SVG"></script>
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+            TeX: {
+                extensions: ["AMScd.js"]
+            },
+            "HTML-CSS": { scale: 100 }
+        };
+    </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1450977-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)};
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-1450977-3');
+  </script>
+
+   <style>
+        .container {
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+        }
+       table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+
+</head>
+
+<body>
+<h1>Lean4 tutorials</h1>
+
+<h2>Prove that in a group homomorphism, 1 is mapped to 1</h2>
+Signature of the proof is like
+<pre><code>
+theorem hom_maps_identity {G H : Type} [Group G] [Group H]
+   (f : G →* H): f 1 = 1 := sorry
+
+</code></pre>
+
+A few things are to be noted.
+
+<br>
+We want to prove some things about Groups G and H. We don't write: (G H: Group) since
+G is defined in Mathlib as a typeclass, not a type. This is because G is a general group.
+If we define it is a type then its members will have to be concrete values, like Nat is
+a type and 1, 2, 3 are values of that type.
+<br>
+Secondly, →* is notation for "bundled monoid homomorphism", specifically for MonoidHom:
+
+<pre><code>
+structure MonoidHom (G H : Type) [MulOneClass G] [MulOneClass H] where
+  toFun : G → H
+  map_one' : toFun 1 = 1
+  map_mul' : ∀ a b, toFun (a * b) = toFun a * toFun b
+</code></pre>
+
+If f is homomorphism, then f(1) = 1. Here are some ways to prove that
+
+<pre><code>
+theorem hom_maps_identity {G H : Type} [Group G] [Group H]
+   (f : G →* H): f 1 = 1 := f.map_one
+
+theorem hom_maps_identity1 {G H : Type} [Group G] [Group H] 
+    (f : G →* H) : f 1 = 1 := by
+  have h1 : f 1 * f 1 = f (1 * 1) := (f.map_mul 1 1).symm
+  have h2 : f (1 * 1) = f 1 := by rw [one_mul]
+  have h3 : f 1 * f 1 = f 1 := by rw [h1, h2]
+  have h4 : f 1 * f 1 = f 1 * 1 := by rw [h3, mul_one]
+  exact mul_left_cancel h4
+
+theorem hom_maps_identity2 {G H : Type} [Group G] [Group H] 
+    (f : G →* H) : f 1 = 1 := by
+  have h1 : f 1 * f 1 = f 1 * 1 := by
+    calc f 1 * f 1 
+        = f (1 * 1) := by rw [f.map_mul]
+      _ = f 1       := by rw [one_mul]
+      _ = f 1 * 1   := by rw [mul_one]
+  exact mul_left_cancel h1
+</code></pre>
+</body>
+</html>

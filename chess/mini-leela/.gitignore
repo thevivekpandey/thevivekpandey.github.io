@@ -1,7 +1,0 @@
-*.pth
-__pycache__/
-lichess_puzzles.csv.zst
-lichess_puzzles.csv
-mate_in_1.csv
-lichess_db_puzzle.csv
-lichess_db_puzzle.csv.zst

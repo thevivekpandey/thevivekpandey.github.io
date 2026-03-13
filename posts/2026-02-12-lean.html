@@ -1,0 +1,561 @@
+<html>
+<head>
+  <title>My Notes on Lean4</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_SVG"></script>
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+            TeX: {
+                extensions: ["AMScd.js"]
+            },
+            "HTML-CSS": { scale: 100 }
+        };
+    </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1450977-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)};
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-1450977-3');
+  </script>
+
+   <style>
+        .container {
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+        }
+       table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+
+</head>
+
+<body>
+<h1>Lean4 tutorials</h1>
+
+<h2>Kernel and prelude</h2>
+<p>
+There is lean kernel which knows about very few constructs. There is an elaborator which converts syntatic sugar to core the core 
+constructs that lean knows about. As elaborator is working, it maintains an environment which contains all the constructs that are
+available in the program at some stage.
+</p>
+
+<p>
+So, the kernel does not even know about Nat or Prop or Bool or even Type. These are the basic constructs that any lean programmar
+would want to be available. They are all defined in Init module which is automatically imported to all the lean programs. However,
+importing them in raw form (.lean file) would be performance killing. So, Init module has been compiled and the output of that
+compilation is some .olean files which are serialized snapshots of environment contributions. Note that the environment contributions
+of .olean files are not checked for correctness. They are assumed to be correct - since correctness had been checked when .olean
+files were getting built and we are assuming that they have not been tampered with.
+</p>
+
+<p>
+Another thing is that for the purposes of theorem proving, we only "compile" the program in the sense of checking
+that all terms are well typed. We don't actually run the program.
+</p>
+<h2>Universes</h2>
+There are some universes. Countably infinite universes. They are called Sort u for u = 0, 1, 2,...
+Prop is a short hand for Sort 0, Type n is a shorthand for Sort (n+1).
+
+Sort u lives in Sort (u+1)
+<br>
+
+Every term has a type. Each term "lives" in that type. Core lean kernel only has Sorts. 
+In the init module we say that Type is same as Sort 0. And that Prop lives in Type, and that Nat lives in Type.
+
+<h2>Terms</h2>
+<p>
+We understand intuitively what is term - in normal languages f(a) = g(b) + 3, a, b, 3, f, g are terms, but ), (, = are not.
+</p>
+
+<h2>Three ways types are made</h2>
+<h3>Inbuilt types</h3>
+<p>
+Sort u for u = 0, 1, 2,... is built in.
+</p>
+
+<h3>Inductive type</h3>
+<p>
+Define by giving various rules of constructing the type.
+
+
+<pre><code>
+inductive Color where
+  | red
+  | green
+  | blue
+</code></pre>
+
+So, the three given literals have the type Color. Color has not other values.
+</p>
+
+<p>
+Critical part is that you can use recursion
+<pre><code>
+inductive List (α : Type) where
+  | nil  : List α
+  | cons : α → List α → List α
+</code></pre>
+</p>
+
+So, nil is type List α , cons 3 nil is of type List α, cons 2 (cons 3 nil) is of type List α, and cons 1 (cons 2 (cons 3 nil)) is of type List α.
+<br>
+The last thing is written in sugared form as [1, 2, 3]. How does this sugaring works - we will not dsicuss it here.
+<br>
+
+Similarly, Nat is also inductive type:
+
+
+<pre><code>
+inductive Nat where
+  | zero : Nat
+  | succ : Nat → Nat
+</code></pre>
+So, Nat.zero, Nat.succ Nat.zero, Nat.succ Nat.succ Nat.zero etc are all of type Nat. Their canonical form is 0, 1, 2 etc. How the translation to and from
+the logical form (coming from the definition) to the literal form (0, 1, 2) happens is something ware not going to discuss.
+
+Using inductive types, we can also have dependent types. Vector is a type constructor that takes in two arguments - an implicit 
+argument α and an argument Nat and gives a new type which depends can be either 
+<pre><code>
+
+inductive myVector (α : Type) : Nat → Type where
+  | nil  : myVector α 0
+  | cons : {n: Nat} → α → myVector α n → myVector α (n + 1)
+   
+</code></pre>
+
+Let's construct some terms from this type constructor.
+<ul>
+<li> 
+def n0 : myVector Nat 0 := myVector.nil
+<br> Here n0 is a term of of type myVector Nat 0
+</li>
+<li>  def n1: myVector Nat 1 := myVector.cons 42 n0
+<br> Here n1 is a term of type myVector Nat 1
+<br>Alternatively we could also say <br>
+def n1a: myVector Nat 1 := myVector.cons 42 (myVector.nil)
+</li>
+
+<li> 
+We can create terms of type myVector Nat 2 by one of the following ways
+<br>
+
+def n2: myVector Nat 2 := myVector.cons 43 n1
+<br>
+def n2a: myVector Nat 2 := myVector.cons 43 (myVector.cons 42 n0)
+<br>
+def n2b: myVector Nat 2 := myVector.cons 43 (myVector.cons 42 (myVector.nil))
+<br>
+</li>
+</ul>
+
+<br>
+Note another things a constructor can have parameter (which is not allowed to change in varous constructors (like alpha above) and 
+indices which are allowed to change across constructors (the n / Nat) above. In the declaration, parameters come before colon and indices
+come after colon.
+<b>Structures</b>
+Now, inductive types are so common, that there are some syntactic sugars on top of inductive type. First of those is structure - 
+which is an indutive type with exactly one constructor.
+<br>
+Example, you can have
+<pre><code>
+structure Point where
+   x: Float
+   y: Float
+</code></pre>
+
+which expands to a single constructor called mk:
+<br>
+
+<pre><code>
+inductive Point where
+  | mk: Float → Float → Point 
+
+</code></pre>
+<br>
+Lot of types in prelude are defined using structure. Some examples would be useful
+<b>Prod</b>
+<pre><code>
+structure Prod (α : Type u) (β : Type v) where
+  mk ::
+  fst : α
+  snd : β
+</code></pre>
+
+<br>
+You can make an object of Prod like this:
+
+def x : Prod Nat Nat := Prod.mk 4 5
+<br>
+We also mandate that (x, y) is a syntactic sugar for Prod.mk x y so you can write simply:
+def x1 : Prod Nat Nat := (4, 5)
+<br>
+def x2 : Prod Nat Nat := ⟨4, 5⟩
+<br>
+Angle bracket works for any single constructor type (any structure or single constructor indutive type)
+<br>
+def x3 : Prod Nat Nat := { fst := 4, snd := 5 }
+
+In fact we can make our own triplet - 
+
+<pre><code>
+universe u v w
+structure myTriple (α: Type u) (β: Type v) (γ: Type w) where
+   mk ::
+   fst: α
+   snd: β
+   thrd: γ
+</code></pre>
+
+And we can take terms of type myTriple
+def x1: myTriple Nat Nat Nat := myTriple.mk 4 5 6
+<br>
+def x3: myTriple Nat Nat Nat := ⟨4, 5, 6⟩
+<br>
+def x4: myTriple Nat Nat Nat := {fst := 4, snd := 5, thrd:= 6}
+<br>
+Note however that 
+def x2: myTriple Nat Nat Nat := (4, 5, 6)
+<br>
+since round bracket is special for pairs.
+
+<br>
+<b>True</b>
+And here is how True is defined
+
+<pre></code>
+inductive True : Prop where
+  | intro : True
+
+</code></pre>
+So, there is only value of type True, adn that value is True.intro.
+<b>False</b>
+inductive False : Prop
+
+<br>
+So, there is no value of type False.
+
+<b>And</b>
+And is defined like this:
+<pre><code>
+structure And (a b : Prop) : Prop where
+  intro ::
+  `h.left`, also notated as `h.1`, is a proof of `a`. -/
+  left : a
+  /-- Extract the right conjunct from a conjunction. `h : a ∧ b` then
+  `h.right`, also notated as `h.2`, is a proof of `b`. -/
+  right : b
+</code></pre>
+
+<br>
+Using this, let's make some values
+<br>
+def y1: And True True := And.intro True.intro True.intro
+<br>
+def y2: And True (And True True) := And.intro True.intro y1
+<br>
+Note that to construct a term of type And Prop Prop we need to provide a term for each of the arguments.
+Intutively we need to provide proofs of both the propositions.
+
+<b>Iff</b>
+<pre></code>
+structure Iff (a b : Prop) : Prop where
+  intro ::
+  mp : a → b
+  mpr : b → a
+</code></pre>
+Let's construct some terms using this type constructor
+
+<br>
+def z1: True ↔ True := ⟨fun h =&gt; h, fun h =&gt; h⟩
+<br>
+def z2: True ↔ True := ⟨fun _ =&gt; True.intro, fun _ =&gt; True.intro⟩
+<br>
+
+<pre><code>
+def andComm (a b : Prop) (ha : a) (hb : b) : And a b ↔ And b a :=
+  Iff.intro
+    (fun h =&gt; And.intro h.right h.left)
+    (fun h =&gt; And.intro h.right h.left)
+</code></pre>
+
+This is constructive. To produce a term of type And a b ↔ And b a, we need to do two things.
+
+Firsly, given a term of type And a b, we need to produce a term of type And b a. And secondly, vice versa.
+To to the firs thing, we write 
+<br>
+    (fun h =&gt; And.intro h.right h.left)
+<br>
+
+h is a term of type And b a, so there are terms h.right (of type b) and h.left (of type a) and we can use them to construct a term of type And b a by And.intro h.right h.left.
+
+<b>Sigma</b>
+<pre><code>
+structure Sigma {α : Type u} (β : α → Type v) where
+  mk ::
+  fst : α
+  snd : β fst
+</code></pre>
+
+The type of the terms that you create will be "Sigma &lt;a function that takes an an argument alpha and returns Type v&gt;"
+and the term will consisting of a tuple. So, a term is
+
+<br>
+def w1: Sigma (fun n =&gt; myVector Nat n) := ⟨3, myVector.cons 1 (myVector.cons 2 (myVector.cons 3 myVector.nil))⟩
+<br>
+Let's construct another term using Sigma.
+
+<br>
+def s4 : Sigma (fun α : Type =&gt; α) := ⟨Nat, 42⟩
+<br>
+def s5 : Sigma (fun α : Type =&gt; α) := ⟨Bool, true⟩
+<b>Fin</b>
+To understand Fin, first let's understand some other def:
+
+<br>
+<pre><code>
+inductive Nat.le (a : Nat) : Nat → Prop where
+  | refl : Nat.le a a
+  | step : Nat.le a b → Nat.le a (b + 1)
+</code></pre>
+<br>
+def Nat.lt (a b: Nat): Prop := a + 1 &lt;= b
+<br>
+How Nat.le and &lt;= get associated to each other - we will leave that.
+<br>
+With that, this is how we define Fin:
+
+<pre><code>
+structure Fin(n: Nat) where
+   val : Nat
+   isLt: val &lt; n
+</code></pre>
+
+<br>
+So, only an Nat which is less than n can have type Fin n.
+<br>
+This is also a good place to introduce tactics - specifically. Sometimes constructing
+a term of some type can be cumborsome.
+
+E.g. to show that 4 is of type Fin 6, we need the following term 
+
+<br>
+def y : Fin 6 := ⟨4, Nat.le.step Nat.le.refl⟩
+<br>
+We can construct term more simply like this:
+
+def y4 : Fin 6 := ⟨4, by omega⟩
+<br>
+Since in theorem proving we are not concerned with actual term - we are only concerned with whether
+a term exists, we can often rely on tactics for proves that we know are easy but tedious.
+<h3>Class</h3>
+
+We have Nat, and we have Nat.add. Let's not worry about how it is implemented.
+<br>
+We also have Float, and we have Float.add. Again, let's not worry about how it is implemented.
+<br>
+We also have Int, and we have Int.add. 
+<br>
+We would like to use + polymorphically - when we say a + b, we want lean to figure out the types of a 
+and b (check that they are same) and apply suitable add. We achieve this using class.
+<code><pre>
+class Add (α : Type u) where
+  add : α → α → α
+</pre></code>
+
+We register instances
+<code><pre>
+instance : Add Nat where
+  add := Nat.add
+
+instance : Add Float where
+  add := Float.add
+
+instance : Add Int where
+  add := Int.add
+</pre></code>
+
+and associated + with Add:
+
+<br>
+notation a + " " + b =&gt; Add.add a b
+<br>
+
+Actually it is not way it is done, they introduce an HAdd (heteroegnous add) to allow addition across types.
+<h3>Pi Type</h3>
+
+Finally we turn to the last of the three big topics - pi types. We have type constructors like myVector
+which take in an integer and produce a type which is dependent on that input - like myVector can give
+you myVector Nat 4 or myVector Float 5. However, as of now we don't have a mechanism to write a function
+that can produce values of different types.
+
+<br>
+E.g. let's say we want to write a function that takes an input n and output myVector Nat n with all values as 42. We will write it in one of the two ways:
+
+<pre><code>
+def allFortyTwo : (n: Nat) → myVector Nat n 
+   | 0 => myVector.nil
+   | n + 1 => myVector.cons 42 (allFortyTwo n)
+
+def allFortyTwo (n : Nat) : myVector Nat n :=
+  match n with
+  | 0     => myVector.nil
+  | n + 1 => myVector.cons 42 (allFortyTwo n)
+
+</code></pre>
+
+<h2>Types of types in functions</h2>
+<p>
+A function take as input - explicit type:
+
+def f(x : Nat): Nat := x + 1
+</p>
+
+<br>
+Params can also be explicit , like here
+
+<br>
+
+def g {t : Type} (x : t) : t := x
+
+<br>
+In this example, t will be inferred automatically.
+
+<br>
+However, following would not compile:
+
+def g {t : Type} (x : t) : t := x + 1
+
+<br>
+because there is not guarantee that the type you pass would support +.
+<br>
+So, for polymorphic increment you can have instance explicit type:
+
+<br>
+def g {t : Type} [Add t] [OfNat t 1] (x : t) : t := x + 1
+<br>
+which says that t supports an Add operation and [OfNat t 1] says literation 1 must make sense for type t.
+<br>
+
+We could also write<br>
+def g {t : Type} [Num t] (x : t) : t := x + 1
+
+<br> What really is [Add t] or [OfNat t 1] or [Num t] - we have handwaved it. We will clarify this later.
+
+<br>And then a function's type can be dependent type - where the return type depends on the input value.
+<br>
+(a: A) → B a
+
+where B is a function of type A → Type.
+
+<br>
+Eg. of a function with dependent type:
+<br>
+
+<pre><code>
+def zeros : (n : Nat) → Vec Int n
+  | 0     =&gt; []
+  | n + 1 =&gt; 0 :: zeros n
+
+</code></pre>
+Type of this function is dependent on the actual value of input n.
+<br>
+
+<h2>Inductive type</h2>
+You can define new types:
+<pre>
+inductive &lt;NewType&gt; &lt;SuperType&gt; where
+  | &lt;some conditions&gt;
+  | &lt;some conditions&gt;
+...
+</pre>
+
+E.g.
+
+<pre>
+inductive True : Prop where
+  | intro : True
+</pre>
+
+This defines a type inside the universe Prop which constrcutor - True.intro which is a value of type True.
+
+<pre>
+inductive False : Prop where
+</pre>
+This defines a type inside the universe Prop which has no constructor.
+
+<pre>
+inductive Nat where
+  | zero: Nat
+  | succ (n: Nat): Nat
+</pre>
+
+<br>
+
+
+zero is a Nat, and for any Nat n, succ n is a Nat.
+
+<h2>Structure type</h2>
+Structure is a syntactic sugar for a special type of inductive type which has a single constructor.  
+Following is the definition of Fin n - type
+for all integers which are lesser than n.
+
+<pre>
+structure Fin (n : Nat) where
+  mk ::
+  val  : Nat
+  isLt : LT.lt val n
+</pre>
+
+Fin n is a (dependent) type which takes n : Nat as an argument - and thus produces Fin n as a type.
+So, the question is - what are the values residing in this type?
+
+Next three lines say that there are two arguments to the only constructor (structure has only one constructor)
+First argument is val, and second argument is isLt which is of type LT.lt val n. LT.lt 
+
+<br>
+Now what is LT
+
+<pre>
+class LT (α : Type u) where
+  lt : α → α → Prop
+
+instance : LT Nat := ⟨Nat.lt⟩
+instance : LT Int := ⟨Int.lt⟩
+
+and somewhere there is 
+infixl:50 " &lt;" =&lt; LT.lt
+</pre>
+
+
+<h2>Pi Type</h2>
+
+If A is type and B is a type then (x :A)  → B is a type
+
+<br>
+Examples
+<br>
+(n: Nat)  →  Nat is a type
+<br>
+
+
+
+
+</body>
+</html>
