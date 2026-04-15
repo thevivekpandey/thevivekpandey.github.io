@@ -19,7 +19,7 @@ from datetime import timedelta
 GptOssPreTrainedModel._init_weights = lambda self, module: None
 
 # 1. ENVIRONMENT SETUP
-os.environ['HF_TOKEN'] = 'YOUR_HF_TOKEN_HERE'
+os.environ['HF_TOKEN'] = '<something>'
 os.environ['PYTHONUNBUFFERED'] = '1'
 os.environ["TORCH_NCCL_ENABLE_MONITORING"] = "0"
 os.environ["TORCH_NCCL_HEARTBEAT_TIMEOUT_SEC"] = "3600"

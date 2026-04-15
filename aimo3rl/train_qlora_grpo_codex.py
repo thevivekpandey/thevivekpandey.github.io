@@ -21,7 +21,7 @@ from transformers.models.gpt_oss.configuration_gpt_oss import GptOssConfig
 GptOssPreTrainedModel._init_weights = lambda self, module: None
 
 # 1. ENVIRONMENT SETUP
-os.environ['HF_TOKEN'] = 'YOUR_HF_TOKEN_HERE'
+os.environ['HF_TOKEN'] = '<something>'
 os.environ['PYTHONUNBUFFERED'] = '1'
 os.environ['TIKTOKEN_ENCODINGS_BASE'] = '/home/ubuntu/tiktoken'
 os.environ["PYTHONPATH"] = "/home/ubuntu/qlora" + (

@@ -12,7 +12,7 @@ soft, hard = resource.getrlimit(resource.RLIMIT_NOFILE)
 resource.setrlimit(resource.RLIMIT_NOFILE, (hard, hard))
 
 os.environ["PYTHONUNBUFFERED"] = "1"
-os.environ["HF_TOKEN"] = "YOUR_HF_TOKEN_HERE"
+os.environ["HF_TOKEN"] = "<something>"
 os.environ["TRANSFORMERS_NO_TF"] = "1"
 os.environ["TRANSFORMERS_NO_FLAX"] = "1"
 os.environ["CUDA_VISIBLE_DEVICES"] = "7"
