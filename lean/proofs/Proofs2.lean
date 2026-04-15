@@ -99,3 +99,44 @@ theorem inter_subgroup {G : Type} [Group G] (H K : Subgroup G):
    have h1 : a * b ∈ H := Subgroup.mul_mem H ah bh
    have h2 : a * b ∈ K := Subgroup.mul_mem K ak bk
    exact Subgroup.mem_inf.mpr ⟨h1, h2⟩
+
+
+#check ZNum.div
+
+#check Ordinal.univ
+#check Complex.instDecidableEq
+
+
+#check iff_isEquiv
+
+#check not_false._simp_1
+
+#check Nat.Coprime.symmetric
+
+#check irrational_pi._simp_1
+
+#check Nat.succ_injective
+
+#check xor_true
+
+#check NNReal.coe_real_pi
+
+#check Bool.false_lt_true
+
+#check Nat.fermatNumber_injective
+
+#check not_small_ordinal
+
+#check AlgebraicGeometry.IsAffineOpen.fromSpec_app_of_le
+
+#check Group
+
+#check Matrix.toEuclideanCLM_toLp
+
+#check AlgebraicGeometry.AffineSpace.isoOfIsAffine_inv
+
+#check AlgebraicGeometry.IsAffineOpen.fromSpec_app_self_apply
+
+#check irrational_sqrt_two
+
+#check Nat
