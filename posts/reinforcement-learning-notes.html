@@ -1,0 +1,85 @@
+<html>
+<head>
+  <title>Reinforcement Learning Notes</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_SVG"></script>
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+            TeX: {
+                extensions: ["AMScd.js"]
+            },
+            "HTML-CSS": { scale: 100 }
+        };
+    </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1450977-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)};
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-1450977-3');
+  </script>
+
+   <style>
+        .container {
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+        }
+       table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<h1>Reinforcement Learning Notes</h1>
+<p>
+<img src="./reinforcement-learning.jpeg" width="300px"/>
+<a href="https://web.stanford.edu/class/psych209/Readings/SuttonBartoIPRLBook2ndEd.pdf" target="_blank">
+Reinforcement Learning: An Introduction</a>
+is a classic book on reinforcement learning. As I got intrested in RL, I got this book and read from beginning to end, over a period
+of around a month. I realized that I knew most of the material already in a scattered manner, so it was good to read through a cohesive
+treatment of the material. I also realized that the book tries to be mathematically precise and sometimes the intution can get lost
+in mathematics. I am creating these notes for future reference to myself, though I am trying that these notes can also be a standalone
+summary of the book.
+</p>
+
+<h2>Chapter 1: Introduction</h2>
+<p>
+Reinforcement learning is learning by interacting with our environment, like a child learns. There is an <em>agent</em> which 
+interacts with <em>environment</em> which consists of <em>states</em>. Agent can take <em>actions</em> which can change
+environment state, perhaps in probabilistic fashion. Goal of the agent is to maximize <em>rewards</em> that it can get as it
+performs actions.
+</p>
+
+<p>
+Reinforcement is third pillar of ML other than supervised learning, where correct actions for a state are provided and the model needs
+to learn them, and unsupervised learning which is about finding patterns in a data.
+</p>
+
+<p>
+A <em>policy</em> (which is learnt during training) is mapping from state to action (can be probabilistic). <em>Value</em> of a state specifies the goodness of a certain state - which means how much (perhaps discounted) rewards can be collected from this state.
+</p>
+
+<p>
+Historically, RL has had two threads. First thread originated in the psychology of animal learning. Second thread originated in 
+optimal control and dynamic programming. Connection between optimal control and DP itself was slow to be realized.
+</p>
+</body>
+</html>
