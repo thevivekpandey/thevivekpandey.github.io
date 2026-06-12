@@ -1,0 +1,96 @@
+<html>
+<head>
+  <title>Stanford CS 336 Notes</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_SVG"></script>
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+            TeX: {
+                extensions: ["AMScd.js"]
+            },
+            "HTML-CSS": { scale: 100 }
+        };
+    </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1450977-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)};
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-1450977-3');
+  </script>
+
+   <style>
+        .container {
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+        }
+       table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<h1>Stanford CS 336 Notes</h1>
+<h2>Lecture 8</h2>
+<h3>Various pytorch.distributed operations</h3>
+
+<b>All reduce</b>
+<pre>
+Rank 0 [before all-reduce]: tensor([0., 1., 2., 3.])
+Rank 1 [before all-reduce]: tensor([1., 2., 3., 4.])
+Rank 2 [before all-reduce]: tensor([2., 3., 4., 5.])
+Rank 3 [before all-reduce]: tensor([3., 4., 5., 6.])
+
+Rank 0 [after all-reduce]: tensor([ 6., 10., 14., 18.])
+Rank 1 [after all-reduce]: tensor([ 6., 10., 14., 18.])
+Rank 3 [after all-reduce]: tensor([ 6., 10., 14., 18.])
+Rank 2 [after all-reduce]: tensor([ 6., 10., 14., 18.])
+</pre>
+
+<b>Reduce Scatter</b>
+<pre>
+Rank 0 [before reduce-scatter]: input=tensor([0., 1., 2., 3.]), output=tensor([0.])
+Rank 1 [before reduce-scatter]: input=tensor([1., 2., 3., 4.]), output=tensor([0.])
+Rank 2 [before reduce-scatter]: input=tensor([2., 3., 4., 5.]), output=tensor([0.])
+Rank 3 [before reduce-scatter]: input=tensor([3., 4., 5., 6.]), output=tensor([0.])
+Rank 0 [after reduce-scatter]: input=tensor([0., 1., 2., 3.]), output=tensor([6.])
+Rank 1 [after reduce-scatter]: input=tensor([1., 2., 3., 4.]), output=tensor([10.])
+Rank 2 [after reduce-scatter]: input=tensor([2., 3., 4., 5.]), output=tensor([14.])
+Rank 3 [after reduce-scatter]: input=tensor([3., 4., 5., 6.]), output=tensor([18.])
+
+</pre>
+
+<b>All gather</b>
+<pre>
+Rank 3 [before all-gather]: input=tensor([18.]), output=tensor([0., 0., 0., 0.])
+Rank 2 [before all-gather]: input=tensor([14.]), output=tensor([0., 0., 0., 0.])
+Rank 1 [before all-gather]: input=tensor([10.]), output=tensor([0., 0., 0., 0.])
+Rank 0 [before all-gather]: input=tensor([6.]), output=tensor([0., 0., 0., 0.])
+Rank 1 [after all-gather]: input=tensor([10.]), output=tensor([ 6., 10., 14., 18.])
+Rank 0 [after all-gather]: input=tensor([6.]), output=tensor([ 6., 10., 14., 18.])
+Rank 3 [after all-gather]: input=tensor([18.]), output=tensor([ 6., 10., 14., 18.])
+Rank 2 [after all-gather]: input=tensor([14.]), output=tensor([ 6., 10., 14., 18.])
+</pre>
+
+<p>So, you can see that all-reduce = reduce-scatter + all-gather</p>
+
+</body>
+</html>
